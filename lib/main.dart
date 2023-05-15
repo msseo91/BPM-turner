@@ -39,6 +39,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   var _pdfPath = "";
   var _bpm = 140;
+  var _isPlaying = false;
 
   void _showPickFile() async {
     final pickResult =
@@ -58,6 +59,30 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void play() {
+    setState(() {
+      _isPlaying = true;
+
+      // TODO - Implement play
+    });
+  }
+
+  void pause() {
+    setState(() {
+      _isPlaying = false;
+
+      // TODO - Implement pause
+    });
+  }
+
+  void stop() {
+    setState(() {
+      _isPlaying = false;
+
+      // TODO -Implement stop
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
         actions: [
           Container(
-            margin: const EdgeInsets.fromLTRB(0, 0, 50, 0),
+            margin: const EdgeInsets.fromLTRB(0, 0, 40, 0),
             child: Row(children: [
               IconButton(onPressed: () { setBpm(_bpm - 5); }, icon: const Icon(Icons.remove)),
               Text(
@@ -78,16 +103,12 @@ class _MyHomePageState extends State<MyHomePage> {
             ]),
           ),
           IconButton(
-            icon: const Icon(Icons.play_arrow),
-            onPressed: () {
-              /* TODO */
-            },
+            icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow ),
+            onPressed: _isPlaying ? pause : play,
           ),
           IconButton(
             icon: const Icon(Icons.stop),
-            onPressed: () {
-              /* TODO */
-            },
+            onPressed: stop,
           ),
         ],
       ),
