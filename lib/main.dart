@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'BPM turner',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -37,9 +38,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   var _pdfPath = "";
+  var _bpm = 140;
 
   void _showPickFile() async {
-    final pickResult = await FilePicker.platform.pickFiles(allowMultiple: false);
+    final pickResult =
+        await FilePicker.platform.pickFiles(allowMultiple: false);
 
     // if no file is picked
     if (pickResult == null) return;
@@ -49,9 +52,45 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void setBpm(int toBpm) {
+    setState(() {
+      _bpm = toBpm;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+        backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
+        actions: [
+          Container(
+            margin: const EdgeInsets.fromLTRB(0, 0, 50, 0),
+            child: Row(children: [
+              IconButton(onPressed: () { setBpm(_bpm - 5); }, icon: const Icon(Icons.remove)),
+              Text(
+                _bpm.toString(),
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+              IconButton(onPressed: () { setBpm(_bpm + 5); }, icon: const Icon(Icons.add)),
+            ]),
+          ),
+          IconButton(
+            icon: const Icon(Icons.play_arrow),
+            onPressed: () {
+              /* TODO */
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.stop),
+            onPressed: () {
+              /* TODO */
+            },
+          ),
+        ],
+      ),
       body: PDFScreen(pdfPath: _pdfPath),
       floatingActionButton: FloatingActionButton(
         onPressed: _showPickFile,
