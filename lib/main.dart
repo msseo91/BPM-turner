@@ -1,9 +1,9 @@
-import 'dart:io';
-import 'dart:typed_data';
+import 'dart:async';
 
 import 'package:bpm_turner/pdf_view.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:bpm_turner/global.dart' as global;
 
 void main() {
   runApp(const MyApp());
@@ -40,6 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
   var _pdfPath = "";
   var _bpm = 140;
   var _isPlaying = false;
+  Timer? _playTimer;
 
   void _showPickFile() async {
     final pickResult =
@@ -59,28 +60,38 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void play() {
+  Future<void> startPlay() async {
+    if(global.pdfViewController == null) return;
+
     setState(() {
       _isPlaying = true;
-
       // TODO - Implement play
     });
+
+    _playTimer = Timer.periodic(const Duration(seconds: 1), play);
+  }
+
+  Future<void> play(Timer t) async {
+    var currentPage = await global.pdfViewController?.getCurrentPage();
+    global.pdfViewController?.setPage((currentPage ?? 0) + 1);
   }
 
   void pause() {
     setState(() {
       _isPlaying = false;
-
       // TODO - Implement pause
     });
+
+    _playTimer?.cancel();
   }
 
   void stop() {
     setState(() {
       _isPlaying = false;
-
       // TODO -Implement stop
     });
+
+    _playTimer?.cancel();
   }
 
   @override
@@ -104,7 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           IconButton(
             icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow ),
-            onPressed: _isPlaying ? pause : play,
+            onPressed: _isPlaying ? pause : startPlay,
           ),
           IconButton(
             icon: const Icon(Icons.stop),

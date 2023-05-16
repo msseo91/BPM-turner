@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
+import "global.dart" as global;
 
 class PDFScreen extends StatefulWidget {
   final String pdfPath;
@@ -14,8 +15,6 @@ class PDFScreen extends StatefulWidget {
 }
 
 class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
-  final Completer<PDFViewController> _controller =
-      Completer<PDFViewController>();
   var pages = 0;
   var currentPage = 0;
   bool isReady = false;
@@ -23,7 +22,9 @@ class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    if(widget.pdfPath.isEmpty) return const Center(child: Text("Load pdf sheet."));
+    if (widget.pdfPath.isEmpty) {
+      return const Center(child: Text("Load pdf sheet."));
+    }
     print("Build PdfScreen with ${widget.pdfPath}");
 
     return Stack(
@@ -59,7 +60,7 @@ class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
             print('$page: ${error.toString()}');
           },
           onViewCreated: (PDFViewController pdfViewController) {
-            //_controller.complete(pdfViewController);
+            global.pdfViewController = pdfViewController;
           },
           onLinkHandler: (String? uri) {
             print('goto uri: $uri');
