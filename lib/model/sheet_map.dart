@@ -1,14 +1,14 @@
 
 import 'package:bpm_turner/model/sheet_bar.dart';
 
-class SheetMap {
+class TempoSheet {
   final String name;
 
   /// 2-dimensional array of the sheet
-  List<List<Bar>> sheet = [];
+  List<List<Bar>> bars = [];
 
-  SheetMap(this.name,
+  TempoSheet(this.name,
   {
-    required this.sheet,
+    required this.bars,
   });
 }
