@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bpm_turner/overlay/overlay_progress.dart';
 import 'package:bpm_turner/pdf_view.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -40,15 +41,18 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   var _pdfPath = "";
   var _bpm = 140;
   var _isPlaying = false;
-  Timer? _playTimer;
-  OverlayEntry? overlayEntry;
-
   // TODO - Implement pick sheet.
   var sheet = rach.sheet;
+  var overlayController = OverlayController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void _showPickFile() async {
     final pickResult =
@@ -60,37 +64,6 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _pdfPath = pickResult.files.first.path ?? "";
     });
-
-    createProgressOverlay();
-  }
-
-  void createProgressOverlay() {
-    if (_pdfPath.isEmpty) return;
-
-    overlayEntry = OverlayEntry(
-      builder: (BuildContext context) {
-        var baseY = MediaQuery.of(context).size.height / 3;
-
-        return Positioned(
-          left: 0,
-          top: baseY,
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: baseY,
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.red,
-                  width: 1.0,
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-
-    Overlay.of(context, debugRequiredFor: widget).insert(overlayEntry!);
   }
 
   void setBpm(int toBpm) {
@@ -107,7 +80,10 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
     sheet.play(_bpm,
-        barCallback: (barIndex) => { _logger.d("Bar $barIndex is played.") },
+        barCallback: (barIndex, duration)  {
+          _logger.d("Bar $barIndex is started.");
+          overlayController.draw(context, Duration(microseconds: duration), this, Rect.fromLTRB(0, 0, 200, 200));
+        },
         lineChangeCallback: (lineIndex) => { _logger.d("Line changed to ${lineIndex+1}") },
         pageChangeCallback: (pageIndex) => {
           _logger.d("Page changed to ${pageIndex+1}"),
@@ -128,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _isPlaying = false;
     });
-
+    global.pdfViewController?.setPage(0);
     sheet.stop();
   }
 

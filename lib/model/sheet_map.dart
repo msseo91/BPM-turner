@@ -21,7 +21,7 @@ class TempoSheet {
 
   Future<void> play(int bpm, {
     Function(int)? segCallback,
-    Function(int)? barCallback,
+    Function(int, int)? barCallback,
     Function(int)? lineChangeCallback,
     Function(int)? pageChangeCallback,
   }) async {
@@ -30,7 +30,10 @@ class TempoSheet {
     for (var i = currentBarIndex; i < bars.length; i++) {
       if(!_isPlaying) break;
 
+
       if(bars[i].tempoParam == 0) {
+        var dur = bars[i].duration(bpm);
+        barCallback?.call(i, dur);
         await Future.delayed(Duration(microseconds: bars[i].duration(bpm)));
       } else {
         var segDurations = bars[i].makePlaySegment(5, bpm);
@@ -40,7 +43,6 @@ class TempoSheet {
         }
       }
 
-      barCallback?.call(i);
       if(bars[i].lastBarInLine) {
         lineChangeCallback?.call(currentLineIndexInPage());
       }
