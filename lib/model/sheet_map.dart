@@ -30,9 +30,14 @@ class TempoSheet {
     for (var i = currentBarIndex; i < bars.length; i++) {
       if(!_isPlaying) break;
 
-      var segDurations = bars[i].makePlaySegment(5, bpm);
-      for (var duration in segDurations) {
-        await Future.delayed(Duration(microseconds: duration));
+      if(bars[i].tempoParam == 0) {
+        await Future.delayed(Duration(microseconds: bars[i].duration(bpm)));
+      } else {
+        var segDurations = bars[i].makePlaySegment(5, bpm);
+        for (var duration in segDurations) {
+          await Future.delayed(Duration(microseconds: duration));
+          segCallback?.call(duration);
+        }
       }
 
       barCallback?.call(i);

@@ -55,9 +55,8 @@ class Bar {
 extension BarCalculator on Bar {
   List<int> makePlaySegment(int segmentCount, int bpm) {
     var segments = <int>[];
-    // Duration of a bar in microsecond
-    var barDuration = (60 * 1000 * 1000) / bpm;
-    if(halfBar) barDuration /= 2;
+    // Duration of a bar in microsecond. One bar has 2 beats.
+    var barDuration = duration(bpm);
     var baseSegDuration = barDuration ~/ segmentCount;
 
     if (tempoParam == 0) {
@@ -70,5 +69,11 @@ extension BarCalculator on Bar {
     }
 
     return segments;
+  }
+
+  int duration(int bpm) {
+    var base = ((60 * 1000 * 1000) ~/ bpm) * 2;
+    if(halfBar) base ~/= 2;
+    return base;
   }
 }
