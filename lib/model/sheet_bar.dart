@@ -57,6 +57,7 @@ extension BarCalculator on Bar {
     var segments = <int>[];
     // Duration of a bar in microsecond
     var barDuration = (60 * 1000 * 1000) / bpm;
+    if(halfBar) barDuration /= 2;
     var baseSegDuration = barDuration ~/ segmentCount;
 
     if (tempoParam == 0) {

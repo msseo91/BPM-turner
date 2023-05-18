@@ -4,6 +4,10 @@ import 'package:bpm_turner/pdf_view.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:bpm_turner/global.dart' as global;
+import 'package:logger/logger.dart';
+import 'model/sample/rach_op17.dart' as rach;
+
+var _logger = Logger(printer: SimplePrinter(printTime: true));
 
 void main() {
   runApp(const MyApp());
@@ -41,6 +45,10 @@ class _MyHomePageState extends State<MyHomePage> {
   var _bpm = 140;
   var _isPlaying = false;
   Timer? _playTimer;
+  OverlayEntry? overlayEntry;
+
+  // TODO - Implement pick sheet.
+  var sheet = rach.sheet;
 
   void _showPickFile() async {
     final pickResult =
@@ -52,6 +60,37 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _pdfPath = pickResult.files.first.path ?? "";
     });
+
+    createProgressOverlay();
+  }
+
+  void createProgressOverlay() {
+    if (_pdfPath.isEmpty) return;
+
+    overlayEntry = OverlayEntry(
+      builder: (BuildContext context) {
+        var baseY = MediaQuery.of(context).size.height / 3;
+
+        return Positioned(
+          left: 0,
+          top: baseY,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: baseY,
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.red,
+                  width: 1.0,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+
+    Overlay.of(context, debugRequiredFor: widget).insert(overlayEntry!);
   }
 
   void setBpm(int toBpm) {
@@ -61,37 +100,36 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> startPlay() async {
-    if(global.pdfViewController == null) return;
+    if (global.pdfViewController == null) return;
 
     setState(() {
       _isPlaying = true;
-      // TODO - Implement play
     });
 
-    _playTimer = Timer.periodic(const Duration(seconds: 1), play);
-  }
-
-  Future<void> play(Timer t) async {
-    var currentPage = await global.pdfViewController?.getCurrentPage();
-    global.pdfViewController?.setPage((currentPage ?? 0) + 1);
+    sheet.play(_bpm,
+        barCallback: (barIndex) => { _logger.d("Bar $barIndex is played.") },
+        lineChangeCallback: (lineIndex) => { _logger.d("Line changed to ${lineIndex+1}") },
+        pageChangeCallback: (pageIndex) => {
+          _logger.d("Page changed to ${pageIndex+1}"),
+          global.pdfViewController?.setPage(pageIndex + 1)
+        }
+    );
   }
 
   void pause() {
     setState(() {
       _isPlaying = false;
-      // TODO - Implement pause
     });
 
-    _playTimer?.cancel();
+    sheet.pause();
   }
 
   void stop() {
     setState(() {
       _isPlaying = false;
-      // TODO -Implement stop
     });
 
-    _playTimer?.cancel();
+    sheet.stop();
   }
 
   @override
@@ -104,17 +142,25 @@ class _MyHomePageState extends State<MyHomePage> {
           Container(
             margin: const EdgeInsets.fromLTRB(0, 0, 40, 0),
             child: Row(children: [
-              IconButton(onPressed: () { setBpm(_bpm - 5); }, icon: const Icon(Icons.remove)),
+              IconButton(
+                  onPressed: () {
+                    setBpm(_bpm - 5);
+                  },
+                  icon: const Icon(Icons.remove)),
               Text(
                 _bpm.toString(),
                 style:
                     const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
-              IconButton(onPressed: () { setBpm(_bpm + 5); }, icon: const Icon(Icons.add)),
+              IconButton(
+                  onPressed: () {
+                    setBpm(_bpm + 5);
+                  },
+                  icon: const Icon(Icons.add)),
             ]),
           ),
           IconButton(
-            icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow ),
+            icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
             onPressed: _isPlaying ? pause : startPlay,
           ),
           IconButton(
@@ -123,7 +169,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body: PDFScreen(pdfPath: _pdfPath),
+      body: PDFScreen(pdfPath: _pdfPath, sheet: rach.sheet),
       floatingActionButton: FloatingActionButton(
         onPressed: _showPickFile,
         tooltip: 'Pick PDF file from storage.',

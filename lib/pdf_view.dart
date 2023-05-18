@@ -1,14 +1,18 @@
-import 'dart:async';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import "global.dart" as global;
+import 'model/sheet_map.dart';
 
 class PDFScreen extends StatefulWidget {
   final String pdfPath;
+  final TempoSheet? sheet;
 
-  const PDFScreen({Key? key, required this.pdfPath}) : super(key: key);
+  const PDFScreen({
+    Key? key,
+    required this.pdfPath,
+    this.sheet,
+  }) : super(key: key);
 
   @override
   State<PDFScreen> createState() => _PDFScreenState();
@@ -19,6 +23,11 @@ class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
   var currentPage = 0;
   bool isReady = false;
   String errorMessage = '';
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +49,6 @@ class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
           defaultPage: currentPage,
           fitPolicy: FitPolicy.BOTH,
           preventLinkNavigation: false,
-          // if set to true the link is handled in flutter
           onRender: (pages) {
             setState(() {
               this.pages = pages ?? 0;
