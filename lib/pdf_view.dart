@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import "global.dart" as global;
-import 'model/sheet_map.dart';
+import 'model/sheet_music.dart';
 
 class PDFScreen extends StatefulWidget {
   final String pdfPath;

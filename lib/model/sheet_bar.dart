@@ -35,23 +35,6 @@ class Bar {
 
   /// Index of line.
   int lineIndex;
-
-  static List<Bar> makeBarLine(int barCount, (int, int) timeSignature,
-      {bool lastLineInPage = false, int lineIndex = 0}) {
-    var bars = <Bar>[];
-    for (int i = 0; i < barCount; i++) {
-      var lastBar = i == barCount - 1;
-      bars.add(
-          Bar(
-            timeSignature,
-            lineIndex: lineIndex,
-            lastBarInLine: lastBar,
-            lastBarInPage: lastBar ? lastLineInPage : false,
-          )
-      );
-    }
-    return bars;
-  }
 }
 
 /// *** Basic idea ***
