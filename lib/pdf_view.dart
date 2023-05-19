@@ -1,5 +1,6 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import "global.dart" as global;
 import 'model/sheet_map.dart';
@@ -34,7 +35,7 @@ class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
     if (widget.pdfPath.isEmpty) {
       return const Center(child: Text("Load pdf sheet."));
     }
-    print("Build PdfScreen with ${widget.pdfPath}");
+    global.logger.d("Build PdfScreen with ${widget.pdfPath}");
 
     return Stack(
       children: <Widget>[

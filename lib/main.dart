@@ -48,6 +48,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   // TODO - Implement pick sheet.
   var sheet = rach.sheet;
   var overlayController = OverlayController();
+  var pdfWidgetKey = GlobalKey();
 
   @override
   void initState() {
@@ -79,12 +80,25 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       _isPlaying = true;
     });
 
+    final RenderBox renderBox = pdfWidgetKey.currentContext?.findRenderObject() as RenderBox;
+    final Size size = renderBox.size;
+    final baseH = size.height / 3;
+    final baseW = size.width / 5;
+
+    var barIndex = 0;
     sheet.play(_bpm,
-        barCallback: (barIndex, duration)  {
+        barCallback: (bar, duration)  {
           _logger.d("Bar $barIndex is started.");
-          overlayController.draw(context, Duration(microseconds: duration), this, Rect.fromLTRB(0, 0, 200, 200));
+          var l = baseW * barIndex;
+          var t = baseH * bar.lineIndex;
+          overlayController.draw(context, Duration(milliseconds: duration), this,
+              Rect.fromLTRB(l, t, l + baseW, t + baseH));
+          barIndex++;
         },
-        lineChangeCallback: (lineIndex) => { _logger.d("Line changed to ${lineIndex+1}") },
+        lineChangeCallback: (bar) {
+          barIndex = 0;
+          _logger.d("Line changed to ${bar.lineIndex}");
+        },
         pageChangeCallback: (pageIndex) => {
           _logger.d("Page changed to ${pageIndex+1}"),
           global.pdfViewController?.setPage(pageIndex + 1)
@@ -105,6 +119,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       _isPlaying = false;
     });
     global.pdfViewController?.setPage(0);
+    overlayController.clear();
     sheet.stop();
   }
 
@@ -145,7 +160,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           ),
         ],
       ),
-      body: PDFScreen(pdfPath: _pdfPath, sheet: rach.sheet),
+      body: PDFScreen(key: pdfWidgetKey, pdfPath: _pdfPath, sheet: rach.sheet),
       floatingActionButton: FloatingActionButton(
         onPressed: _showPickFile,
         tooltip: 'Pick PDF file from storage.',

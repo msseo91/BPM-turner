@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 
 class OverlayController {
   OverlayEntry? lastOverlay;
+  AnimationController? _controller;
 
   void draw(BuildContext context, Duration duration, TickerProvider vsync,
       Rect barRect) async {
-    var controller = AnimationController(duration: duration, vsync: vsync);
+    _controller = AnimationController(duration: duration, vsync: vsync);
+
     var barWidth = barRect.width;
     var moveWidth = barWidth / 60;
-    var animation = IntTween(begin: 0, end: 60).animate(controller);
+    var animation = IntTween(begin: 0, end: 60).animate(_controller!);
     animation.addListener(() {
       lastOverlay?.remove();
 
-      var leftPosition = moveWidth * animation.value;
+      var leftPosition = barRect.left + moveWidth * animation.value;
       lastOverlay = OverlayEntry(
         builder: (BuildContext context) {
           return Positioned(
@@ -28,6 +30,11 @@ class OverlayController {
 
       Overlay.of(context).insert(lastOverlay!);
     });
-    controller.forward();
+    _controller?.forward(from: 0);
+  }
+
+  void clear() {
+    _controller?.dispose();
+    _controller = null;
   }
 }

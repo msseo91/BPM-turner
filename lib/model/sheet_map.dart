@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bpm_turner/model/sheet_bar.dart';
 import 'package:logger/logger.dart';
 
@@ -19,47 +21,55 @@ class TempoSheet {
 
   bool _isPlaying = false;
 
+  Timer? _timer;
+
   Future<void> play(int bpm, {
     Function(int)? segCallback,
-    Function(int, int)? barCallback,
-    Function(int)? lineChangeCallback,
+    Function(Bar, int)? barCallback,
+    Function(Bar)? lineChangeCallback,
     Function(int)? pageChangeCallback,
   }) async {
     _isPlaying = true;
 
-    for (var i = currentBarIndex; i < bars.length; i++) {
-      if(!_isPlaying) break;
+    // We assume all duration is same in sheet... For now.
+    var duration = Duration(milliseconds: bpmDuration(bpm));
+    var isOneTickPlayed = false;
 
-
-      if(bars[i].tempoParam == 0) {
-        var dur = bars[i].duration(bpm);
-        barCallback?.call(i, dur);
-        await Future.delayed(Duration(microseconds: bars[i].duration(bpm)));
-      } else {
-        var segDurations = bars[i].makePlaySegment(5, bpm);
-        for (var duration in segDurations) {
-          await Future.delayed(Duration(microseconds: duration));
-          segCallback?.call(duration);
+    _timer = Timer.periodic(duration, (timer) {
+      if(bars[currentBarIndex].halfBar) {
+        barCallback?.call(bars[currentBarIndex], duration.inMilliseconds);
+        if(bars[currentBarIndex].lastBarInLine) {
+          lineChangeCallback?.call(bars[currentBarIndex]);
         }
+        if(bars[currentBarIndex].lastBarInPage) {
+          pageChangeCallback?.call(currentPage());
+        }
+        currentBarIndex++;
+      } else if(isOneTickPlayed) {
+        isOneTickPlayed = false;
+        currentBarIndex++;
+      } else {
+        barCallback?.call(bars[currentBarIndex], duration.inMilliseconds * 2);
+        if(bars[currentBarIndex].lastBarInLine) {
+          lineChangeCallback?.call((bars[currentBarIndex]));
+        }
+        if(bars[currentBarIndex].lastBarInPage) {
+          pageChangeCallback?.call(currentPage());
+        }
+        isOneTickPlayed = true;
       }
 
-      if(bars[i].lastBarInLine) {
-        lineChangeCallback?.call(currentLineIndexInPage());
-      }
-      if(bars[i].lastBarInPage) {
-        pageChangeCallback?.call(currentPage());
-      }
-
-      currentBarIndex++;
-    }
+    });
   }
 
   void pause() {
     _isPlaying = false;
+    _timer?.cancel();
   }
 
   void stop() {
     _isPlaying = false;
+    _timer?.cancel();
     currentBarIndex = 0;
   }
 
@@ -77,39 +87,5 @@ class TempoSheet {
     }
 
     return page;
-  }
-
-  int currentLineIndexInPage() {
-    int line = 0;
-
-    // 1. Get last bar in page.
-    var lastBarIndex = currentBarIndex;
-    for (var i = currentBarIndex; i < bars.length; i++) {
-      if (bars[i].lastBarInPage) {
-        break;
-      }
-      lastBarIndex++;
-    }
-
-    // 2. Get first bar in page.
-    var firstBarIndex = currentBarIndex;
-    for (var i = currentBarIndex; i >= 0; i--) {
-      if (bars[i].lastBarInPage) {
-        firstBarIndex = i + 1;
-        break;
-      }
-    }
-
-    // 3. Get current line index.
-    for (var i = firstBarIndex; i <= lastBarIndex; i++) {
-      if (i == currentBarIndex) {
-        return line;
-      }
-      if (bars[i].lastBarInLine) {
-        line++;
-      }
-    }
-
-    return line;
   }
 }

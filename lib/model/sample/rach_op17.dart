@@ -17,166 +17,166 @@ List<Bar> _makeBars() {
     Bar(timeSignature68),
     Bar(timeSignature68, lastBarInLine: true),
   ]);
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
   // 2
-  bars.addAll(Bar.makeBarLine(6, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(6, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
   // 3
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
   // 4
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
   // 10
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(4, timeSignature68));
-  bars.addAll(Bar.makeBarLine(4, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(4, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(4, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
-  bars.addAll(Bar.makeBarLine(6, timeSignature68));
-  bars.addAll(Bar.makeBarLine(6, timeSignature68));
-  bars.addAll(Bar.makeBarLine(6, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(6, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(6, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(6, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
-  bars.addAll(Bar.makeBarLine(6, timeSignature68));
-  bars.addAll(Bar.makeBarLine(6, timeSignature68));
-  bars.addAll(Bar.makeBarLine(6, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(6, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(6, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(6, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
-  bars.addAll(Bar.makeBarLine(6, timeSignature68));
-  bars.addAll(Bar.makeBarLine(6, timeSignature68));
-  bars.addAll(Bar.makeBarLine(6, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(6, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(6, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(6, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
   // 14
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
   // 15
-  bars.addAll(Bar.makeBarLine(6, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(6, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
   // 20
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
   // 25
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
   // 30
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(6, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(6, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
   // 35
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(6, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(6, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
-  bars.addAll(Bar.makeBarLine(6, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(6, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(6, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(6, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(5, timeSignature68));
-  bars.addAll(Bar.makeBarLine(6, timeSignature68, lastLineInPage: true));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 0));
+  bars.addAll(Bar.makeBarLine(5, timeSignature68, lineIndex: 1));
+  bars.addAll(Bar.makeBarLine(6, timeSignature68, lineIndex: 2, lastLineInPage: true));
 
   return bars;
 }

@@ -11,6 +11,7 @@ class Bar {
     this.lastBarInPage = false,
     this.lastBarInLine = false,
     this.halfBar = false,
+    this.lineIndex = 0,
   });
 
   /// Time signature. Ex) 4/4
@@ -32,14 +33,18 @@ class Bar {
   /// If this bar is half bar, this value is true.
   bool halfBar;
 
+  /// Index of line.
+  int lineIndex;
+
   static List<Bar> makeBarLine(int barCount, (int, int) timeSignature,
-      {bool lastLineInPage = false}) {
+      {bool lastLineInPage = false, int lineIndex = 0}) {
     var bars = <Bar>[];
     for (int i = 0; i < barCount; i++) {
       var lastBar = i == barCount - 1;
       bars.add(
           Bar(
             timeSignature,
+            lineIndex: lineIndex,
             lastBarInLine: lastBar,
             lastBarInPage: lastBar ? lastLineInPage : false,
           )
@@ -71,9 +76,15 @@ extension BarCalculator on Bar {
     return segments;
   }
 
+  /// Duration of this bar in millisecond.
   int duration(int bpm) {
-    var base = ((60 * 1000 * 1000) ~/ bpm) * 2;
+    var base = ((60 * 1000) ~/ bpm) * 2;
     if(halfBar) base ~/= 2;
     return base;
   }
+}
+
+/// BPM duration for one tick in millisecond.
+int bpmDuration(int bpm) {
+  return ((60 * 1000) ~/ bpm);
 }
