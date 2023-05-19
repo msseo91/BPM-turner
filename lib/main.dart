@@ -4,11 +4,8 @@ import 'package:bpm_turner/overlay/overlay_progress.dart';
 import 'package:bpm_turner/pdf_view.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:bpm_turner/global.dart' as global;
-import 'package:logger/logger.dart';
+import 'package:bpm_turner/global.dart';
 import 'model/sample/rach_op17.dart' as rach;
-
-var _logger = Logger(printer: SimplePrinter(printTime: true));
 
 void main() {
   runApp(const MyApp());
@@ -74,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   }
 
   Future<void> startPlay() async {
-    if (global.pdfViewController == null) return;
+    if (pdfViewController == null) return;
 
     setState(() {
       _isPlaying = true;
@@ -88,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     var barIndex = 0;
     sheet.play(_bpm,
         barCallback: (bar, duration)  {
-          _logger.d("Bar $barIndex is started.");
+          logger.d("Bar $barIndex is started.");
           var l = baseW * barIndex;
           var t = baseH * bar.lineIndex;
           overlayController.draw(context, Duration(milliseconds: duration), this,
@@ -97,11 +94,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         },
         lineChangeCallback: (bar) {
           barIndex = 0;
-          _logger.d("Line changed to ${bar.lineIndex}");
+          logger.d("Line changed to ${bar.lineIndex}");
         },
         pageChangeCallback: (pageIndex) => {
-          _logger.d("Page changed to ${pageIndex+1}"),
-          global.pdfViewController?.setPage(pageIndex + 1)
+          logger.d("Page changed to ${pageIndex+1}"),
+          pdfViewController?.setPage(pageIndex + 1)
         }
     );
   }
@@ -118,7 +115,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     setState(() {
       _isPlaying = false;
     });
-    global.pdfViewController?.setPage(0);
+    pdfViewController?.setPage(0);
     overlayController.clear();
     sheet.stop();
   }
@@ -169,3 +166,4 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     );
   }
 }
+
