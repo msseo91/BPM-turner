@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:bpm_turner/global.dart';
 import 'package:bpm_turner/model/sheet_bar.dart';
 import 'package:bpm_turner/model/sheet_line.dart';
@@ -26,6 +27,7 @@ class TempoSheet {
   int currentLineIndex = 0;
 
   Timer? _timer;
+  var player = AudioPlayer()..setSource(AssetSource('metronome.mp3'));
 
   Future<void> play(
     int bpm, {
@@ -37,6 +39,7 @@ class TempoSheet {
     // We assume all duration is same in sheet... For now.
     var duration = Duration(milliseconds: bpmDuration(bpm));
     var isOneTickPlayed = false;
+    player = AudioPlayer()..setSource(AssetSource('metronome.mp3'));
 
     _timer = Timer.periodic(duration, (timer) {
       var bar = currentBar();
@@ -46,6 +49,9 @@ class TempoSheet {
         timer.cancel();
         return;
       }
+
+      player.seek(const Duration(seconds: 0));
+      player.resume();
 
       if (bar.halfBar) {
         barCallback?.call(bar, duration.inMilliseconds);
