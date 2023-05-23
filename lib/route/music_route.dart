@@ -125,18 +125,18 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
         body: SafeArea(
             child: Stack(
               children: <Widget>[
-        InkWell(
-          onTap: onScreenTab,
-          child: SizedBox(
-            width: double.infinity,
-            height: double.infinity,
-            child: RawGestureCatcher(
-              onTap: onScreenTab,
-              child: PDFScreen(key: pdfWidgetKey, pdfPath: _pdfPath, sheet: rach.sheet),
-            ),
-          ),
-        ),
-        AnimatedOpacity(
+                InkWell(
+                  onTap: onScreenTab,
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: double.infinity,
+                    child: RawGestureCatcher(
+                      onTap: onScreenTab,
+                      child: PDFScreen(key: pdfWidgetKey, pdfPath: _pdfPath, sheet: rach.sheet),
+                    ),
+                  ),
+                ),
+                AnimatedOpacity(
                   duration: const Duration(milliseconds: 400),
                   opacity: _controlOpacity,
                   child: Align(
