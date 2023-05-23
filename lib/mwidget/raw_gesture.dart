@@ -5,10 +5,16 @@ class RawGestureCatcher extends StatelessWidget {
   const RawGestureCatcher({
     super.key,
     this.child,
-    this.onTap
+    this.onTap,
+    this.onTapDown,
+    this.onTapUp,
   });
 
   final GestureTapCallback? onTap;
+
+  final GestureTapDownCallback? onTapDown;
+
+  final GestureTapUpCallback? onTapUp;
 
   final Widget? child;
 
@@ -20,6 +26,8 @@ class RawGestureCatcher extends StatelessWidget {
             (AllowMultipleGestureRecognizer instance) {
           //initializer
           instance.onTap = onTap;
+          instance.onTapDown = onTapDown;
+          instance.onTapUp = onTapUp;
         },
       )
     },
