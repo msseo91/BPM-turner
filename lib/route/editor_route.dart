@@ -6,20 +6,19 @@ import 'package:flutter_pdfview/flutter_pdfview.dart';
 /// - View sheet music..
 /// - Draw&Edit multiple overlay box.
 ///
-class MusicEditor extends StatefulWidget {
-  MusicEditor({
+class EditorRoute extends StatefulWidget {
+  EditorRoute({
     super.key,
     required this.pdfPath,
   });
 
   String pdfPath;
 
-
   @override
-  State createState() => _MusicEditorState();
+  State createState() => _EditorRouteState();
 }
 
-class _MusicEditorState extends State<MusicEditor> {
+class _EditorRouteState extends State<EditorRoute> {
 
   @override
   Widget build(BuildContext context) {
