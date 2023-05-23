@@ -42,10 +42,13 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   var _pdfPath = "";
   var _bpm = 140;
   var _isPlaying = false;
+  var _controlOpacity = 0.0;
+
   // TODO - Implement pick sheet.
   var sheet = rach.sheet;
   var overlayController = OverlayController();
   var pdfWidgetKey = GlobalKey();
+  var showControl = false;
 
   @override
   void initState() {
@@ -53,8 +56,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   }
 
   void _showPickFile() async {
-    final pickResult =
-        await FilePicker.platform.pickFiles(allowMultiple: false);
+    final pickResult = await FilePicker.platform.pickFiles(allowMultiple: false);
 
     // if no file is picked
     if (pickResult == null) return;
@@ -84,23 +86,20 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
     var barIndex = 0;
     sheet.play(_bpm,
-        barCallback: (bar, duration)  {
+        barCallback: (bar, duration) {
           logger.d("Bar $barIndex is started.");
           var l = baseW * barIndex;
           var t = baseH * bar.lineIndex;
-          overlayController.draw(context, Duration(milliseconds: duration), this,
-              Rect.fromLTRB(l, t, l + baseW, t + baseH));
+          overlayController.draw(
+              context, Duration(milliseconds: duration), this, Rect.fromLTRB(l, t, l + baseW, t + baseH));
           barIndex++;
         },
         lineChangeCallback: (bar) {
           barIndex = 0;
           logger.d("Line changed to ${bar.lineIndex}");
         },
-        pageChangeCallback: (pageIndex) => {
-          logger.d("Page changed to ${pageIndex+1}"),
-          pdfViewController?.setPage(pageIndex + 1)
-        }
-    );
+        pageChangeCallback: (pageIndex) =>
+            {logger.d("Page changed to ${pageIndex + 1}"), pdfViewController?.setPage(pageIndex + 1)});
   }
 
   void pause() {
@@ -120,50 +119,74 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     sheet.stop();
   }
 
+  void onScreenTab() {
+    setState(() {
+      logger.d("InkWell tap!");
+      if (_controlOpacity == 0) {
+        _controlOpacity = 0.5;
+        Timer(const Duration(milliseconds: 3000), () => setState(() => _controlOpacity = 0));
+      } else {
+        _controlOpacity = 0;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
-        actions: [
-          Container(
-            margin: const EdgeInsets.fromLTRB(0, 0, 40, 0),
-            child: Row(children: [
-              IconButton(
-                  onPressed: () {
-                    setBpm(_bpm - 5);
-                  },
-                  icon: const Icon(Icons.remove)),
-              Text(
-                _bpm.toString(),
-                style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        body: SafeArea(
+            child: Stack(
+              children: <Widget>[
+              InkWell(
+                onTap: onScreenTab,
+                child: SizedBox(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: PDFScreen(key: pdfWidgetKey, pdfPath: _pdfPath, sheet: rach.sheet),
+                ),
               ),
-              IconButton(
-                  onPressed: () {
-                    setBpm(_bpm + 5);
-                  },
-                  icon: const Icon(Icons.add)),
-            ]),
-          ),
-          IconButton(
-            icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
-            onPressed: _isPlaying ? pause : startPlay,
-          ),
-          IconButton(
-            icon: const Icon(Icons.stop),
-            onPressed: stop,
-          ),
-        ],
-      ),
-      body: PDFScreen(key: pdfWidgetKey, pdfPath: _pdfPath, sheet: rach.sheet),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showPickFile,
-        tooltip: 'Pick PDF file from storage.',
-        child: const Icon(Icons.file_open),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+              AnimatedOpacity(
+                duration: const Duration(milliseconds: 400),
+                opacity: _controlOpacity,
+                child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                        color: Colors.black26,
+                        child: Row(
+                          children: [
+                            IconButton(
+                                onPressed: () {
+                                  setBpm(_bpm - 5);
+                                },
+                                icon: const Icon(Icons.remove)),
+                            Text(
+                              _bpm.toString(),
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                            ),
+                            IconButton(onPressed: () => setBpm(_bpm + 5), icon: const Icon(Icons.add)),
+                            IconButton(
+                              icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
+                              onPressed: _isPlaying ? pause : startPlay,
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.stop),
+                              onPressed: stop,
+                            ),
+                          ],
+                        ))),
+              ),
+              AnimatedOpacity(
+                duration: const Duration(milliseconds: 400),
+                opacity: _controlOpacity,
+                child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                        color: Colors.black26,
+                        child: Row(
+                          children: [IconButton(onPressed: _showPickFile, icon: const Icon(Icons.file_open))],
+                        ))),
+              ),
+            ],
+          )));
   }
 }
-
