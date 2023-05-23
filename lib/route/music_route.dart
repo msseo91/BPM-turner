@@ -9,6 +9,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:bpm_turner/model/sample/rach_op17.dart' as rach;
 
+import '../mwidget/raw_gesture.dart';
 import '../overlay/overlay_progress.dart';
 
 class MusicRoute extends StatefulWidget {
@@ -129,15 +130,10 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
           child: SizedBox(
             width: double.infinity,
             height: double.infinity,
-            child: RawGestureDetector(gestures: {
-              AllowMultipleGestureRecognizer: GestureRecognizerFactoryWithHandlers<AllowMultipleGestureRecognizer>(
-                () => AllowMultipleGestureRecognizer(), //constructor
-                (AllowMultipleGestureRecognizer instance) {
-                  //initializer
-                  instance.onTap = onScreenTab;
-                },
-              )
-            }, child: PDFScreen(key: pdfWidgetKey, pdfPath: _pdfPath, sheet: rach.sheet)),
+            child: RawGestureCatcher(
+              onTap: onScreenTab,
+              child: PDFScreen(key: pdfWidgetKey, pdfPath: _pdfPath, sheet: rach.sheet),
+            ),
           ),
         ),
         AnimatedOpacity(
@@ -209,9 +205,3 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
   }
 }
 
-class AllowMultipleGestureRecognizer extends TapGestureRecognizer {
-  @override
-  void rejectGesture(int pointer) {
-    acceptGesture(pointer);
-  }
-}
