@@ -1,8 +1,7 @@
-import 'dart:typed_data';
-
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
-import "global.dart" as global;
+import 'global.dart';
 import 'model/sheet_music.dart';
 
 class PDFScreen extends StatefulWidget {
@@ -35,7 +34,7 @@ class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
     if (widget.pdfPath.isEmpty) {
       return const Center(child: Text("Load pdf sheet."));
     }
-    global.logger.d("Build PdfScreen with ${widget.pdfPath}");
+    logger.d("Build PdfScreen with ${widget.pdfPath}");
 
     return Stack(
       children: <Widget>[
@@ -60,22 +59,22 @@ class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
             setState(() {
               errorMessage = error.toString();
             });
-            print(error.toString());
+            logger.e(error.toString());
           },
           onPageError: (page, error) {
             setState(() {
               errorMessage = '$page: ${error.toString()}';
             });
-            print('$page: ${error.toString()}');
+            logger.e('$page: ${error.toString()}');
           },
-          onViewCreated: (PDFViewController pdfViewController) {
-            global.pdfViewController = pdfViewController;
+          onViewCreated: (PDFViewController controller) {
+            pdfViewController = controller;
           },
           onLinkHandler: (String? uri) {
-            print('goto uri: $uri');
+            logger.d('goto uri: $uri');
           },
           onPageChanged: (int? page, int? total) {
-            print('page change: $page/$total');
+            logger.d('page change: $page/$total');
             setState(() {
               currentPage = page ?? 0;
             });

@@ -5,6 +5,7 @@ import 'package:bpm_turner/global.dart';
 import 'package:bpm_turner/pdf_view.dart';
 import 'package:bpm_turner/route/editor_route.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:bpm_turner/model/sample/rach_op17.dart' as rach;
 
@@ -123,15 +124,23 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
         body: SafeArea(
             child: Stack(
               children: <Widget>[
-                InkWell(
-                  onTap: onScreenTab,
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: double.infinity,
-                    child: PDFScreen(key: pdfWidgetKey, pdfPath: _pdfPath, sheet: rach.sheet),
-                  ),
-                ),
-                AnimatedOpacity(
+        InkWell(
+          onTap: onScreenTab,
+          child: SizedBox(
+            width: double.infinity,
+            height: double.infinity,
+            child: RawGestureDetector(gestures: {
+              AllowMultipleGestureRecognizer: GestureRecognizerFactoryWithHandlers<AllowMultipleGestureRecognizer>(
+                () => AllowMultipleGestureRecognizer(), //constructor
+                (AllowMultipleGestureRecognizer instance) {
+                  //initializer
+                  instance.onTap = onScreenTab;
+                },
+              )
+            }, child: PDFScreen(key: pdfWidgetKey, pdfPath: _pdfPath, sheet: rach.sheet)),
+          ),
+        ),
+        AnimatedOpacity(
                   duration: const Duration(milliseconds: 400),
                   opacity: _controlOpacity,
                   child: Align(
@@ -197,5 +206,12 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
                 ),
               ],
             )));
+  }
+}
+
+class AllowMultipleGestureRecognizer extends TapGestureRecognizer {
+  @override
+  void rejectGesture(int pointer) {
+    acceptGesture(pointer);
   }
 }
