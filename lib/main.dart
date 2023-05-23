@@ -39,10 +39,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
+  final double iconSize = 40;
+
   var _pdfPath = "";
   var _bpm = 140;
   var _isPlaying = false;
   var _controlOpacity = 0.0;
+  Timer? _controlTabTimer;
 
   // TODO - Implement pick sheet.
   var sheet = rach.sheet;
@@ -98,8 +101,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           barIndex = 0;
           logger.d("Line changed to ${bar.lineIndex}");
         },
-        pageChangeCallback: (pageIndex) =>
-            {logger.d("Page changed to ${pageIndex + 1}"), pdfViewController?.setPage(pageIndex + 1)});
+        pageChangeCallback: (pageIndex) {
+          logger.d("Page changed to ${pageIndex + 1}");
+          pdfViewController?.setPage(pageIndex + 1);
+        });
   }
 
   void pause() {
@@ -124,8 +129,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       logger.d("InkWell tap!");
       if (_controlOpacity == 0) {
         _controlOpacity = 0.5;
-        Timer(const Duration(milliseconds: 3000), () => setState(() => _controlOpacity = 0));
+        _controlTabTimer?.cancel();
+        _controlTabTimer = Timer(const Duration(milliseconds: 3000), () => setState(() => _controlOpacity = 0));
       } else {
+        _controlTabTimer?.cancel();
         _controlOpacity = 0;
       }
     });
@@ -153,22 +160,29 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     child: Container(
                         color: Colors.black26,
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             IconButton(
-                                onPressed: () {
-                                  setBpm(_bpm - 5);
-                                },
-                                icon: const Icon(Icons.remove)),
+                                onPressed: () => setBpm(_bpm - 5),
+                                iconSize: iconSize,
+                                icon: const Icon(Icons.remove)
+                            ),
                             Text(
                               _bpm.toString(),
                               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                             ),
-                            IconButton(onPressed: () => setBpm(_bpm + 5), icon: const Icon(Icons.add)),
                             IconButton(
+                                onPressed: () => setBpm(_bpm + 5),
+                                iconSize: iconSize,
+                                icon: const Icon(Icons.add)
+                            ),
+                            IconButton(
+                              iconSize: iconSize,
                               icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
                               onPressed: _isPlaying ? pause : startPlay,
                             ),
                             IconButton(
+                              iconSize: iconSize,
                               icon: const Icon(Icons.stop),
                               onPressed: stop,
                             ),
@@ -183,7 +197,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     child: Container(
                         color: Colors.black26,
                         child: Row(
-                          children: [IconButton(onPressed: _showPickFile, icon: const Icon(Icons.file_open))],
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [IconButton(onPressed: _showPickFile, iconSize: iconSize,   icon: const Icon(Icons.file_open))],
                         ))),
               ),
             ],
