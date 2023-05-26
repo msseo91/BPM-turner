@@ -33,6 +33,7 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
   var overlayController = OverlayController();
   var pdfWidgetKey = GlobalKey();
   var showControl = false;
+  var _makeMetronomeSound = false;
 
   @override
   void initState() {
@@ -119,6 +120,13 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
     });
   }
 
+  void toggleMetronome() {
+    setState(() {
+      _makeMetronomeSound = !_makeMetronomeSound;
+      sheet.playMetronome = _makeMetronomeSound;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -169,6 +177,11 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
                                 iconSize: iconSize,
                                 icon: const Icon(Icons.stop),
                                 onPressed: stop,
+                              ),
+                              IconButton(
+                                iconSize: iconSize,
+                                icon: Icon(_makeMetronomeSound ? Icons.volume_up : Icons.volume_off),
+                                onPressed: toggleMetronome,
                               ),
                             ],
                           ))),

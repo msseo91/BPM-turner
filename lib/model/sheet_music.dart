@@ -18,6 +18,8 @@ class TempoSheet {
 
   final String savedPath;
 
+  var playMetronome = false;
+
   /// Array of bar
   List<Page> pages = [];
 
@@ -50,8 +52,10 @@ class TempoSheet {
         return;
       }
 
-      player.seek(const Duration(seconds: 0));
-      player.resume();
+      if(playMetronome) {
+        player.seek(const Duration(seconds: 0));
+        player.resume();
+      }
 
       if (bar.halfBar) {
         barCallback?.call(bar, duration.inMilliseconds);
