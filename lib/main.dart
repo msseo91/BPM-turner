@@ -1,4 +1,5 @@
 import 'package:bpm_turner/route/music_route.dart';
+import 'package:bpm_turner/theme/color_schemes.g.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,10 +15,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'BPM turner',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
+      darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
       home: const MusicRoute(),
     );
   }
