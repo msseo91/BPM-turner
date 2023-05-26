@@ -27,7 +27,7 @@ class Bar {
   /// If this bar is last bar in page, this value is true.
   bool lastBarInPage;
 
-  // If this bar is last bar in line, this value is true.
+  /// If this bar is last bar in line, this value is true.
   bool lastBarInLine;
 
   /// If this bar is half bar, this value is true.
