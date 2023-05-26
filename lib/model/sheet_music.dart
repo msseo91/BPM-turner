@@ -5,7 +5,6 @@ import 'package:bpm_turner/global.dart';
 import 'package:bpm_turner/model/sheet_bar.dart';
 import 'package:bpm_turner/model/sheet_line.dart';
 import 'package:bpm_turner/model/sheet_page.dart';
-import 'package:logger/logger.dart';
 
 class TempoSheet {
   TempoSheet(
