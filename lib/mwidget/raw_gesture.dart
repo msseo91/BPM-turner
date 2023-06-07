@@ -20,18 +20,21 @@ class RawGestureCatcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RawGestureDetector(gestures: {
-      AllowMultipleGestureRecognizer: GestureRecognizerFactoryWithHandlers<AllowMultipleGestureRecognizer>(
-            () => AllowMultipleGestureRecognizer(), //constructor
-            (AllowMultipleGestureRecognizer instance) {
-          //initializer
-          instance.onTap = onTap;
-          instance.onTapDown = onTapDown;
-          instance.onTapUp = onTapUp;
-        },
-      )
-    },
-    child: child,);
+    return RawGestureDetector(
+      gestures: {
+        AllowMultipleGestureRecognizer: GestureRecognizerFactoryWithHandlers<AllowMultipleGestureRecognizer>(
+          () => AllowMultipleGestureRecognizer(), //constructor
+          (AllowMultipleGestureRecognizer instance) {
+            //initializer
+            instance.onTap = onTap;
+            instance.onTapDown = onTapDown;
+            instance.onTapUp = onTapUp;
+          },
+        )
+      },
+      behavior: HitTestBehavior.translucent,
+      child: child,
+    );
   }
 }
 

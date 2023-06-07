@@ -127,98 +127,99 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
     var colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-        body: SafeArea(
-            child: Stack(
-      children: <Widget>[
-        InkWell(
-          onTap: onScreenTab,
-          child: SizedBox(
-            width: double.infinity,
-            height: double.infinity,
-            child: RawGestureCatcher(
-              onTap: onScreenTab,
-              child: PDFScreen(key: pdfWidgetKey, pdfPath: _pdfPath, sheet: rach.sheet),
+      body: SafeArea(
+        child: Stack(
+          children: <Widget>[
+            SizedBox(
+              width: double.infinity,
+              height: double.infinity,
+              child: PDFScreen(
+                key: pdfWidgetKey,
+                pdfPath: _pdfPath,
+                sheet: rach.sheet,
+                onScreenTab: onScreenTab,
+              ),
             ),
-          ),
+            AnimatedOpacity(
+              duration: const Duration(milliseconds: 400),
+              opacity: _controlOpacity,
+              child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Container(
+                      color: colors.secondaryContainer,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                              onPressed: () => setBpm(_bpm - 5),
+                              iconSize: iconSize,
+                              color: colors.onSecondaryContainer,
+                              icon: const Icon(Icons.remove)),
+                          Text(
+                            _bpm.toString(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: colors.onSecondaryContainer,
+                            ),
+                          ),
+                          IconButton(
+                              onPressed: () => setBpm(_bpm + 5),
+                              iconSize: iconSize,
+                              color: colors.onSecondaryContainer,
+                              icon: const Icon(Icons.add)),
+                          IconButton(
+                            iconSize: iconSize,
+                            color: colors.onSecondaryContainer,
+                            icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
+                            onPressed: _isPlaying ? pause : startPlay,
+                          ),
+                          IconButton(
+                            iconSize: iconSize,
+                            color: colors.onSecondaryContainer,
+                            icon: const Icon(Icons.stop),
+                            onPressed: stop,
+                          ),
+                          IconButton(
+                            iconSize: iconSize,
+                            color: colors.onSecondaryContainer,
+                            icon: Icon(_makeMetronomeSound ? Icons.volume_up : Icons.volume_off),
+                            onPressed: toggleMetronome,
+                          ),
+                        ],
+                      ))),
+            ),
+            AnimatedOpacity(
+              duration: const Duration(milliseconds: 400),
+              opacity: _controlOpacity,
+              child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                      color: colors.secondaryContainer,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => EditorRoute(pdfPath: _pdfPath)),
+                                );
+                              },
+                              iconSize: iconSize,
+                              color: colors.onSecondaryContainer,
+                              icon: const Icon(Icons.edit_note)),
+                          IconButton(
+                              onPressed: _showPickFile,
+                              iconSize: iconSize,
+                              color: colors.onSecondaryContainer,
+                              icon: const Icon(Icons.file_open))
+                        ],
+                      ))),
+            ),
+          ],
         ),
-        AnimatedOpacity(
-          duration: const Duration(milliseconds: 400),
-          opacity: _controlOpacity,
-          child: Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                  color: colors.secondaryContainer,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                          onPressed: () => setBpm(_bpm - 5),
-                          iconSize: iconSize,
-                          color: colors.onSecondaryContainer,
-                          icon: const Icon(Icons.remove)),
-                      Text(
-                        _bpm.toString(),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: colors.onSecondaryContainer,
-                        ),
-                      ),
-                      IconButton(
-                          onPressed: () => setBpm(_bpm + 5),
-                          iconSize: iconSize,
-                          color: colors.onSecondaryContainer,
-                          icon: const Icon(Icons.add)),
-                      IconButton(
-                        iconSize: iconSize,
-                        color: colors.onSecondaryContainer,
-                        icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
-                        onPressed: _isPlaying ? pause : startPlay,
-                      ),
-                      IconButton(
-                        iconSize: iconSize,
-                        color: colors.onSecondaryContainer,
-                        icon: const Icon(Icons.stop),
-                        onPressed: stop,
-                      ),
-                      IconButton(
-                        iconSize: iconSize,
-                        color: colors.onSecondaryContainer,
-                        icon: Icon(_makeMetronomeSound ? Icons.volume_up : Icons.volume_off),
-                        onPressed: toggleMetronome,
-                      ),
-                    ],
-                  ))),
-        ),
-        AnimatedOpacity(
-          duration: const Duration(milliseconds: 400),
-          opacity: _controlOpacity,
-          child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                  color: colors.secondaryContainer,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => EditorRoute(pdfPath: _pdfPath)),
-                            );
-                          },
-                          iconSize: iconSize,
-                          color: colors.onSecondaryContainer,
-                          icon: const Icon(Icons.edit_note)),
-                      IconButton(
-                          onPressed: _showPickFile,
-                          iconSize: iconSize,
-                          color: colors.onSecondaryContainer,
-                          icon: const Icon(Icons.file_open))
-                    ],
-                  ))),
-        ),
-      ],
-    )));
+      ),
+    );
   }
 }
