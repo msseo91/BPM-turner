@@ -36,6 +36,8 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+
+    sheet.init(this);
   }
 
   void _showPickFile() async {
@@ -63,17 +65,10 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
     });
 
     final RenderBox renderBox = pdfWidgetKey.currentContext?.findRenderObject() as RenderBox;
-    final Size size = renderBox.size;
-    final baseH = size.height / 3;
-    final baseW = size.width / 5;
 
     var barIndex = 0;
-    sheet.play(_bpm, barCallback: (bar, duration) {
+    sheet.play(_bpm, this, context, renderBox.size, barCallback: (bar, duration) {
       logger.d("Bar $barIndex is started.");
-      var l = baseW * barIndex;
-      var t = baseH * bar.lineIndex;
-      overlayController.draw(
-          context, Duration(milliseconds: duration), this, Rect.fromLTRB(l, t, l + baseW, t + baseH));
       barIndex++;
     }, lineChangeCallback: (bar) {
       barIndex = 0;

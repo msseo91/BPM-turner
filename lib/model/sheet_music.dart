@@ -5,6 +5,8 @@ import 'package:bpm_turner/global.dart';
 import 'package:bpm_turner/model/sheet_bar.dart';
 import 'package:bpm_turner/model/sheet_line.dart';
 import 'package:bpm_turner/model/sheet_page.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 class TempoSheet {
   TempoSheet(
@@ -20,79 +22,161 @@ class TempoSheet {
   var playMetronome = false;
 
   /// Array of bar
-  List<Page> pages = [];
+  List<MusicPage> pages = [];
 
   /// Current bar index in sheet.
   int currentBarIndex = 0;
   int currentPageIndex = 0;
   int currentLineIndex = 0;
 
-  Timer? _timer;
   var player = AudioPlayer()..setSource(AssetSource('metronome.mp3'));
 
+  Ticker? _measureTicker;
+  Ticker? _playTicker;
+
+  OverlayEntry? _lastOverlay;
+  var tickTime = 0;
+
+  void init(TickerProvider tickerProvider) {
+    var count = 0;
+    _measureTicker = tickerProvider.createTicker((elapsed) {
+      count++;
+      if(count > 10) {
+        tickTime = elapsed.inMilliseconds ~/ 10;
+        logger.i("Tick time is $tickTime");
+        _measureTicker?.stop();
+      }
+    });
+    _measureTicker?.start();
+  }
+
   Future<void> play(
-    int bpm, {
+    int bpm,
+    TickerProvider tickerProvider,
+    BuildContext context,
+    Size screenSize,{
     Function(int)? segCallback,
     Function(Bar, int)? barCallback,
     Function(Bar)? lineChangeCallback,
     Function(int)? pageChangeCallback,
   }) async {
     // We assume all duration is same in sheet... For now.
-    var duration = Duration(milliseconds: bpmDuration(bpm));
+    var halfBarDuration = Duration(milliseconds: bpmDuration(bpm));
     var isOneTickPlayed = false;
-    player = AudioPlayer()..setSource(AssetSource('metronome.mp3'));
+    player = AudioPlayer()
+      ..setSource(AssetSource('metronome.mp3'))
+      ..seek(const Duration(seconds: 0));
 
-    _timer = Timer.periodic(duration, (timer) {
-      var bar = currentBar();
-      if(bar == null) {
-        // End of music.
-        logger.i("End of music");
-        timer.cancel();
-        return;
-      }
+    var tickCount = halfBarDuration.inMilliseconds ~/ tickTime;
+    logger.i("1/2 bar duration is ${halfBarDuration.inMilliseconds}ms, tick count is $tickCount");
+    var currentTickCount = 0;
 
-      if(playMetronome) {
-        player.seek(const Duration(seconds: 0));
-        player.resume();
-      }
+    // TODO - Change bar size after impl editor.
+    final barHeight = screenSize.height / 3;
+    final barWidth = screenSize.width / 5 / 2;
+    final oneTickWidth = barWidth / tickCount;
+    var currentLeft = 0.0;
+    var currentTop = 0.0;
+    var isFirst = true;
+    logger.i("Bar size is $barWidth x $barHeight, tick width is $oneTickWidth");
 
-      if (bar.halfBar) {
-        barCallback?.call(bar, duration.inMilliseconds);
-        if (bar.lastBarInLine) {
-          lineChangeCallback?.call(bar);
+    _playTicker = tickerProvider.createTicker((elapsed) {
+      drawProgressBar(context, currentLeft, currentTop, barHeight);
+      // If it is first tick, play first sound.
+      if(isFirst) {
+        isFirst = false;
+        if(playMetronome) {
+          player.resume();
+          player.seek(const Duration(seconds: 0));
         }
-        if (bar.lastBarInPage) {
-          pageChangeCallback?.call(currentPageIndex);
-        }
-        _nextBar();
-      } else if (isOneTickPlayed) {
-        isOneTickPlayed = false;
-        _nextBar();
       } else {
-        barCallback?.call(bar, duration.inMilliseconds * 2);
-        if (bar.lastBarInLine) {
-          lineChangeCallback?.call((bar));
+        currentLeft += oneTickWidth;
+        currentTickCount++;
+      }
+      // Half bar
+      if(currentTickCount >= tickCount) {
+        currentTickCount = 0;
+
+        var bar = currentBar();
+        if(bar == null) {
+          // End of music.
+          logger.i("End of music");
+          _playTicker?.stop();
+          return;
         }
-        if (bar.lastBarInPage) {
-          pageChangeCallback?.call(currentPageIndex);
+
+        if(playMetronome) {
+          player.resume();
+          player.seek(const Duration(seconds: 0));
         }
-        isOneTickPlayed = true;
+
+        if (bar.halfBar) {
+          barCallback?.call(bar, halfBarDuration.inMilliseconds);
+          if (bar.lastBarInLine) {
+            currentTop += barHeight;
+            currentLeft = 0;
+            lineChangeCallback?.call(bar);
+          }
+          if (bar.lastBarInPage) {
+            currentTop = 0;
+            currentLeft = 0;
+            pageChangeCallback?.call(currentPageIndex);
+          }
+          _nextBar();
+        } else if (isOneTickPlayed) {
+          isOneTickPlayed = false;
+          _nextBar();
+        } else {
+          barCallback?.call(bar, halfBarDuration.inMilliseconds * 2);
+          if (bar.lastBarInLine) {
+            currentTop += barHeight;
+            currentLeft = 0;
+            lineChangeCallback?.call((bar));
+          }
+          if (bar.lastBarInPage) {
+            currentTop = 0;
+            currentLeft = 0;
+            pageChangeCallback?.call(currentPageIndex);
+          }
+          isOneTickPlayed = true;
+        }
       }
     });
+    _playTicker?.start();
+  }
+
+  void drawProgressBar(BuildContext context, double left, double top, double height) {
+    _lastOverlay?.remove();
+    _lastOverlay = OverlayEntry(
+      builder: (BuildContext context) {
+        return Positioned(
+          left: left,
+          top: top,
+          height: height,
+          child: const VerticalDivider(
+            color: Colors.red,
+          ),
+        );
+      },
+    );
+
+    Overlay.of(context).insert(_lastOverlay!);
   }
 
   void pause() {
-    _timer?.cancel();
+    _playTicker?.stop();
   }
 
   void stop() {
-    _timer?.cancel();
+    _playTicker?.stop();
+    _lastOverlay?.remove();
+    _lastOverlay = null;
     currentBarIndex = 0;
     currentLineIndex = 0;
     currentPageIndex = 0;
   }
 
-  Page? currentPage() {
+  MusicPage? currentPage() {
     if(pages.length <= currentPageIndex) return null;
     return pages[currentPageIndex];
   }
@@ -113,7 +197,7 @@ class TempoSheet {
 
   /// Turn to next page.
   /// @return next page if exists, null if not.
-  Page? _nextPage() {
+  MusicPage? _nextPage() {
     currentLineIndex = 0;
     currentBarIndex = 0;
     currentPageIndex++;

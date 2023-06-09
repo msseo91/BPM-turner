@@ -1,9 +1,9 @@
 
 import 'package:bpm_turner/model/sheet_line.dart';
 
-class Page {
+class MusicPage {
   final int index;
   final List<Line> lines;
 
-  Page(this.index, this.lines);
+  MusicPage(this.index, this.lines);
 }
