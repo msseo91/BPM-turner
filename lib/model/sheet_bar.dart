@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 const (int, int) timeSignature44 = (4, 4);
 const (int, int) timeSignature34 = (3, 4);
 const (int, int) timeSignature24 = (2, 4);
@@ -5,14 +7,13 @@ const (int, int) timeSignature68 = (6, 8);
 const (int, int) timeSignature38 = (3, 8);
 
 class Bar {
-  Bar(
-    this.timeSignature, {
-    this.tempoParam = 0,
-    this.lastBarInPage = false,
-    this.lastBarInLine = false,
-    this.halfBar = false,
-    this.lineIndex = 0,
-  });
+  Bar(this.timeSignature,
+      {this.tempoParam = 0,
+      this.lastBarInPage = false,
+      this.lastBarInLine = false,
+      this.halfBar = false,
+      this.lineIndex = 0,
+      this.barRect = Rect.zero});
 
   /// Time signature. Ex) 4/4
   /// (3,8) means 3/8
@@ -35,6 +36,9 @@ class Bar {
 
   /// Index of line.
   int lineIndex;
+
+  /// Rect of bar. This represent position of bar in page.
+  Rect barRect;
 }
 
 /// *** Basic idea ***
@@ -62,7 +66,7 @@ extension BarCalculator on Bar {
   /// Duration of this bar in millisecond.
   int duration(int bpm) {
     var base = ((60 * 1000) ~/ bpm) * 2;
-    if(halfBar) base ~/= 2;
+    if (halfBar) base ~/= 2;
     return base;
   }
 }
