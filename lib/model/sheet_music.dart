@@ -69,33 +69,30 @@ class TempoSheet {
 
     var tickCount = halfBarDuration.inMilliseconds ~/ tickTime;
     logger.i("1/2 bar duration is ${halfBarDuration.inMilliseconds}ms, tick count is $tickCount");
-    var currentTickCount = 0;
 
     // TODO - Change bar size after impl editor.
     final barHeight = screenSize.height / 3;
-    final barWidth = screenSize.width / 5 / 2;
-    final oneTickWidth = barWidth / tickCount;
+    final halfBarWidth = screenSize.width / 5 / 2;
+    final oneTickWidth = halfBarWidth / tickCount;
     var currentLeft = 0.0;
     var currentTop = 0.0;
-    var isFirst = true;
-    logger.i("Bar size is $barWidth x $barHeight, tick width is $oneTickWidth");
+    logger.i("Bar size is $halfBarWidth x $barHeight, tick width is $oneTickWidth");
+    var lastBeepElapsed = 0;
+    var lastTickElapse = 0;
 
     _playTicker = tickerProvider.createTicker((elapsed) {
+      var elapsedFromLast = elapsed.inMilliseconds - lastBeepElapsed;
+      var elapsedBetweenTick = elapsed.inMilliseconds - lastTickElapse;
+      var measuredTickCount = halfBarDuration.inMilliseconds / elapsedBetweenTick;
+      lastTickElapse = elapsed.inMilliseconds;
+
       drawProgressBar(context, currentLeft, currentTop, barHeight);
-      // If it is first tick, play first sound.
-      if(isFirst) {
-        isFirst = false;
-        if(playMetronome) {
-          player.resume();
-          player.seek(const Duration(seconds: 0));
-        }
-      } else {
-        currentLeft += oneTickWidth;
-        currentTickCount++;
-      }
+      currentLeft += halfBarWidth / measuredTickCount;
+
       // Half bar
-      if(currentTickCount >= tickCount) {
-        currentTickCount = 0;
+      if(elapsedFromLast >= halfBarDuration.inMilliseconds) {
+        lastBeepElapsed = elapsed.inMilliseconds;
+        logger.i("Elapse between: $elapsedFromLast ms");
 
         var bar = currentBar();
         if(bar == null) {
