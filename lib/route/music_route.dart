@@ -1,14 +1,13 @@
 import 'dart:async';
 
 import 'package:bpm_turner/global.dart';
-import 'package:bpm_turner/pdf_view.dart';
 import 'package:bpm_turner/route/editor_route.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:bpm_turner/model/sample/rach_op17.dart' as rach;
-
-import '../mwidget/raw_gesture.dart';
+import 'package:pdf_render/pdf_render.dart';
 import '../overlay/overlay_progress.dart';
+import 'dart:ui' as ui;
 
 class MusicRoute extends StatefulWidget {
   const MusicRoute({super.key});
@@ -21,15 +20,17 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
   final double iconSize = 40;
 
   var _pdfPath = "";
-  var _bpm = 140;
+  var _bpm = 160;
   var _isPlaying = false;
   var _controlOpacity = 0.0;
   Timer? _controlTabTimer;
 
   // TODO - Implement pick sheet.
   var sheet = rach.sheet;
+  List<ui.Image> sheetImages = [];
+  var currentPage = 0;
   var overlayController = OverlayController();
-  var pdfWidgetKey = GlobalKey();
+  var sheetImageKey = GlobalKey();
   var showControl = false;
   var _makeMetronomeSound = false;
 
@@ -41,14 +42,32 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
   }
 
   void _showPickFile() async {
-    final pickResult = await FilePicker.platform.pickFiles(allowMultiple: false);
+    final pickResult =
+        await FilePicker.platform.pickFiles(allowMultiple: false);
 
     // if no file is picked
     if (pickResult == null) return;
 
     setState(() {
       _pdfPath = pickResult.files.first.path ?? "";
+      _makePdfImage(_pdfPath).then((value) => setState(() {
+            sheetImages = value;
+            currentPage = 0;
+          }));
     });
+  }
+
+  Future<List<ui.Image>> _makePdfImage(String path) async {
+    PdfDocument doc = await PdfDocument.openFile(path);
+    int pageCount = doc.pageCount;
+    List<ui.Image> images = [];
+    for (var i = 1; i <= pageCount; i++) {
+      PdfPage page = await doc.getPage(i);
+      PdfPageImage pageImage = await page.render();
+      var image = await pageImage.createImageIfNotAvailable();
+      images.add(image);
+    }
+    return images;
   }
 
   void setBpm(int toBpm) {
@@ -58,16 +77,16 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
   }
 
   Future<void> startPlay() async {
-    if (pdfViewController == null) return;
-
     setState(() {
       _isPlaying = true;
     });
 
-    final RenderBox renderBox = pdfWidgetKey.currentContext?.findRenderObject() as RenderBox;
+    final RenderBox renderBox =
+        sheetImageKey.currentContext?.findRenderObject() as RenderBox;
 
     var barIndex = 0;
-    sheet.play(_bpm, this, context, renderBox.size, barCallback: (bar, duration) {
+    sheet.play(_bpm, this, context, renderBox.size,
+        barCallback: (bar, duration) {
       logger.d("Bar $barIndex is started.");
       barIndex++;
     }, lineChangeCallback: (bar) {
@@ -75,7 +94,9 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
       logger.d("Line changed to ${bar.lineIndex}");
     }, pageChangeCallback: (pageIndex) {
       logger.d("Page changed to ${pageIndex + 1}");
-      pdfViewController?.setPage(pageIndex + 1);
+      setState(() {
+        currentPage = pageIndex + 1;
+      });
     });
   }
 
@@ -90,8 +111,8 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
   void stop() {
     setState(() {
       _isPlaying = false;
+      currentPage = 0;
     });
-    pdfViewController?.setPage(0);
     overlayController.clear();
     sheet.stop();
   }
@@ -102,10 +123,27 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
       if (_controlOpacity == 0) {
         _controlOpacity = 0.5;
         _controlTabTimer?.cancel();
-        _controlTabTimer = Timer(const Duration(milliseconds: 3000), () => setState(() => _controlOpacity = 0));
+        _controlTabTimer = Timer(const Duration(milliseconds: 3000),
+            () => setState(() => _controlOpacity = 0));
       } else {
         _controlTabTimer?.cancel();
         _controlOpacity = 0;
+      }
+    });
+  }
+
+  void _nextPage() {
+    setState(() {
+      if(sheetImages.length - 1 > currentPage) {
+        currentPage++;
+      }
+    });
+  }
+
+  void _prevPage() {
+    setState(() {
+      if(currentPage > 0) {
+        currentPage--;
       }
     });
   }
@@ -125,14 +163,25 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
       body: SafeArea(
         child: Stack(
           children: <Widget>[
-            SizedBox(
-              width: double.infinity,
-              height: double.infinity,
-              child: PDFScreen(
-                key: pdfWidgetKey,
-                pdfPath: _pdfPath,
-                sheet: rach.sheet,
-                onScreenTab: onScreenTab,
+            GestureDetector(
+              onTap: onScreenTab,
+              behavior: HitTestBehavior.translucent,
+              onPanUpdate: (details) {
+                // Swiping in right direction.
+                if (details.delta.dx > 0) {
+                  _nextPage();
+                }
+                // Swiping in left direction.
+                if (details.delta.dx < 0) {
+                  _prevPage();
+                }
+              },
+              child: SizedBox(
+                width: double.infinity,
+                height: double.infinity,
+                child: sheetImages.isEmpty
+                    ? const SizedBox()
+                    : RawImage(key: sheetImageKey, image: sheetImages[currentPage]),
               ),
             ),
             AnimatedOpacity(
@@ -166,7 +215,8 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
                           IconButton(
                             iconSize: iconSize,
                             color: colors.onSecondaryContainer,
-                            icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
+                            icon: Icon(
+                                _isPlaying ? Icons.pause : Icons.play_arrow),
                             onPressed: _isPlaying ? pause : startPlay,
                           ),
                           IconButton(
@@ -178,7 +228,9 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
                           IconButton(
                             iconSize: iconSize,
                             color: colors.onSecondaryContainer,
-                            icon: Icon(_makeMetronomeSound ? Icons.volume_up : Icons.volume_off),
+                            icon: Icon(_makeMetronomeSound
+                                ? Icons.volume_up
+                                : Icons.volume_off),
                             onPressed: toggleMetronome,
                           ),
                         ],
@@ -198,7 +250,9 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
                               onPressed: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => EditorRoute(pdfPath: _pdfPath)),
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          EditorRoute(pdfPath: _pdfPath)),
                                 );
                               },
                               iconSize: iconSize,

@@ -74,7 +74,6 @@ class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
               logger.e('$page: ${error.toString()}');
             },
             onViewCreated: (PDFViewController controller) {
-              pdfViewController = controller;
             },
             onLinkHandler: (String? uri) {
               logger.d('goto uri: $uri');
