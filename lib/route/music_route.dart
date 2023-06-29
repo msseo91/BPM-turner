@@ -62,6 +62,7 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
     int pageCount = doc.pageCount;
     List<ui.Image> images = [];
     for (var i = 1; i <= pageCount; i++) {
+      logger.d("Making $i page to image.");
       PdfPage page = await doc.getPage(i);
       PdfPageImage pageImage = await page.render();
       var image = await pageImage.createImageIfNotAvailable();
@@ -137,6 +138,7 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
       if(sheetImages.length - 1 > currentPage) {
         currentPage++;
       }
+      logger.d("nextPage=$currentPage");
     });
   }
 
@@ -145,6 +147,7 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
       if(currentPage > 0) {
         currentPage--;
       }
+      logger.d("prevPage=$currentPage");
     });
   }
 
@@ -166,13 +169,11 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
             GestureDetector(
               onTap: onScreenTab,
               behavior: HitTestBehavior.translucent,
-              onPanUpdate: (details) {
-                // Swiping in right direction.
-                if (details.delta.dx > 0) {
+              onHorizontalDragEnd: (dragEndDetails) {
+                var velocity = dragEndDetails.primaryVelocity ?? 0;
+                if (velocity < 0) {
                   _nextPage();
-                }
-                // Swiping in left direction.
-                if (details.delta.dx < 0) {
+                } else if (velocity > 0) {
                   _prevPage();
                 }
               },

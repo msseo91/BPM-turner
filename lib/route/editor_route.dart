@@ -13,7 +13,7 @@ class EditorRoute extends StatefulWidget {
     required this.pdfPath,
   });
 
-  String pdfPath;
+  final String pdfPath;
 
   @override
   State createState() => _EditorRouteState();
