@@ -39,6 +39,14 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
     super.initState();
 
     sheet.init(this);
+
+    // Open default page.
+    setState(() {
+      _makePdfImage(assetName: "assets/rach-tarantella.pdf").then((value) => setState(() {
+        sheetImages = value;
+        currentPage = 0;
+      }));
+    });
   }
 
   void _showPickFile() async {
@@ -50,15 +58,17 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
 
     setState(() {
       _pdfPath = pickResult.files.first.path ?? "";
-      _makePdfImage(_pdfPath).then((value) => setState(() {
+      _makePdfImage(path: _pdfPath).then((value) => setState(() {
             sheetImages = value;
             currentPage = 0;
           }));
     });
   }
 
-  Future<List<ui.Image>> _makePdfImage(String path) async {
-    PdfDocument doc = await PdfDocument.openFile(path);
+  Future<List<ui.Image>> _makePdfImage({String? path, String? assetName}) async {
+    var doc = path != null ? await PdfDocument.openFile(path)
+        : await PdfDocument.openAsset(assetName!);
+
     int pageCount = doc.pageCount;
     List<ui.Image> images = [];
     for (var i = 1; i <= pageCount; i++) {
