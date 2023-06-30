@@ -75,8 +75,7 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
       logger.d("Making $i page to image.");
       PdfPage page = await doc.getPage(i);
       PdfPageImage pageImage = await page.render();
-      var image = await pageImage.createImageIfNotAvailable();
-      images.add(image);
+      images.add(await pageImage.createImageIfNotAvailable());
     }
     return images;
   }

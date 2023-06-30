@@ -20,6 +20,9 @@ class TempoSheet {
   final String savedPath;
 
   var playMetronome = false;
+  Size screenSize = const Size(0,0);
+
+  double halfBarWidth = 0;
 
   /// Array of bar
   List<MusicPage> pages = [];
@@ -71,14 +74,27 @@ class TempoSheet {
     logger.i("1/2 bar duration is ${halfBarDuration.inMilliseconds}ms, tick count is $tickCount");
 
     // TODO - Change bar size after impl editor.
+    this.screenSize = screenSize;
     final barHeight = screenSize.height / 3;
-    final halfBarWidth = screenSize.width / 5 / 2;
-    final oneTickWidth = halfBarWidth / tickCount;
+    var barCount = currentLine()?.bars.length ?? 5;
+    halfBarWidth = screenSize.width / barCount / 2;
     var currentLeft = 0.0;
     var currentTop = 0.0;
-    logger.i("Bar size is $halfBarWidth x $barHeight, tick width is $oneTickWidth");
+    logger.i("Bar size is $halfBarWidth x $barHeight");
     var lastBeepElapsed = 0;
     var lastTickElapse = 0;
+
+    void changeLine(Bar bar) {
+      currentTop += barHeight;
+      currentLeft = 0;
+      lineChangeCallback?.call((bar));
+    }
+
+    void changePage() {
+      currentTop = 0;
+      currentLeft = 0;
+      pageChangeCallback?.call(currentPageIndex);
+    }
 
     _playTicker = tickerProvider.createTicker((elapsed) {
       var elapsedFromLast = elapsed.inMilliseconds - lastBeepElapsed;
@@ -110,14 +126,10 @@ class TempoSheet {
         if (bar.halfBar) {
           barCallback?.call(bar, halfBarDuration.inMilliseconds);
           if (bar.lastBarInLine) {
-            currentTop += barHeight;
-            currentLeft = 0;
-            lineChangeCallback?.call(bar);
+            changeLine(bar);
           }
           if (bar.lastBarInPage) {
-            currentTop = 0;
-            currentLeft = 0;
-            pageChangeCallback?.call(currentPageIndex);
+            changePage();
           }
           _nextBar();
         } else if (isOneTickPlayed) {
@@ -126,14 +138,10 @@ class TempoSheet {
         } else {
           barCallback?.call(bar, halfBarDuration.inMilliseconds * 2);
           if (bar.lastBarInLine) {
-            currentTop += barHeight;
-            currentLeft = 0;
-            lineChangeCallback?.call((bar));
+            changeLine(bar);
           }
           if (bar.lastBarInPage) {
-            currentTop = 0;
-            currentLeft = 0;
-            pageChangeCallback?.call(currentPageIndex);
+            changePage();
           }
           isOneTickPlayed = true;
         }
@@ -212,6 +220,9 @@ class TempoSheet {
       currentBarIndex = 0;
       currentLineIndex++;
     }
+    // Update bar width.
+    var barCount = currentLine()?.bars.length ?? 5;
+    halfBarWidth = screenSize.width / barCount / 2;
 
     return currentLine();
   }
