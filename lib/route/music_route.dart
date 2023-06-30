@@ -262,7 +262,7 @@ class _MusicRouteState extends State<MusicRoute> with TickerProviderStateMixin {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          EditorRoute(pdfPath: _pdfPath)),
+                                          EditorRoute(sheetImages: sheetImages)),
                                 );
                               },
                               iconSize: iconSize,

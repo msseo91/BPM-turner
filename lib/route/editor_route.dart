@@ -1,7 +1,6 @@
 import 'package:bpm_turner/global.dart';
-import 'package:bpm_turner/mwidget/raw_gesture.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'dart:ui' as ui;
 
 /// This class is responsible to edit overlay of sheet music.
 /// - View sheet music..
@@ -10,10 +9,10 @@ import 'package:flutter_pdfview/flutter_pdfview.dart';
 class EditorRoute extends StatefulWidget {
   EditorRoute({
     super.key,
-    required this.pdfPath,
+    required this.sheetImages,
   });
 
-  final String pdfPath;
+  List<ui.Image> sheetImages = [];
 
   @override
   State createState() => _EditorRouteState();
@@ -22,8 +21,8 @@ class EditorRoute extends StatefulWidget {
 class _EditorRouteState extends State<EditorRoute> {
   bool _showToolbar = false;
   bool _isDrawingMode = false;
-
-  PDFViewController? _controller;
+  var sheetImageKey = GlobalKey();
+  var currentPage = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -33,18 +32,16 @@ class _EditorRouteState extends State<EditorRoute> {
         body: SafeArea(
       child: Stack(
         children: [
-          RawGestureCatcher(
+          GestureDetector(
             onTap: onScreenTab,
             //onTapDown: onTabDown,
             //onTapUp: onTabUp,
-            child: PDFView(
-              key: ValueKey(widget.pdfPath),
-              filePath: widget.pdfPath,
-              swipeHorizontal: true,
-              autoSpacing: false,
-              fitPolicy: FitPolicy.BOTH,
-              preventLinkNavigation: false,
-              onViewCreated: (c) => _controller = c,
+            child: SizedBox(
+              width: double.infinity,
+              height: double.infinity,
+              child: widget.sheetImages.isEmpty
+                  ? const SizedBox()
+                  : RawImage(key: sheetImageKey, image: widget.sheetImages[currentPage]),
             ),
           ),
           Align(
@@ -84,18 +81,21 @@ class _EditorRouteState extends State<EditorRoute> {
   }
 
   void turnPageBackward() async {
-    if(_controller == null) return;
-
-    var page = (await _controller!.getCurrentPage()) ?? 0;
-    if(page > 0) page -= 1;
-    _controller?.setPage(page);
+    setState(() {
+      if (currentPage > 0) {
+        currentPage--;
+      }
+      logger.d("prevPage=$currentPage");
+    });
   }
 
   void turnPageForward() async {
-    if(_controller == null) return;
-
-    var page = (await _controller!.getCurrentPage()) ?? 0;
-    _controller?.setPage(page + 1);
+    setState(() {
+      if (widget.sheetImages.length - 1 > currentPage) {
+        currentPage++;
+      }
+      logger.d("nextPage=$currentPage");
+    });
   }
 
   void onScreenTab() {
