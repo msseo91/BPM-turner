@@ -1,113 +1,98 @@
-import 'package:bpm_turner/global.dart';
-import 'package:flutter/material.dart';
-import 'dart:ui' as ui;
+import 'package:bpm_turner/editor/drawing_board.dart';
+import 'package:bpm_turner/editor/drawing_mode.dart';
+import 'package:bpm_turner/editor/sketch.dart';
+import 'package:flutter/material.dart' hide Image;
+import 'dart:ui';
+
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 /// This class is responsible to edit overlay of sheet music.
 /// - View sheet music..
 /// - Draw&Edit multiple overlay box.
 ///
-class EditorRoute extends StatefulWidget {
-  EditorRoute({
-    super.key,
+class EditorRoute extends HookWidget {
+  const EditorRoute({
+    Key? key,
     required this.sheetImages,
-  });
+  }): super(key: key);
 
-  List<ui.Image> sheetImages = [];
-
-  @override
-  State createState() => _EditorRouteState();
-}
-
-class _EditorRouteState extends State<EditorRoute> {
-  bool _showToolbar = false;
-  bool _isDrawingMode = false;
-  var sheetImageKey = GlobalKey();
-  var currentPage = 0;
+  final List<Image> sheetImages;
 
   @override
   Widget build(BuildContext context) {
+    final selectedColor = useState(Colors.red);
+    final strokeSize = useState<double>(2);
+    final eraserSize = useState<double>(30);
+    final drawingMode = useState(DrawingMode.square);
+    final filled = useState<bool>(false);
+    final polygonSides = useState<int>(3);
+    final backgroundImage = useState<Image?>(sheetImages[0]);
+    final currentPage = useState(0);
+    final drawOn = useState<bool>(true);
+
+    final canvasGlobalKey = GlobalKey();
+
+    ValueNotifier<Sketch?> currentSketch = useState(null);
+    ValueNotifier<List<Sketch>> allSketches = useState([]);
+
+    final animationController = useAnimationController(
+      duration: const Duration(milliseconds: 150),
+      initialValue: 1,
+    );
+
     var colors = Theme.of(context).colorScheme;
+
     return Scaffold(
-        //appBar: AppBar(title: const Text("Edit your sheet music overlay"), backgroundColor: colors.primaryContainer),
-        body: SafeArea(
-      child: Stack(
-        children: [
-          GestureDetector(
-            onTap: onScreenTab,
-            //onTapDown: onTabDown,
-            //onTapUp: onTabUp,
-            child: SizedBox(
-              width: double.infinity,
-              height: double.infinity,
-              child: widget.sheetImages.isEmpty
-                  ? const SizedBox()
-                  : RawImage(key: sheetImageKey, image: widget.sheetImages[currentPage]),
+        body: Stack(
+          children: [
+            DrawingBoard(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              drawingMode: drawingMode,
+              selectedColor: selectedColor,
+              strokeSize: strokeSize,
+              eraserSize: eraserSize,
+              sideBarController: animationController,
+              currentSketch: currentSketch,
+              allSketches: allSketches,
+              canvasGlobalKey: canvasGlobalKey,
+              filled: filled,
+              polygonSides: polygonSides,
+              backgroundImage: backgroundImage,
             ),
-          ),
-          Align(
-              alignment: Alignment.bottomCenter,
-              child: Opacity(
-                  opacity: 0.9,
-                  child: Container(
-                    padding: const EdgeInsets.all(7),
-                    color: colors.primaryContainer,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          onPressed: turnPageBackward,
-                          iconSize: 40,
-                          color: colors.onPrimary,
-                          icon: const Icon(Icons.arrow_back),
-                        ),
-                        IconButton(
-                          onPressed: turnPageForward,
-                          iconSize: 40,
-                          color: colors.onPrimary,
-                          icon: const Icon(Icons.arrow_forward),
-                        ),
-                        IconButton(
-                          iconSize: 40,
-                          color: colors.onPrimary,
-                          icon: Icon(_isDrawingMode ? Icons.edit : Icons.edit_off, color: colors.onTertiary),
-                          onPressed: () => setState(() => _isDrawingMode = !_isDrawingMode),
-                        ),
-                      ],
-                    ),
-                  )))
-        ],
-      ),
-    ));
-  }
-
-  void turnPageBackward() async {
-    setState(() {
-      if (currentPage > 0) {
-        currentPage--;
-      }
-      logger.d("prevPage=$currentPage");
-    });
-  }
-
-  void turnPageForward() async {
-    setState(() {
-      if (widget.sheetImages.length - 1 > currentPage) {
-        currentPage++;
-      }
-      logger.d("nextPage=$currentPage");
-    });
-  }
-
-  void onScreenTab() {
-    logger.d("Tab!");
-    setState(() => _showToolbar = !_showToolbar);
-  }
-
-  void onTabDown(TapDownDetails details) {
-    logger.d("Down x=${details.localPosition.dx}, y=${details.localPosition.dy}");
-  }
-
-  void onTabUp(TapUpDetails details) {
-    logger.d("Up x=${details.localPosition.dx}, y=${details.localPosition.dy}");
+            Align(
+                alignment: Alignment.bottomCenter,
+                child: Opacity(
+                    opacity: 0.9,
+                    child: Container(
+                      padding: const EdgeInsets.all(7),
+                      color: colors.primaryContainer,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            onPressed: () => backgroundImage.value = sheetImages[++currentPage.value],
+                            iconSize: 40,
+                            color: colors.onPrimaryContainer,
+                            icon: const Icon(Icons.arrow_back),
+                          ),
+                          IconButton(
+                            onPressed: () => backgroundImage.value = sheetImages[--currentPage.value],
+                            iconSize: 40,
+                            color: colors.onPrimaryContainer,
+                            icon: const Icon(Icons.arrow_forward),
+                          ),
+                          IconButton(
+                            iconSize: 40,
+                            color: colors.onPrimaryContainer,
+                            icon: Icon(drawOn.value ? Icons.edit : Icons.edit_off),
+                            onPressed: () => drawOn.value = !drawOn.value,
+                          ),
+                        ],
+                      ),
+                    )))
+          ],
+        )
+    );
   }
 }
