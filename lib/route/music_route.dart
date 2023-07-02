@@ -24,13 +24,14 @@ class MusicRoute extends HookWidget {
     final currentPage = useState(0);
     final sheetImages = useState<List<Image>>([]);
 
+    if(sheetImages.value.isEmpty) {
+      makePdfImage(assetName: "assets/rach-tarantella.pdf").then((value) => sheetImages.value = value);
+    }
+
     useValueChanged(pdfPath.value, (_, __) {
-      if (pdfPath.value == null) {
-        // Load default sheet.
-        makePdfImage(assetName: "assets/rach-tarantella.pdf").then((value) => sheetImages.value = value);
-      } else {
+      if (pdfPath.value != null) {
         // Load pdf
-        makePdfImage(path: pdfPath.value).then((value) => sheetImages.value = value);
+      makePdfImage(path: pdfPath.value).then((value) => sheetImages.value = value);
       }
       return true;
     });
