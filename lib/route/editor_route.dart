@@ -26,7 +26,7 @@ class EditorRoute extends HookWidget {
     final drawingMode = useState(DrawingMode.square);
     final filled = useState<bool>(false);
     final polygonSides = useState<int>(3);
-    final backgroundImage = useState<Image?>(sheetImages[0]);
+    final backgroundImage = useState<Image?>(sheetImages.firstOrNull);
     final currentPage = useState(0);
     final drawOn = useState<bool>(true);
 
