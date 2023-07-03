@@ -1,6 +1,7 @@
 import 'package:bpm_turner/editor/drawing_board.dart';
 import 'package:bpm_turner/editor/drawing_mode.dart';
 import 'package:bpm_turner/editor/sketch.dart';
+import 'package:bpm_turner/global.dart';
 import 'package:flutter/material.dart' hide Image;
 import 'dart:ui';
 
@@ -42,6 +43,20 @@ class EditorRoute extends HookWidget {
 
     var colors = Theme.of(context).colorScheme;
 
+    void nextPage() {
+      if (sheetImages.length - 1 > currentPage.value) {
+        backgroundImage.value = sheetImages[++currentPage.value];
+      }
+      logger.d("nextPage=${currentPage.value}");
+    }
+
+    void prevPage() {
+      if (currentPage.value > 0) {
+        backgroundImage.value = sheetImages[--currentPage.value];
+      }
+      logger.d("prevPage=${currentPage.value}");
+    }
+
     return Scaffold(
         body: Stack(
           children: [
@@ -71,13 +86,13 @@ class EditorRoute extends HookWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           IconButton(
-                            onPressed: () => backgroundImage.value = sheetImages[++currentPage.value],
+                            onPressed: () => prevPage(),
                             iconSize: 40,
                             color: colors.onPrimaryContainer,
                             icon: const Icon(Icons.arrow_back),
                           ),
                           IconButton(
-                            onPressed: () => backgroundImage.value = sheetImages[--currentPage.value],
+                            onPressed: () => nextPage(),
                             iconSize: 40,
                             color: colors.onPrimaryContainer,
                             icon: const Icon(Icons.arrow_forward),

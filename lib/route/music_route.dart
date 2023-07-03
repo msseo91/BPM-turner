@@ -31,7 +31,7 @@ class MusicRoute extends HookWidget {
     useValueChanged(pdfPath.value, (_, __) {
       if (pdfPath.value != null) {
         // Load pdf
-      makePdfImage(path: pdfPath.value).then((value) => sheetImages.value = value);
+        makePdfImage(path: pdfPath.value).then((value) => sheetImages.value = value);
       }
       return true;
     });
