@@ -58,20 +58,24 @@ class EditorRoute extends HookWidget {
     }
 
     return Scaffold(
-      body: DrawingBoard(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height - 40,
-        drawingMode: drawingMode,
-        selectedColor: selectedColor,
-        strokeSize: strokeSize,
-        eraserSize: eraserSize,
-        sideBarController: animationController,
-        currentSketch: currentSketch,
-        allSketches: allSketches,
-        canvasGlobalKey: canvasGlobalKey,
-        filled: filled,
-        polygonSides: polygonSides,
-        backgroundImage: backgroundImage,
+      body:
+      Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: DrawingBoard(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          drawingMode: drawingMode,
+          selectedColor: selectedColor,
+          strokeSize: strokeSize,
+          eraserSize: eraserSize,
+          sideBarController: animationController,
+          currentSketch: currentSketch,
+          allSketches: allSketches,
+          canvasGlobalKey: canvasGlobalKey,
+          filled: filled,
+          polygonSides: polygonSides,
+          backgroundImage: backgroundImage,
+        ),
       ),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(7),
