@@ -15,7 +15,7 @@ class EditorRoute extends HookWidget {
   const EditorRoute({
     Key? key,
     required this.sheetImages,
-  }): super(key: key);
+  }) : super(key: key);
 
   final List<Image> sheetImages;
 
@@ -58,56 +58,48 @@ class EditorRoute extends HookWidget {
     }
 
     return Scaffold(
-        body: Stack(
+      body: DrawingBoard(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height - 40,
+        drawingMode: drawingMode,
+        selectedColor: selectedColor,
+        strokeSize: strokeSize,
+        eraserSize: eraserSize,
+        sideBarController: animationController,
+        currentSketch: currentSketch,
+        allSketches: allSketches,
+        canvasGlobalKey: canvasGlobalKey,
+        filled: filled,
+        polygonSides: polygonSides,
+        backgroundImage: backgroundImage,
+      ),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.all(7),
+        color: colors.primaryContainer,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            DrawingBoard(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              drawingMode: drawingMode,
-              selectedColor: selectedColor,
-              strokeSize: strokeSize,
-              eraserSize: eraserSize,
-              sideBarController: animationController,
-              currentSketch: currentSketch,
-              allSketches: allSketches,
-              canvasGlobalKey: canvasGlobalKey,
-              filled: filled,
-              polygonSides: polygonSides,
-              backgroundImage: backgroundImage,
+            IconButton(
+              onPressed: () => prevPage(),
+              iconSize: 40,
+              color: colors.onPrimaryContainer,
+              icon: const Icon(Icons.arrow_back),
             ),
-            Align(
-                alignment: Alignment.bottomCenter,
-                child: Opacity(
-                    opacity: 0.9,
-                    child: Container(
-                      padding: const EdgeInsets.all(7),
-                      color: colors.primaryContainer,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          IconButton(
-                            onPressed: () => prevPage(),
-                            iconSize: 40,
-                            color: colors.onPrimaryContainer,
-                            icon: const Icon(Icons.arrow_back),
-                          ),
-                          IconButton(
-                            onPressed: () => nextPage(),
-                            iconSize: 40,
-                            color: colors.onPrimaryContainer,
-                            icon: const Icon(Icons.arrow_forward),
-                          ),
-                          IconButton(
-                            iconSize: 40,
-                            color: colors.onPrimaryContainer,
-                            icon: Icon(drawOn.value ? Icons.edit : Icons.edit_off),
-                            onPressed: () => drawOn.value = !drawOn.value,
-                          ),
-                        ],
-                      ),
-                    )))
+            IconButton(
+              onPressed: () => nextPage(),
+              iconSize: 40,
+              color: colors.onPrimaryContainer,
+              icon: const Icon(Icons.arrow_forward),
+            ),
+            IconButton(
+              iconSize: 40,
+              color: colors.onPrimaryContainer,
+              icon: Icon(drawOn.value ? Icons.edit : Icons.edit_off),
+              onPressed: () => drawOn.value = !drawOn.value,
+            ),
           ],
-        )
+        ),
+      ),
     );
   }
 }
