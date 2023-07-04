@@ -1,6 +1,6 @@
-import 'package:bpm_turner/editor/drawing_board.dart';
-import 'package:bpm_turner/editor/drawing_mode.dart';
-import 'package:bpm_turner/editor/sketch.dart';
+import 'package:bpm_turner/ui/editor/drawing_board.dart';
+import 'package:bpm_turner/ui/editor/drawing_mode.dart';
+import 'package:bpm_turner/ui/editor/sketch.dart';
 import 'package:bpm_turner/global.dart';
 import 'package:flutter/material.dart' hide Image;
 import 'dart:ui';

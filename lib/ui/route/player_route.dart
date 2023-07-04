@@ -1,13 +1,13 @@
 import 'dart:ui';
 
 import 'package:bpm_turner/global.dart';
-import 'package:bpm_turner/mwidget/music_widget.dart';
+import 'package:bpm_turner/ui/player/player_widget.dart';
 import 'package:flutter/material.dart' hide Image;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:pdf_render/pdf_render.dart';
 
-class MusicRoute extends HookWidget {
-  const MusicRoute({
+class PlayerRoute extends HookWidget {
+  const PlayerRoute({
     Key? key,
   }) : super(key: key);
 
@@ -36,7 +36,7 @@ class MusicRoute extends HookWidget {
       return true;
     });
 
-    return MusicWidget(
+    return PlayerWidget(
         pdfPath: pdfPath,
         sheetImages: sheetImages.value,
         bpm: bpm,

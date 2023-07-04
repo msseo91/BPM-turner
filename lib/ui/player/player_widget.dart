@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:bpm_turner/global.dart';
-import 'package:bpm_turner/route/editor_route.dart';
+import 'package:bpm_turner/ui/route/editor_route.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart' hide Image;
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -11,8 +11,8 @@ import 'package:bpm_turner/model/sample/rach_op17.dart' as rach;
 const Duration controlDuration = Duration(milliseconds: 3000);
 const double iconSize = 40;
 
-class MusicWidget extends HookWidget {
-  MusicWidget(
+class PlayerWidget extends HookWidget {
+  PlayerWidget(
       {Key? key,
       required this.pdfPath,
       required this.sheetImages,

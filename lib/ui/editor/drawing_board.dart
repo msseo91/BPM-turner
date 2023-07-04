@@ -1,5 +1,5 @@
-import 'package:bpm_turner/editor/drawing_mode.dart';
-import 'package:bpm_turner/editor/sketch.dart';
+import 'package:bpm_turner/ui/editor/drawing_mode.dart';
+import 'package:bpm_turner/ui/editor/sketch.dart';
 import 'package:flutter/material.dart' hide Image;
 import 'package:flutter_hooks/flutter_hooks.dart';
 
