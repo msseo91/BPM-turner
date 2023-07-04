@@ -79,57 +79,57 @@ class TempoSheet {
       pageChangeCallback?.call(currentPageIndex);
     }
 
-    _playTicker = tickerProvider.createTicker((elapsed) {
-      var elapsedFromLast = elapsed.inMilliseconds - lastBeepElapsed;
-      var elapsedBetweenTick = elapsed.inMilliseconds - lastTickElapse;
-      var measuredTickCount = halfBarDuration.inMilliseconds / elapsedBetweenTick;
-      lastTickElapse = elapsed.inMilliseconds;
+    _playTicker ??= tickerProvider.createTicker((elapsed) {
+        var elapsedFromLast = elapsed.inMilliseconds - lastBeepElapsed;
+        var elapsedBetweenTick = elapsed.inMilliseconds - lastTickElapse;
+        var measuredTickCount = halfBarDuration.inMilliseconds / elapsedBetweenTick;
+        lastTickElapse = elapsed.inMilliseconds;
 
-      drawProgressBar(context, currentLeft, currentTop, barHeight);
-      currentLeft += halfBarWidth / measuredTickCount;
+        drawProgressBar(context, currentLeft, currentTop, barHeight);
+        currentLeft += halfBarWidth / measuredTickCount;
 
-      // Half bar
-      if(elapsedFromLast >= halfBarDuration.inMilliseconds) {
-        lastBeepElapsed = elapsed.inMilliseconds;
-        logger.i("Elapse between: $elapsedFromLast ms");
+        // Half bar
+        if (elapsedFromLast >= halfBarDuration.inMilliseconds) {
+          lastBeepElapsed = elapsed.inMilliseconds;
+          logger.i("Elapse between: $elapsedFromLast ms");
 
-        var bar = currentBar();
-        if(bar == null) {
-          // End of music.
-          logger.i("End of music");
-          _playTicker?.stop();
-          return;
+          var bar = currentBar();
+          if (bar == null) {
+            // End of music.
+            logger.i("End of music");
+            _playTicker?.stop();
+            return;
+          }
+
+          if (playMetronome) {
+            player.resume();
+            player.seek(const Duration(seconds: 0));
+          }
+
+          if (bar.halfBar) {
+            barCallback?.call(bar, halfBarDuration.inMilliseconds);
+            if (bar.lastBarInLine) {
+              changeLine(bar);
+            }
+            if (bar.lastBarInPage) {
+              changePage();
+            }
+            _nextBar();
+          } else if (isOneTickPlayed) {
+            isOneTickPlayed = false;
+            _nextBar();
+          } else {
+            barCallback?.call(bar, halfBarDuration.inMilliseconds * 2);
+            if (bar.lastBarInLine) {
+              changeLine(bar);
+            }
+            if (bar.lastBarInPage) {
+              changePage();
+            }
+            isOneTickPlayed = true;
+          }
         }
-
-        if(playMetronome) {
-          player.resume();
-          player.seek(const Duration(seconds: 0));
-        }
-
-        if (bar.halfBar) {
-          barCallback?.call(bar, halfBarDuration.inMilliseconds);
-          if (bar.lastBarInLine) {
-            changeLine(bar);
-          }
-          if (bar.lastBarInPage) {
-            changePage();
-          }
-          _nextBar();
-        } else if (isOneTickPlayed) {
-          isOneTickPlayed = false;
-          _nextBar();
-        } else {
-          barCallback?.call(bar, halfBarDuration.inMilliseconds * 2);
-          if (bar.lastBarInLine) {
-            changeLine(bar);
-          }
-          if (bar.lastBarInPage) {
-            changePage();
-          }
-          isOneTickPlayed = true;
-        }
-      }
-    });
+      });
     _playTicker?.start();
   }
 
