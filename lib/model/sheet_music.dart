@@ -34,24 +34,10 @@ class TempoSheet {
 
   var player = AudioPlayer()..setSource(AssetSource('metronome.mp3'));
 
-  Ticker? _measureTicker;
   Ticker? _playTicker;
 
   OverlayEntry? _lastOverlay;
   var tickTime = 0;
-
-  void init(TickerProvider tickerProvider) {
-    var count = 0;
-    _measureTicker = tickerProvider.createTicker((elapsed) {
-      count++;
-      if(count > 10) {
-        tickTime = elapsed.inMilliseconds ~/ 10;
-        logger.i("Tick time is $tickTime");
-        _measureTicker?.stop();
-      }
-    });
-    _measureTicker?.start();
-  }
 
   Future<void> play(
     int bpm,
@@ -69,9 +55,6 @@ class TempoSheet {
     player = AudioPlayer()
       ..setSource(AssetSource('metronome.mp3'))
       ..seek(const Duration(seconds: 0));
-
-    var tickCount = halfBarDuration.inMilliseconds ~/ tickTime;
-    logger.i("1/2 bar duration is ${halfBarDuration.inMilliseconds}ms, tick count is $tickCount");
 
     // TODO - Change bar size after impl editor.
     this.screenSize = screenSize;

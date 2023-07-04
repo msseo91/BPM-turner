@@ -197,7 +197,7 @@ class MusicWidget extends HookWidget {
                             iconSize: iconSize,
                             color: colors.onSecondaryContainer,
                             icon: Icon(makeMetronomeSound.value ? Icons.volume_up : Icons.volume_off),
-                            onPressed: () => makeMetronomeSound.value = !makeMetronomeSound.value,
+                            onPressed: () => sheet.playMetronome = makeMetronomeSound.value = !makeMetronomeSound.value,
                           ),
                         ],
                       ))),
