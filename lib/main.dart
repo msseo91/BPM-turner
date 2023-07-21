@@ -1,4 +1,5 @@
 import 'package:bpm_turner/ui/route/player_route.dart';
+import 'package:bpm_turner/ui/route/splash_route.dart';
 import 'package:bpm_turner/ui/theme/color_schemes.g.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
       darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
-      home: const PlayerRoute(),
+      home: const SplashRoute(),
     );
   }
 }
