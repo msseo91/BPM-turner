@@ -8,19 +8,27 @@ class SplashRoute extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    var buttonSize = 150.0;
+    var buttonSize = 300.0;
+    var buttonStyle = OutlinedButton.styleFrom(
+        shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(
+        Radius.circular(10),
+      ),
+        )
+    );
 
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Center(
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               SizedBox(
                 height: buttonSize,
                 width: buttonSize,
                 child: FilledButton(
+                  style: buttonStyle,
                   onPressed: () {},
                   child: const Text(
                     "Select sheet music",
@@ -29,12 +37,11 @@ class SplashRoute extends HookWidget {
                 ),
               ),
 
-              const Spacer(),
-
               SizedBox(
                 height: buttonSize,
                 width: buttonSize,
                 child: FilledButton(
+                  style: buttonStyle,
                   onPressed: () {},
                   child: const Text(
                     "Make auto-turning sheet music",
