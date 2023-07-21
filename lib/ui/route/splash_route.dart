@@ -16,6 +16,7 @@ class SplashRoute extends HookWidget {
       ),
         )
     );
+    var buttonTextStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
 
     return Scaffold(
       body: Padding(
@@ -45,6 +46,7 @@ class SplashRoute extends HookWidget {
                   onPressed: () {},
                   child: const Text(
                     "Make auto-turning sheet music",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                 ),
