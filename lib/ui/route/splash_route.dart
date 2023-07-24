@@ -14,9 +14,10 @@ class SplashRoute extends HookWidget {
       borderRadius: BorderRadius.all(
         Radius.circular(10),
       ),
-        )
-    );
-    var buttonTextStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
+    ));
+    var buttonTextStyle =
+        const TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
+
 
     return Scaffold(
       body: Padding(
@@ -31,22 +32,22 @@ class SplashRoute extends HookWidget {
                 child: FilledButton(
                   style: buttonStyle,
                   onPressed: () {},
-                  child: const Text(
+                  child: Text(
                     "Select sheet music",
+                    style: buttonTextStyle,
                     textAlign: TextAlign.center,
                   ),
                 ),
               ),
-
               SizedBox(
                 height: buttonSize,
                 width: buttonSize,
                 child: FilledButton(
                   style: buttonStyle,
                   onPressed: () {},
-                  child: const Text(
+                  child: Text(
                     "Make auto-turning sheet music",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: buttonTextStyle,
                     textAlign: TextAlign.center,
                   ),
                 ),
