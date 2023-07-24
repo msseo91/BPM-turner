@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:bpm_turner/model/sheet_bar.dart';
+import 'package:bpm_turner/data/model/sheet_bar.dart';
 
 class Line {
   Line(this.index, this.bars, {this.rect = Rect.zero});

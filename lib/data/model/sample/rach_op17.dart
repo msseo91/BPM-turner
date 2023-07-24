@@ -1,9 +1,7 @@
-import 'dart:ui';
-
-import 'package:bpm_turner/model/sheet_bar.dart';
-import 'package:bpm_turner/model/sheet_line.dart';
-import 'package:bpm_turner/model/sheet_music.dart';
-import 'package:bpm_turner/model/sheet_page.dart';
+import 'package:bpm_turner/data/model/sheet_bar.dart';
+import 'package:bpm_turner/data/model/sheet_line.dart';
+import 'package:bpm_turner/data/model/sheet_page.dart';
+import 'package:bpm_turner/data/model/sheet_music.dart';
 
 /// Rachmaninoff Suite No.2, Op.17 Tarantella
 

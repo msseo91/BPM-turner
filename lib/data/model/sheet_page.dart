@@ -1,5 +1,6 @@
 
-import 'package:bpm_turner/model/sheet_line.dart';
+
+import 'package:bpm_turner/data/model/sheet_line.dart';
 
 class MusicPage {
   final int index;
