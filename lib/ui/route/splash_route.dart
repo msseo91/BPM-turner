@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class SplashRoute extends HookWidget {
+  static const String route = "/";
+
   const SplashRoute({
     Key? key,
   }) : super(key: key);

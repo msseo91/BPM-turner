@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class SelectSheetRoute extends HookWidget {
+  static const String route = "/select_sheet";
+
   const SelectSheetRoute({
     Key? key
   }): super(key: key)

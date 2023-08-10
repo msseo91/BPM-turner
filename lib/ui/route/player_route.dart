@@ -7,6 +7,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:pdf_render/pdf_render.dart';
 
 class PlayerRoute extends HookWidget {
+  static const String route = "/player";
+
   const PlayerRoute({
     Key? key,
   }) : super(key: key);

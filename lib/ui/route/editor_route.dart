@@ -12,6 +12,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 /// - Draw&Edit multiple overlay box.
 ///
 class EditorRoute extends HookWidget {
+  static const route = "/editor";
+
   const EditorRoute({
     Key? key,
     required this.sheetImages,
