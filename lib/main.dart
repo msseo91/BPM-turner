@@ -1,3 +1,4 @@
+import 'package:bpm_turner/global.dart';
 import 'package:bpm_turner/ui/route/editor_route.dart';
 import 'package:bpm_turner/ui/route/player_route.dart';
 import 'package:bpm_turner/ui/route/select_sheet_route.dart';
@@ -6,6 +7,7 @@ import 'package:bpm_turner/ui/theme/color_schemes.g.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  setup();
   runApp(const MyApp());
 }
 
@@ -23,9 +25,9 @@ class MyApp extends StatelessWidget {
       initialRoute: SplashRoute.route,
       routes: {
         SplashRoute.route: (context) => const SplashRoute(),
-        SelectSheetRoute.route: (context) => const SelectSheetRoute(),
+        SelectSheetRoute.route: (context) => SelectSheetRoute(),
         PlayerRoute.route: (context) => const PlayerRoute(),
-        EditorRoute.route: (context) => const EditorRoute(sheetImages: sheetImages)
+        EditorRoute.route: (context) => const EditorRoute(sheetImages: [])
       },
     );
   }

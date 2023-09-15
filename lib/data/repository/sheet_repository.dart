@@ -7,4 +7,7 @@ class SheetRepository {
 
   SheetRepository() :
     _sheetDatabase = getIt.get<SheetDatabase>();
+
+  void insertSheet() {
+  }
 }
