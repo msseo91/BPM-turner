@@ -1,3 +1,5 @@
+import 'package:bpm_turner/ui/route/editor_route.dart';
+import 'package:bpm_turner/ui/route/player_route.dart';
 import 'package:bpm_turner/ui/route/select_sheet_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -17,27 +19,35 @@ class SplashRoute extends HookWidget {
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(
-              child: Row(
-                children: [
-                  Expanded(
-                    child: SimpleTextButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, SelectSheetRoute.route);
-                        },
-                        text: "Select sheet music"),
-                  )
-                ],
-              ),
-            ),
-            Expanded(
-              child: SimpleTextButton(
+            Row(
+              children: [
+                SelectorItemWidget(
                   onPressed: () {
-                    // TODO
+                    Navigator.pushNamed(context, SelectSheetRoute.route);
                   },
-                  text: "Make auto-turning sheet music"),
+                  text: "Select sheet music",
+                ),
+                const SizedBox(width: 16.0),
+                SelectorItemWidget(
+                  onPressed: () {
+                    Navigator.pushNamed(context, EditorRoute.route);
+                  },
+                  text: "Make auto-turning sheet music",
+                ),
+              ],
             ),
+            const SizedBox(height: 16.0),
+            Row(
+              children: [
+                SelectorItemWidget(
+                    onPressed: () {
+                      Navigator.pushNamed(context, PlayerRoute.route);
+                    },
+                    text: "Play music")
+              ],
+            )
           ],
         ),
       ),
@@ -45,9 +55,27 @@ class SplashRoute extends HookWidget {
   }
 }
 
+class SelectorItemWidget extends StatelessWidget {
+  final String text;
+  final VoidCallback? onPressed;
+
+  const SelectorItemWidget(
+      {super.key, required this.onPressed, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+        child: SizedBox(
+      height: 150.0,
+      child: SimpleTextButton(text: text, onPressed: onPressed),
+    ));
+  }
+}
+
 class SimpleTextButton extends StatelessWidget {
   static const buttonTextStyle =
       TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
+
   static ButtonStyle buttonStyle = OutlinedButton.styleFrom(
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.all(
