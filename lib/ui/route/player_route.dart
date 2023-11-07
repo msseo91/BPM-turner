@@ -57,7 +57,10 @@ class PlayerRoute extends HookWidget {
     for (var i = 1; i <= pageCount; i++) {
       logger.d("Making $i page to image.");
       PdfPage page = await doc.getPage(i);
-      PdfPageImage pageImage = await page.render();
+      PdfPageImage pageImage = await page.render(
+        width: 1200,
+        height: 1920
+      );
       images.add(await pageImage.createImageIfNotAvailable());
     }
     return images;
