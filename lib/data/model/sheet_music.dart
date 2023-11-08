@@ -8,6 +8,11 @@ import 'package:bpm_turner/data/model/sheet_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+const double leftMargin = 100;
+const double rightMargin = 100;
+const double topMargin = 100;
+const double bottomMargin = 100;
+
 class TempoSheet {
   TempoSheet(
     this.name, {
@@ -20,7 +25,7 @@ class TempoSheet {
   final String savedPath;
 
   var playMetronome = false;
-  Size screenSize = const Size(0,0);
+  Size sheetSize = const Size(0,0);
 
   double halfBarWidth = 0;
 
@@ -57,25 +62,29 @@ class TempoSheet {
       ..seek(const Duration(seconds: 0));
 
     // TODO - Change bar size after impl editor.
-    this.screenSize = screenSize;
-    final barHeight = screenSize.height / 3;
+    sheetSize = Size(
+        screenSize.width - rightMargin - leftMargin,
+        screenSize.height - topMargin - bottomMargin
+    );
+
+    final barHeight = sheetSize.height / 3;
     var barCount = currentLine()?.bars.length ?? 5;
-    halfBarWidth = screenSize.width / barCount / 2;
-    var currentLeft = 0.0;
-    var currentTop = 0.0;
+    halfBarWidth = sheetSize.width / barCount / 2;
+    var currentLeft = leftMargin;
+    var currentTop = topMargin;
     logger.i("Bar size is $halfBarWidth x $barHeight");
     var lastBeepElapsed = 0;
     var lastTickElapse = 0;
 
     void changeLine(Bar bar) {
       currentTop += barHeight;
-      currentLeft = 0;
+      currentLeft = leftMargin;
       lineChangeCallback?.call((bar));
     }
 
     void changePage() {
-      currentTop = 0;
-      currentLeft = 0;
+      currentTop = topMargin;
+      currentLeft = leftMargin;
       pageChangeCallback?.call(currentPageIndex);
     }
 
@@ -205,7 +214,7 @@ class TempoSheet {
     }
     // Update bar width.
     var barCount = currentLine()?.bars.length ?? 5;
-    halfBarWidth = screenSize.width / barCount / 2;
+    halfBarWidth = sheetSize.width / barCount / 2;
 
     return currentLine();
   }
