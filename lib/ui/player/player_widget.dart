@@ -10,6 +10,7 @@ import 'package:bpm_turner/data/model/sample/rach_op17.dart' as rach;
 
 const Duration controlDuration = Duration(milliseconds: 3000);
 const double iconSize = 40;
+const int defaultCountDown = 3;
 
 class PlayerWidget extends HookWidget {
   PlayerWidget(
@@ -36,6 +37,9 @@ class PlayerWidget extends HookWidget {
   Timer? controlTabTimer;
   var sheet = rach.sheet;
   final sheetImageKey = GlobalKey();
+
+  OverlayEntry? _lastOverlay;
+  Size? screenSize;
 
   void onScreenTab() {
     logger.d("tap!");
@@ -78,10 +82,9 @@ class PlayerWidget extends HookWidget {
   Future<void> startPlay(BuildContext context) async {
     isPlaying.value = true;
 
-    final RenderBox renderBox = sheetImageKey.currentContext?.findRenderObject() as RenderBox;
-
     var barIndex = 0;
-    sheet.play(bpm.value, ticker, context, renderBox.size, barCallback: (bar, duration) {
+    sheet.play(bpm.value, ticker, context, screenSize!,
+        barCallback: (bar, duration) {
       logger.d("Bar $barIndex is started.");
       barIndex++;
     }, lineChangeCallback: (bar) {
@@ -93,8 +96,31 @@ class PlayerWidget extends HookWidget {
     });
   }
 
+  void startWithCountDown(BuildContext context, int countDown) async {
+    _lastOverlay?.remove();
+    if(countDown <= 0) {
+      startPlay(context);
+      return;
+    }
+
+    _lastOverlay = OverlayEntry(builder: (BuildContext context) {
+      return Center(
+        child: Text(
+          "$countDown",
+          style: const TextStyle(fontSize: 72, fontWeight: FontWeight.bold),
+        ),
+      );
+    });
+    Overlay.of(context).insert(_lastOverlay!);
+
+    Future.delayed(const Duration(seconds: 1), () {
+        startWithCountDown(context, --countDown);
+    });
+  }
+
   void showPickFile() async {
-    final pickResult = await FilePicker.platform.pickFiles(allowMultiple: false);
+    final pickResult =
+        await FilePicker.platform.pickFiles(allowMultiple: false);
 
     // if no file is picked
     if (pickResult == null) return;
@@ -130,6 +156,11 @@ class PlayerWidget extends HookWidget {
   Widget build(BuildContext context) {
     var colors = Theme.of(context).colorScheme;
 
+    MediaQueryData mediaQueryData = MediaQuery.of(context);
+    double screenWidth = mediaQueryData.size.width;
+    double screenHeight = mediaQueryData.size.height;
+    screenSize = Size(screenWidth, screenHeight);
+
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -150,7 +181,9 @@ class PlayerWidget extends HookWidget {
                 height: double.infinity,
                 child: sheetImages.isEmpty
                     ? progressLoading()
-                    : RawImage(key: sheetImageKey, image: sheetImages[currentPage.value]),
+                    : RawImage(
+                        key: sheetImageKey,
+                        image: sheetImages[currentPage.value]),
               ),
             ),
             AnimatedOpacity(
@@ -184,8 +217,12 @@ class PlayerWidget extends HookWidget {
                           IconButton(
                             iconSize: iconSize,
                             color: colors.onSecondaryContainer,
-                            icon: Icon(isPlaying.value ? Icons.pause : Icons.play_arrow),
-                            onPressed: isPlaying.value ? pause : () => startPlay(context),
+                            icon: Icon(isPlaying.value
+                                ? Icons.pause
+                                : Icons.play_arrow),
+                            onPressed: isPlaying.value
+                                ? pause
+                                : () => startWithCountDown(context, defaultCountDown),
                           ),
                           IconButton(
                             iconSize: iconSize,
@@ -196,8 +233,12 @@ class PlayerWidget extends HookWidget {
                           IconButton(
                             iconSize: iconSize,
                             color: colors.onSecondaryContainer,
-                            icon: Icon(makeMetronomeSound.value ? Icons.volume_up : Icons.volume_off),
-                            onPressed: () => sheet.playMetronome = makeMetronomeSound.value = !makeMetronomeSound.value,
+                            icon: Icon(makeMetronomeSound.value
+                                ? Icons.volume_up
+                                : Icons.volume_off),
+                            onPressed: () => sheet.playMetronome =
+                                makeMetronomeSound.value =
+                                    !makeMetronomeSound.value,
                           ),
                         ],
                       ))),
@@ -216,7 +257,9 @@ class PlayerWidget extends HookWidget {
                               onPressed: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => EditorRoute(sheetImages: sheetImages)),
+                                  MaterialPageRoute(
+                                      builder: (context) => EditorRoute(
+                                          sheetImages: sheetImages)),
                                 );
                               },
                               iconSize: iconSize,
