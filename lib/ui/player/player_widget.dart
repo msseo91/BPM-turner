@@ -8,6 +8,8 @@ import 'package:flutter/material.dart' hide Image;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:bpm_turner/data/model/sample/rach_op17.dart' as rach;
 
+import '../../data/model/sheet_music.dart';
+
 const Duration controlDuration = Duration(milliseconds: 3000);
 const double iconSize = 40;
 const int defaultCountDown = 3;
@@ -16,6 +18,7 @@ class PlayerWidget extends HookWidget {
   PlayerWidget(
       {Key? key,
       required this.pdfPath,
+      required this.sheet,
       required this.sheetImages,
       required this.bpm,
       required this.isPlaying,
@@ -33,9 +36,10 @@ class PlayerWidget extends HookWidget {
   final TickerProvider ticker;
   final ValueNotifier<bool> makeMetronomeSound;
   final ValueNotifier<int> currentPage;
+  final TempoSheet sheet;
 
   Timer? controlTabTimer;
-  var sheet = rach.sheet;
+
   final sheetImageKey = GlobalKey();
 
   OverlayEntry? _lastOverlay;
@@ -83,8 +87,7 @@ class PlayerWidget extends HookWidget {
     isPlaying.value = true;
 
     var barIndex = 0;
-    sheet.play(bpm.value, ticker, context, screenSize!,
-        barCallback: (bar, duration) {
+    sheet.play(bpm.value, ticker, context, screenSize!, barCallback: (bar, duration) {
       logger.d("Bar $barIndex is started.");
       barIndex++;
     }, lineChangeCallback: (bar) {
@@ -92,13 +95,15 @@ class PlayerWidget extends HookWidget {
       logger.d("Line changed to ${bar.lineIndex}");
     }, pageChangeCallback: (pageIndex) {
       logger.d("Page changed to ${pageIndex + 1}");
-      currentPage.value = pageIndex + 1;
+      if(sheetImages.length > pageIndex + 1) {
+        currentPage.value = pageIndex + 1;
+      }
     });
   }
 
   void startWithCountDown(BuildContext context, int countDown) async {
     _lastOverlay?.remove();
-    if(countDown <= 0) {
+    if (countDown <= 0) {
       startPlay(context);
       return;
     }
@@ -114,13 +119,12 @@ class PlayerWidget extends HookWidget {
     Overlay.of(context).insert(_lastOverlay!);
 
     Future.delayed(const Duration(seconds: 1), () {
-        startWithCountDown(context, --countDown);
+      startWithCountDown(context, --countDown);
     });
   }
 
   void showPickFile() async {
-    final pickResult =
-        await FilePicker.platform.pickFiles(allowMultiple: false);
+    final pickResult = await FilePicker.platform.pickFiles(allowMultiple: false);
 
     // if no file is picked
     if (pickResult == null) return;
@@ -181,9 +185,7 @@ class PlayerWidget extends HookWidget {
                 height: double.infinity,
                 child: sheetImages.isEmpty
                     ? progressLoading()
-                    : RawImage(
-                        key: sheetImageKey,
-                        image: sheetImages[currentPage.value]),
+                    : RawImage(key: sheetImageKey, image: sheetImages[currentPage.value]),
               ),
             ),
             AnimatedOpacity(
@@ -217,12 +219,8 @@ class PlayerWidget extends HookWidget {
                           IconButton(
                             iconSize: iconSize,
                             color: colors.onSecondaryContainer,
-                            icon: Icon(isPlaying.value
-                                ? Icons.pause
-                                : Icons.play_arrow),
-                            onPressed: isPlaying.value
-                                ? pause
-                                : () => startWithCountDown(context, defaultCountDown),
+                            icon: Icon(isPlaying.value ? Icons.pause : Icons.play_arrow),
+                            onPressed: isPlaying.value ? pause : () => startWithCountDown(context, defaultCountDown),
                           ),
                           IconButton(
                             iconSize: iconSize,
@@ -233,12 +231,8 @@ class PlayerWidget extends HookWidget {
                           IconButton(
                             iconSize: iconSize,
                             color: colors.onSecondaryContainer,
-                            icon: Icon(makeMetronomeSound.value
-                                ? Icons.volume_up
-                                : Icons.volume_off),
-                            onPressed: () => sheet.playMetronome =
-                                makeMetronomeSound.value =
-                                    !makeMetronomeSound.value,
+                            icon: Icon(makeMetronomeSound.value ? Icons.volume_up : Icons.volume_off),
+                            onPressed: () => sheet.playMetronome = makeMetronomeSound.value = !makeMetronomeSound.value,
                           ),
                         ],
                       ))),
@@ -257,9 +251,7 @@ class PlayerWidget extends HookWidget {
                               onPressed: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(
-                                      builder: (context) => EditorRoute(
-                                          sheetImages: sheetImages)),
+                                  MaterialPageRoute(builder: (context) => EditorRoute(sheetImages: sheetImages)),
                                 );
                               },
                               iconSize: iconSize,

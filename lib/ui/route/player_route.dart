@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:bpm_turner/data/model/sheet_music.dart';
 import 'package:bpm_turner/global.dart';
 import 'package:bpm_turner/ui/player/player_widget.dart';
 import 'package:flutter/material.dart' hide Image;
@@ -27,8 +28,8 @@ class PlayerRoute extends HookWidget {
     final currentPage = useState(0);
     final sheetImages = useState<List<Image>>([]);
 
-    if(sheetImages.value.isEmpty) {
-      if(args.isAsset) {
+    if (sheetImages.value.isEmpty) {
+      if (args.isAsset) {
         makePdfImage(assetName: args.path).then((value) => sheetImages.value = value);
       } else {
         makePdfImage(path: args.path).then((value) => sheetImages.value = value);
@@ -45,6 +46,7 @@ class PlayerRoute extends HookWidget {
 
     return PlayerWidget(
         pdfPath: pdfPath,
+        sheet: args.sheet,
         sheetImages: sheetImages.value,
         bpm: bpm,
         isPlaying: isPlaying,
@@ -62,10 +64,7 @@ class PlayerRoute extends HookWidget {
     for (var i = 1; i <= pageCount; i++) {
       logger.d("Making $i page to image.");
       PdfPage page = await doc.getPage(i);
-      PdfPageImage pageImage = await page.render(
-        width: 1200,
-        height: 1920
-      );
+      PdfPageImage pageImage = await page.render(width: 1200, height: 1920);
       images.add(await pageImage.createImageIfNotAvailable());
     }
     return images;
@@ -74,7 +73,12 @@ class PlayerRoute extends HookWidget {
 
 class PlayerScreenArgs {
   final String path;
+  final TempoSheet sheet;
   final bool isAsset;
 
-  PlayerScreenArgs(this.path, this.isAsset);
+  PlayerScreenArgs({
+    required this.path,
+    required this.isAsset,
+    required this.sheet
+  });
 }

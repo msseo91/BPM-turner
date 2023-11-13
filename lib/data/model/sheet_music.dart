@@ -67,7 +67,7 @@ class TempoSheet {
         screenSize.height - topMargin - bottomMargin
     );
 
-    final barHeight = sheetSize.height / 3;
+    final barHeight = sheetSize.height / currentPage()!.lines.length;
     var barCount = currentLine()?.bars.length ?? 5;
     halfBarWidth = sheetSize.width / barCount / 2;
     var currentLeft = leftMargin;

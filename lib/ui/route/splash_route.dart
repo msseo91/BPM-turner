@@ -4,6 +4,9 @@ import 'package:bpm_turner/ui/route/select_sheet_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
+import 'package:bpm_turner/data/model/sample/rach_op17.dart' as rach;
+import 'package:bpm_turner/data/model/sample/chopin_10_1.dart' as chopin;
+
 class SplashRoute extends HookWidget {
   static const String route = "/";
 
@@ -44,7 +47,8 @@ class SplashRoute extends HookWidget {
                       Navigator.pushNamed(
                         context,
                         PlayerRoute.route,
-                        arguments: PlayerScreenArgs("assets/rach-tarantella.pdf", true),
+                        arguments:
+                            PlayerScreenArgs(path: "assets/rach-tarantella.pdf", isAsset: true, sheet: rach.sheet),
                       );
                     },
                     text: "Rach tarantella"),
@@ -54,7 +58,7 @@ class SplashRoute extends HookWidget {
                       Navigator.pushNamed(
                         context,
                         PlayerRoute.route,
-                        arguments: PlayerScreenArgs("assets/chopin_10_1.pdf", true),
+                        arguments: PlayerScreenArgs(path: "assets/chopin_10_1.pdf", isAsset: true, sheet: chopin.sheet),
                       );
                     },
                     text: "Chopin 10-1"),
