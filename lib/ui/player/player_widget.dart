@@ -6,7 +6,6 @@ import 'package:bpm_turner/ui/route/editor_route.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart' hide Image;
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:bpm_turner/data/model/sample/rach_op17.dart' as rach;
 
 import '../../data/model/sheet_music.dart';
 

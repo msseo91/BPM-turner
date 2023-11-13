@@ -4,8 +4,8 @@ import 'package:bpm_turner/ui/route/select_sheet_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-import 'package:bpm_turner/data/model/sample/rach_op17.dart' as rach;
-import 'package:bpm_turner/data/model/sample/chopin_10_1.dart' as chopin;
+import 'package:bpm_turner/data/sample/rach_op17.dart' as rach;
+import 'package:bpm_turner/data/sample/chopin_10_1.dart' as chopin;
 
 class SplashRoute extends HookWidget {
   static const String route = "/";
