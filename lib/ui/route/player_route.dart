@@ -16,9 +16,10 @@ class PlayerRoute extends HookWidget {
   @override
   Widget build(BuildContext context) {
     logger.d("build MusicRoute");
+    final args = ModalRoute.of(context)!.settings.arguments as PlayerScreenArgs;
 
-    final pdfPath = useState<String?>(null);
-    final bpm = useState(160);
+    final pdfPath = useState<String?>(args.isAsset ? args.path : null);
+    final bpm = useState(180);
     final isPlaying = useState(false);
     final controlOpacity = useState(0.0);
     final ticker = useSingleTickerProvider();
@@ -27,7 +28,11 @@ class PlayerRoute extends HookWidget {
     final sheetImages = useState<List<Image>>([]);
 
     if(sheetImages.value.isEmpty) {
-      makePdfImage(assetName: "assets/rach-tarantella.pdf").then((value) => sheetImages.value = value);
+      if(args.isAsset) {
+        makePdfImage(assetName: args.path).then((value) => sheetImages.value = value);
+      } else {
+        makePdfImage(path: args.path).then((value) => sheetImages.value = value);
+      }
     }
 
     useValueChanged(pdfPath.value, (_, __) {
@@ -65,4 +70,11 @@ class PlayerRoute extends HookWidget {
     }
     return images;
   }
+}
+
+class PlayerScreenArgs {
+  final String path;
+  final bool isAsset;
+
+  PlayerScreenArgs(this.path, this.isAsset);
 }

@@ -13,8 +13,6 @@ class SplashRoute extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
-
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -43,9 +41,23 @@ class SplashRoute extends HookWidget {
               children: [
                 SelectorItemWidget(
                     onPressed: () {
-                      Navigator.pushNamed(context, PlayerRoute.route);
+                      Navigator.pushNamed(
+                        context,
+                        PlayerRoute.route,
+                        arguments: PlayerScreenArgs("assets/rach-tarantella.pdf", true),
+                      );
                     },
-                    text: "Play music")
+                    text: "Rach tarantella"),
+                const SizedBox(width: 16.0),
+                SelectorItemWidget(
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context,
+                        PlayerRoute.route,
+                        arguments: PlayerScreenArgs("assets/chopin_10_1.pdf", true),
+                      );
+                    },
+                    text: "Chopin 10-1"),
               ],
             )
           ],
@@ -59,8 +71,7 @@ class SelectorItemWidget extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
 
-  const SelectorItemWidget(
-      {super.key, required this.onPressed, required this.text});
+  const SelectorItemWidget({super.key, required this.onPressed, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -73,8 +84,7 @@ class SelectorItemWidget extends StatelessWidget {
 }
 
 class SimpleTextButton extends StatelessWidget {
-  static const buttonTextStyle =
-      TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
+  static const buttonTextStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
 
   static ButtonStyle buttonStyle = OutlinedButton.styleFrom(
     shape: const RoundedRectangleBorder(
@@ -87,8 +97,7 @@ class SimpleTextButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
 
-  const SimpleTextButton(
-      {super.key, required this.onPressed, required this.text});
+  const SimpleTextButton({super.key, required this.onPressed, required this.text});
 
   @override
   Widget build(BuildContext context) {
