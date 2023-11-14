@@ -1,12 +1,102 @@
-import 'dart:ui';
-
-import 'package:bpm_turner/data/model/sheet_music.dart';
+import 'package:bpm_turner/data/model/tempo_sheet.dart';
 import 'package:bpm_turner/global.dart';
-import 'package:bpm_turner/ui/player/player_widget.dart';
+import 'package:bpm_turner/ui/block/circular_progress.dart';
+import 'package:bpm_turner/ui/viewmodel/player_viewmodel.dart';
+import 'package:bpm_turner/ui/viewmodel/sheet_image_viewmodel.dart';
 import 'package:flutter/material.dart' hide Image;
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:pdf_render/pdf_render.dart';
+import 'package:provider/provider.dart';
 
+class PlayerScreenArgs {
+  final String path;
+  final TempoSheet sheet;
+  final bool isAsset;
+
+  PlayerScreenArgs({required this.path, required this.isAsset, required this.sheet});
+}
+
+class PlayerRoute extends StatelessWidget {
+  static const String route = "/player";
+
+  const PlayerRoute({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final args = ModalRoute
+        .of(context)!
+        .settings
+        .arguments as PlayerScreenArgs;
+
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (create) => PlayerViewModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (create) => SheetImageViewModel(args),
+        )
+      ],
+      child: PlayerScreen(),
+    );
+  }
+}
+
+class PlayerScreen extends StatelessWidget {
+  const PlayerScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    PlayerViewModel viewModel = context.watch();
+    var square = viewModel.squareData;
+
+    return Stack(
+      children: [
+        if (square != null)
+          Positioned(
+            left: square.left.toDouble(),
+            top: square.top.toDouble(),
+            height: square.height.toDouble(),
+            child: const VerticalDivider(
+              color: Colors.red,
+            ),
+          ),
+
+        SheetImageView(),
+      ],
+    );
+  }
+}
+
+class SheetImageView extends StatelessWidget {
+  const SheetImageView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    SheetImageViewModel viewModel = context.watch();
+
+    return GestureDetector(
+      onTap: viewModel.onScreenTab,
+      behavior: HitTestBehavior.translucent,
+      onHorizontalDragEnd: (dragEndDetails) {
+        var velocity = dragEndDetails.primaryVelocity ?? 0;
+        if (velocity < 0) {
+          viewModel.nextPage();
+        } else if (velocity > 0) {
+          viewModel.prevPage();
+        }
+      },
+      child: SizedBox(
+        width: double.infinity,
+        height: double.infinity,
+        // Show Progress, if no rendered image.
+        child: viewModel.currentSheetImage != null
+            ? RawImage(image: viewModel.currentSheetImage)
+            : const CircularProgress(),
+      ),
+    );
+  }
+}
+
+/*
 class PlayerRoute extends HookWidget {
   static const String route = "/player";
 
@@ -82,3 +172,4 @@ class PlayerScreenArgs {
     required this.sheet
   });
 }
+*/
