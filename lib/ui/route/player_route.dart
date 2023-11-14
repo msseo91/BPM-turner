@@ -73,7 +73,7 @@ class PlayerRoute extends HookWidget {
 
 class PlayerScreenArgs {
   final String path;
-  final TempoSheet sheet;
+  final TempoSheett sheet;
   final bool isAsset;
 
   PlayerScreenArgs({

@@ -35,7 +35,7 @@ class PlayerWidget extends HookWidget {
   final TickerProvider ticker;
   final ValueNotifier<bool> makeMetronomeSound;
   final ValueNotifier<int> currentPage;
-  final TempoSheet sheet;
+  final TempoSheett sheet;
 
   Timer? controlTabTimer;
 

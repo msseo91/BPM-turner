@@ -3,6 +3,8 @@ import 'package:bpm_turner/data/model/sheet_line.dart';
 import 'package:bpm_turner/data/model/sheet_music.dart';
 import 'package:bpm_turner/data/model/sheet_page.dart';
 
+import '../model/tempo_sheet.dart';
+
 TempoSheet sheet = TempoSheet("Chopin etudes Op.10 No.1", pages: _makePages());
 
 List<MusicPage> _makePages() {

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:bpm_turner/data/model/sheet_line.dart';
 import 'package:bpm_turner/data/model/sheet_page.dart';
+import 'package:bpm_turner/data/model/tempo_sheet.dart';
 import 'package:bpm_turner/global.dart';
 import 'package:bpm_turner/data/model/sheet_bar.dart';
 import 'package:flutter/material.dart';
@@ -13,12 +14,12 @@ const double rightMargin = 100;
 const double topMargin = 100;
 const double bottomMargin = 100;
 
-class TempoSheet {
-  TempoSheet(
+class TempoSheett extends TempoSheet {
+  TempoSheett(
     this.name, {
     required this.pages,
     this.savedPath = '',
-  });
+  }) : super('', pages: pages);
 
   final String name;
 
