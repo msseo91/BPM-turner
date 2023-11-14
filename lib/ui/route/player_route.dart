@@ -61,6 +61,7 @@ class PlayerScreen extends StatelessWidget {
           ),
 
         SheetImageView(),
+        // TODO - 여기서 ControlBar 를 구현하고, SheetImageView 는 단순히 image 만 보여주도록 하자.
       ],
     );
   }
@@ -72,6 +73,7 @@ class SheetImageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SheetImageViewModel viewModel = context.watch();
+    var colors = Theme.of(context).colorScheme;
 
     return GestureDetector(
       onTap: viewModel.onScreenTab,
@@ -93,6 +95,60 @@ class SheetImageView extends StatelessWidget {
             : const CircularProgress(),
       ),
     );
+  }
+
+  void topBar(SheetImageViewModel viewModel, ColorScheme colors) {
+    double iconSize = 40;
+
+    AnimatedOpacity(
+      duration: const Duration(milliseconds: 400),
+      opacity: viewModel.controlOpacity,
+      child: Align(
+          alignment: Alignment.topCenter,
+          child: Container(
+              color: colors.secondaryContainer,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                      onPressed: () => bpm.value -= 5,
+                      iconSize: iconSize,
+                      color: colors.onSecondaryContainer,
+                      icon: const Icon(Icons.remove)),
+                  Text(
+                    bpm.value.toString(),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: colors.onSecondaryContainer,
+                    ),
+                  ),
+                  IconButton(
+                      onPressed: () => bpm.value += 5,
+                      iconSize: iconSize,
+                      color: colors.onSecondaryContainer,
+                      icon: const Icon(Icons.add)),
+                  IconButton(
+                    iconSize: iconSize,
+                    color: colors.onSecondaryContainer,
+                    icon: Icon(isPlaying.value ? Icons.pause : Icons.play_arrow),
+                    onPressed: isPlaying.value ? pause : () => startWithCountDown(context, defaultCountDown),
+                  ),
+                  IconButton(
+                    iconSize: iconSize,
+                    color: colors.onSecondaryContainer,
+                    icon: const Icon(Icons.stop),
+                    onPressed: stop,
+                  ),
+                  IconButton(
+                    iconSize: iconSize,
+                    color: colors.onSecondaryContainer,
+                    icon: Icon(makeMetronomeSound.value ? Icons.volume_up : Icons.volume_off),
+                    onPressed: () => sheet.playMetronome = makeMetronomeSound.value = !makeMetronomeSound.value,
+                  ),
+                ],
+              ))),
+    ),
   }
 }
 
