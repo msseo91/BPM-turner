@@ -1,3 +1,4 @@
+import 'package:bloc/bloc.dart';
 import 'package:bpm_turner/global.dart';
 import 'package:bpm_turner/ui/route/editor_route.dart';
 import 'package:bpm_turner/ui/route/player_route.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 
 void main() {
   setup();
+  Bloc.observer = Observer();
   runApp(const MyApp());
 }
 
@@ -33,3 +35,22 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class Observer extends BlocObserver {
+  @override
+  void onCreate(BlocBase bloc) {
+    print("Create :: $bloc");
+    super.onCreate(bloc);
+  }
+
+  @override
+  void onClose(BlocBase bloc) {
+    print("Close :: $bloc");
+    super.onClose(bloc);
+  }
+
+  @override
+  void onChange(BlocBase bloc, Change change) {
+    print(change);
+    super.onChange(bloc, change);
+  }
+}

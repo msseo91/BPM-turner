@@ -6,13 +6,7 @@ import 'package:bpm_turner/ui/viewmodel/sheet_image_viewmodel.dart';
 import 'package:flutter/material.dart' hide Image;
 import 'package:provider/provider.dart';
 
-class PlayerScreenArgs {
-  final String path;
-  final TempoSheet sheet;
-  final bool isAsset;
 
-  PlayerScreenArgs({required this.path, required this.isAsset, required this.sheet});
-}
 
 class PlayerRoute extends StatelessWidget {
   static const String route = "/player";
@@ -62,45 +56,16 @@ class PlayerScreen extends StatelessWidget {
 
         SheetImageView(),
         // TODO - 여기서 ControlBar 를 구현하고, SheetImageView 는 단순히 image 만 보여주도록 하자.
+        topBar(),
       ],
     );
   }
-}
 
-class SheetImageView extends StatelessWidget {
-  const SheetImageView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    SheetImageViewModel viewModel = context.watch();
-    var colors = Theme.of(context).colorScheme;
-
-    return GestureDetector(
-      onTap: viewModel.onScreenTab,
-      behavior: HitTestBehavior.translucent,
-      onHorizontalDragEnd: (dragEndDetails) {
-        var velocity = dragEndDetails.primaryVelocity ?? 0;
-        if (velocity < 0) {
-          viewModel.nextPage();
-        } else if (velocity > 0) {
-          viewModel.prevPage();
-        }
-      },
-      child: SizedBox(
-        width: double.infinity,
-        height: double.infinity,
-        // Show Progress, if no rendered image.
-        child: viewModel.currentSheetImage != null
-            ? RawImage(image: viewModel.currentSheetImage)
-            : const CircularProgress(),
-      ),
-    );
-  }
-
-  void topBar(SheetImageViewModel viewModel, ColorScheme colors) {
+  Widget topBar(SheetImageViewModel viewModel, ColorScheme colors) {
     double iconSize = 40;
+    var bpm = 180;
 
-    AnimatedOpacity(
+    return AnimatedOpacity(
       duration: const Duration(milliseconds: 400),
       opacity: viewModel.controlOpacity,
       child: Align(
@@ -148,7 +113,38 @@ class SheetImageView extends StatelessWidget {
                   ),
                 ],
               ))),
-    ),
+    );
+  }
+}
+
+class SheetImageView extends StatelessWidget {
+  const SheetImageView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    SheetImageViewModel viewModel = context.watch();
+    var colors = Theme.of(context).colorScheme;
+
+    return GestureDetector(
+      onTap: viewModel.onScreenTab,
+      behavior: HitTestBehavior.translucent,
+      onHorizontalDragEnd: (dragEndDetails) {
+        var velocity = dragEndDetails.primaryVelocity ?? 0;
+        if (velocity < 0) {
+          viewModel.nextPage();
+        } else if (velocity > 0) {
+          viewModel.prevPage();
+        }
+      },
+      child: SizedBox(
+        width: double.infinity,
+        height: double.infinity,
+        // Show Progress, if no rendered image.
+        child: viewModel.currentSheetImage != null
+            ? RawImage(image: viewModel.currentSheetImage)
+            : const CircularProgress(),
+      ),
+    );
   }
 }
 
