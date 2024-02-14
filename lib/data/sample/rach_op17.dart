@@ -7,7 +7,7 @@ import '../model/tempo_sheet.dart';
 
 /// Rachmaninoff Suite No.2, Op.17 Tarantella
 
-TempoSheet sheet = TempoSheet("Rachmaninoff Suite No.2, Op.17 Tarantella", pages: _makePages());
+TempoSheet tarantella = TempoSheet("Rachmaninoff Suite No.2, Op.17 Tarantella", pages: _makePages());
 
 List<MusicPage> _makePages() {
   return [
