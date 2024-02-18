@@ -1,9 +1,10 @@
 
-import 'package:bpm_turner/player/bloc/player_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 
-import '../../data/sample/rach_op17.dart';
+import '../../../data/sample/rach_op17.dart';
+import '../bloc/player_bloc.dart';
+
 
 class PlayerPage extends StatelessWidget {
   const PlayerPage({super.key});

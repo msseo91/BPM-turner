@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:bpm_turner/global.dart';
-import 'package:bpm_turner/player/player.dart';
+import 'package:bpm_turner/feature/player/player.dart';
+import 'package:bpm_turner/feature/editor/editor.dart';
 
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
