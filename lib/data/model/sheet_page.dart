@@ -8,7 +8,7 @@ import 'package:bpm_turner/data/model/sheet_line.dart';
 class MusicPage {
   final int index;
   final List<Line> lines;
-  final Image? sheetImage;
+  Image? sheetImage;
 
   MusicPage(this.index, this.lines, {this.sheetImage});
 }

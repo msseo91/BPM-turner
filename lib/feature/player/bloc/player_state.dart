@@ -12,6 +12,10 @@ final class PlayerInitial extends PlayerState {
   const PlayerInitial(super.sheet);
 }
 
+final class PlayerSheetLoaded extends PlayerState {
+  const PlayerSheetLoaded(super.sheet);
+}
+
 final class PlayerRunning extends PlayerState {
   const PlayerRunning(super.sheet);
 }
