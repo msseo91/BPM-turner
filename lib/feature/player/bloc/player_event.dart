@@ -14,8 +14,12 @@ final class PlayerEventStop extends PlayerEvent {
 }
 
 final class PlayerEventStart extends PlayerEvent {
-  const PlayerEventStart({required this.bpm});
-  final int bpm;
+  const PlayerEventStart({required this.countDown});
+  final int countDown;
+}
+
+final class PlayerEventPause extends PlayerEvent {
+  const PlayerEventPause();
 }
 
 final class PlayerEventRunComplete extends PlayerEvent {
@@ -35,6 +39,12 @@ final class PlayerEventSetBpm extends PlayerEvent {
   const PlayerEventSetBpm({required this.bpm});
   final int bpm;
 }
+
+final class PlayerEventChangePage extends PlayerEvent {
+  const PlayerEventChangePage({required this.pageIndex});
+  final int pageIndex;
+}
+
 
 class PlayerScreenArg {
   final String path;
