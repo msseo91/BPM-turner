@@ -49,10 +49,8 @@ class PlayerView extends StatelessWidget {
                             ),
                           );
                       return const ProgressLoading();
-                    } else if (state is PlayerStandBy) {
+                    } else  {
                       return SheetView();
-                    } else {
-                      return const Text('Error');
                     }
                   },
                 ),
@@ -99,10 +97,6 @@ class SheetView extends StatelessWidget {
 
   final sheetImageKey = GlobalKey();
 
-  void onScreenTab() {
-    logger.d("tap!");
-  }
-
   void nextPage() {
     logger.d("nextPage");
   }
@@ -111,20 +105,8 @@ class SheetView extends StatelessWidget {
     logger.d("prevPage");
   }
 
-  void pause() {
-    logger.d("pause");
-  }
-
-  void stop() {
-    logger.d("stop");
-  }
-
   void showPickFile() {
     logger.d("showPickFile");
-  }
-
-  void startWithCountDown(BuildContext context, int countDown) {
-    logger.d("startWithCountDown");
   }
 
   @override
@@ -139,7 +121,7 @@ class SheetView extends StatelessWidget {
           child: Stack(
             children: <Widget>[
               GestureDetector(
-                onTap: onScreenTab,
+                onTap: () => playerBloc.add(const PlayerEventTabView()),
                 behavior: HitTestBehavior.translucent,
                 onHorizontalDragEnd: (dragEndDetails) {
                   var velocity = dragEndDetails.primaryVelocity ?? 0;
@@ -197,15 +179,14 @@ class SheetView extends StatelessWidget {
                                     : Icons.play_arrow,
                               ),
                               onPressed: state is PlayerRunning
-                                  ? pause
-                                  : () => startWithCountDown(
-                                      context, defaultCountDown),
+                                  ? () => playerBloc.add(const PlayerEventPause())
+                                  : () => playerBloc.add(const PlayerEventStart(countDown: 3)),
                             ),
                             IconButton(
                               iconSize: iconSize,
                               color: colors.onSecondaryContainer,
                               icon: const Icon(Icons.stop),
-                              onPressed: stop,
+                              onPressed: () => playerBloc.add(const PlayerEventStop()),
                             ),
                             IconButton(
                               iconSize: iconSize,
@@ -254,10 +235,27 @@ class SheetView extends StatelessWidget {
                           ],
                         ))),
               ),
+              if(state is PlayerCountDown) CountDown(countDown: state.countDown),
             ],
           ),
         );
       },
+    );
+  }
+}
+
+class CountDown extends StatelessWidget {
+  const CountDown({super.key, required this.countDown});
+
+  final int countDown;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        "$countDown",
+        style: const TextStyle(fontSize: 72, fontWeight: FontWeight.bold),
+      ),
     );
   }
 }

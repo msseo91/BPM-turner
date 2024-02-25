@@ -34,12 +34,33 @@ final class PlayerStandBy extends PlayerState {
     required super.controlOpacity,
   });
 
-  PlayerStandBy.fromState(PlayerState state) : super(
-    sheet: state.sheet,
-    bpm: state.bpm,
-    isMetronome: state.isMetronome,
-    controlOpacity: state.controlOpacity,
-  );
+  PlayerStandBy.fromState(PlayerState state)
+      : super(
+          sheet: state.sheet,
+          bpm: state.bpm,
+          isMetronome: state.isMetronome,
+          controlOpacity: state.controlOpacity,
+        );
+}
+
+final class PlayerCountDown extends PlayerState {
+  const PlayerCountDown({
+    required super.sheet,
+    required super.bpm,
+    required super.isMetronome,
+    required super.controlOpacity,
+    required this.countDown,
+  });
+
+  final int countDown;
+
+  PlayerCountDown.fromState(PlayerState state, {required this.countDown})
+      : super(
+          sheet: state.sheet,
+          bpm: state.bpm,
+          isMetronome: state.isMetronome,
+          controlOpacity: state.controlOpacity,
+        );
 }
 
 final class PlayerRunning extends PlayerState {
@@ -50,12 +71,13 @@ final class PlayerRunning extends PlayerState {
     required super.controlOpacity,
   });
 
-  PlayerRunning.fromState(PlayerState state) : super(
-    sheet: state.sheet,
-    bpm: state.bpm,
-    isMetronome: state.isMetronome,
-    controlOpacity: state.controlOpacity,
-  );
+  PlayerRunning.fromState(PlayerState state)
+      : super(
+          sheet: state.sheet,
+          bpm: state.bpm,
+          isMetronome: state.isMetronome,
+          controlOpacity: state.controlOpacity,
+        );
 }
 
 final class PlayerRunComplete extends PlayerState {
@@ -66,12 +88,13 @@ final class PlayerRunComplete extends PlayerState {
     required super.controlOpacity,
   });
 
-  PlayerRunComplete.fromState(PlayerState state) : super(
-    sheet: state.sheet,
-    bpm: state.bpm,
-    isMetronome: state.isMetronome,
-    controlOpacity: state.controlOpacity,
-  );
+  PlayerRunComplete.fromState(PlayerState state)
+      : super(
+          sheet: state.sheet,
+          bpm: state.bpm,
+          isMetronome: state.isMetronome,
+          controlOpacity: state.controlOpacity,
+        );
 }
 
 extension Copy on PlayerState {
@@ -80,8 +103,9 @@ extension Copy on PlayerState {
     int? bpm,
     bool? isMetronome,
     double? controlOpacity,
+    int? countDown,
   }) {
-    switch(runtimeType) {
+    switch (runtimeType) {
       case PlayerInitial:
         return PlayerInitial(
           sheet: sheet ?? this.sheet,
@@ -109,6 +133,14 @@ extension Copy on PlayerState {
           bpm: bpm ?? this.bpm,
           isMetronome: isMetronome ?? this.isMetronome,
           controlOpacity: controlOpacity ?? this.controlOpacity,
+        );
+      case PlayerCountDown:
+        return PlayerCountDown(
+          sheet: sheet ?? this.sheet,
+          bpm: bpm ?? this.bpm,
+          isMetronome: isMetronome ?? this.isMetronome,
+          controlOpacity: controlOpacity ?? this.controlOpacity,
+          countDown: countDown ?? (this as PlayerCountDown).countDown,
         );
       default:
         throw StateError('Unknown state: $runtimeType');
