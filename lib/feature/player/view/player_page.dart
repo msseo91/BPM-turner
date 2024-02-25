@@ -49,7 +49,7 @@ class PlayerView extends StatelessWidget {
                             ),
                           );
                       return const ProgressLoading();
-                    } else if (state is PlayerSheetLoaded) {
+                    } else if (state is PlayerStandBy) {
                       return SheetView();
                     } else {
                       return const Text('Error');
