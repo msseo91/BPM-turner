@@ -26,15 +26,15 @@ final class PlayerInitial extends PlayerState {
   });
 }
 
-final class PlayerSheetLoaded extends PlayerState {
-  const PlayerSheetLoaded({
+final class PlayerStandBy extends PlayerState {
+  const PlayerStandBy({
     required super.sheet,
     required super.bpm,
     required super.isMetronome,
     required super.controlOpacity,
   });
 
-  PlayerSheetLoaded.fromState(PlayerState state) : super(
+  PlayerStandBy.fromState(PlayerState state) : super(
     sheet: state.sheet,
     bpm: state.bpm,
     isMetronome: state.isMetronome,
@@ -49,6 +49,13 @@ final class PlayerRunning extends PlayerState {
     required super.isMetronome,
     required super.controlOpacity,
   });
+
+  PlayerRunning.fromState(PlayerState state) : super(
+    sheet: state.sheet,
+    bpm: state.bpm,
+    isMetronome: state.isMetronome,
+    controlOpacity: state.controlOpacity,
+  );
 }
 
 final class PlayerRunComplete extends PlayerState {
@@ -58,6 +65,13 @@ final class PlayerRunComplete extends PlayerState {
     required super.isMetronome,
     required super.controlOpacity,
   });
+
+  PlayerRunComplete.fromState(PlayerState state) : super(
+    sheet: state.sheet,
+    bpm: state.bpm,
+    isMetronome: state.isMetronome,
+    controlOpacity: state.controlOpacity,
+  );
 }
 
 extension Copy on PlayerState {
@@ -75,8 +89,8 @@ extension Copy on PlayerState {
           isMetronome: isMetronome ?? this.isMetronome,
           controlOpacity: controlOpacity ?? this.controlOpacity,
         );
-      case PlayerSheetLoaded:
-        return PlayerSheetLoaded(
+      case PlayerStandBy:
+        return PlayerStandBy(
           sheet: sheet ?? this.sheet,
           bpm: bpm ?? this.bpm,
           isMetronome: isMetronome ?? this.isMetronome,

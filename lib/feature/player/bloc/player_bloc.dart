@@ -20,7 +20,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     required SheetRepository sheetRepository,
   })  : _sheetRepository = sheetRepository,
         super(PlayerInitial(
-            sheet: sheet, bpm: 170, isMetronome: false, controlOpacity: 1.0)) {
+            sheet: sheet, bpm: 170, isMetronome: false, controlOpacity: 0.0)) {
     on<PlayerEventLoadPage>(_onPlayerLoadPage);
     on<PlayerEventStop>(_onPlayerStop);
     on<PlayerEventStart>(_onPlayerStart);
@@ -45,7 +45,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
             });
 
             emit(
-              PlayerSheetLoaded.fromState(
+              PlayerStandBy.fromState(
                 state.copyWith(sheet: event.screenArg.sheet),
               ),
             );
@@ -58,7 +58,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
             });
 
             emit(
-              PlayerSheetLoaded.fromState(
+              PlayerStandBy.fromState(
                 state.copyWith(sheet: event.screenArg.sheet),
               ),
             );
@@ -68,30 +68,44 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   void _onPlayerStop(
     PlayerEventStop event,
     Emitter<PlayerState> emit,
-  ) {}
+  ) {
+    emit(PlayerStandBy.fromState(state));
+  }
 
   void _onPlayerStart(
     PlayerEventStart event,
     Emitter<PlayerState> emit,
-  ) {}
+  ) {
+    emit(PlayerRunning.fromState(state));
+  }
 
   void _onPlayerRunComplete(
     PlayerEventRunComplete event,
     Emitter<PlayerState> emit,
-  ) {}
+  ) {
+    emit(PlayerRunComplete.fromState(state));
+  }
 
   void _onPlayerTabView(
     PlayerEventTabView event,
     Emitter<PlayerState> emit,
-  ) {}
+  ) async {
+    emit(state.copyWith(controlOpacity: 1.0));
+    await Future.delayed(const Duration(seconds: 3));
+    emit(state.copyWith(controlOpacity: 0.0));
+  }
 
   void _onPlayerSetMetronome(
     PlayerEventSetMetronome event,
     Emitter<PlayerState> emit,
-  ) {}
+  ) {
+    emit(state.copyWith(isMetronome: event.isMetronome));
+  }
 
   void _onPlayerSetBpm(
     PlayerEventSetBpm event,
     Emitter<PlayerState> emit,
-  ) {}
+  ) {
+    emit(state.copyWith(bpm: event.bpm));
+  }
 }
