@@ -9,6 +9,7 @@ import 'package:bpm_turner/data/model/sheet_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+/*
 const double leftMargin = 100;
 const double rightMargin = 100;
 const double topMargin = 100;
@@ -68,7 +69,7 @@ class TempoSheett extends TempoSheet {
         screenSize.height - topMargin - bottomMargin
     );
 
-    final barHeight = sheetSize.height / currentPage()!.lines.length;
+    final barHeight = sheetSize.height / pageIndex()!.lines.length;
     var barCount = currentLine()?.bars.length ?? 5;
     halfBarWidth = sheetSize.width / barCount / 2;
     var currentLeft = leftMargin;
@@ -174,13 +175,13 @@ class TempoSheett extends TempoSheet {
     currentPageIndex = 0;
   }
 
-  MusicPage? currentPage() {
+  MusicPage? pageIndex() {
     if(pages.length <= currentPageIndex) return null;
     return pages[currentPageIndex];
   }
 
   Line? currentLine() {
-    var page = currentPage();
+    var page = pageIndex();
     if(page == null) return null;
     if(page.lines.length <= currentLineIndex) return null;
     return page.lines[currentLineIndex];
@@ -199,12 +200,12 @@ class TempoSheett extends TempoSheet {
     currentLineIndex = 0;
     currentBarIndex = 0;
     currentPageIndex++;
-    return currentPage();
+    return pageIndex();
   }
 
   /// Turn to next line.
   Line? _nextLine() {
-    var page = currentPage();
+    var page = pageIndex();
     if(page == null) return null;
     if(page.lines.length <= currentLineIndex + 1) {
       // Should turn next page.
@@ -233,3 +234,4 @@ class TempoSheett extends TempoSheet {
     return currentBar();
   }
 }
+*/

@@ -19,36 +19,79 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     required TempoSheet sheet,
     required SheetRepository sheetRepository,
   })  : _sheetRepository = sheetRepository,
-        super(PlayerInitial(sheet)) {
-    on<PlayerLoadPage>(_onPlayerLoadPage);
-    on<PlayerStop>(_onPlayerStop);
-    on<PlayerStart>(_onPlayerStart);
+        super(PlayerInitial(
+            sheet: sheet, bpm: 170, isMetronome: false, controlOpacity: 1.0)) {
+    on<PlayerEventLoadPage>(_onPlayerLoadPage);
+    on<PlayerEventStop>(_onPlayerStop);
+    on<PlayerEventStart>(_onPlayerStart);
+    on<PlayerEventRunComplete>(_onPlayerRunComplete);
+    on<PlayerEventTabView>(_onPlayerTabView);
+    on<PlayerEventSetMetronome>(_onPlayerSetMetronome);
+    on<PlayerEventSetBpm>(_onPlayerSetBpm);
   }
 
   final SheetRepository _sheetRepository;
 
   void _onPlayerLoadPage(
-    PlayerLoadPage event,
+    PlayerEventLoadPage event,
     Emitter<PlayerState> emit,
-  ) {
-    _sheetRepository
-        .loadSheetMusic(assetName: "rach-tarantella.pdf")
-        .then((imageList) {
-      tarantella.pages.forEachIndexed((i, page) {
-        page.sheetImage = imageList[i];
-      });
+  ) async {
+    event.screenArg.isAsset
+        ? await _sheetRepository
+            .loadSheetMusic(assetName: event.screenArg.path)
+            .then((imageList) {
+            event.screenArg.sheet.pages.forEachIndexed((i, page) {
+              page.sheetImage = imageList[i];
+            });
 
-      emit(PlayerSheetLoaded(tarantella));
-    });
+            emit(
+              PlayerSheetLoaded.fromState(
+                state.copyWith(sheet: event.screenArg.sheet),
+              ),
+            );
+          })
+        : await _sheetRepository
+            .loadSheetMusic(path: event.screenArg.path)
+            .then((imageList) {
+            event.screenArg.sheet.pages.forEachIndexed((i, page) {
+              page.sheetImage = imageList[i];
+            });
+
+            emit(
+              PlayerSheetLoaded.fromState(
+                state.copyWith(sheet: event.screenArg.sheet),
+              ),
+            );
+          });
   }
 
   void _onPlayerStop(
-    PlayerStop event,
+    PlayerEventStop event,
     Emitter<PlayerState> emit,
   ) {}
 
   void _onPlayerStart(
-    PlayerStart event,
+    PlayerEventStart event,
+    Emitter<PlayerState> emit,
+  ) {}
+
+  void _onPlayerRunComplete(
+    PlayerEventRunComplete event,
+    Emitter<PlayerState> emit,
+  ) {}
+
+  void _onPlayerTabView(
+    PlayerEventTabView event,
+    Emitter<PlayerState> emit,
+  ) {}
+
+  void _onPlayerSetMetronome(
+    PlayerEventSetMetronome event,
+    Emitter<PlayerState> emit,
+  ) {}
+
+  void _onPlayerSetBpm(
+    PlayerEventSetBpm event,
     Emitter<PlayerState> emit,
   ) {}
 }
