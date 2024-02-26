@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:bpm_turner/data/model/tempo_sheet.dart';
 import 'package:bpm_turner/data/repository/sheet_repository.dart';
+import 'package:bpm_turner/feature/player/proc/music_runner.dart';
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/scheduler.dart';
 
 part 'player_event.dart';
 
@@ -27,7 +29,9 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     on<PlayerEventChangePage>(_onPlayerChangePage);
   }
 
+  late Ticker _ticker;
   final SheetRepository _sheetRepository;
+  final MusicRunner runner = MusicRunner();
 
   void _onPlayerLoadPage(
     PlayerEventLoadPage event,
@@ -120,5 +124,11 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
 
     emit(state.copyWith(
         sheet: state.sheet.copyWith(pageIndex: event.pageIndex)));
+  }
+
+  void supplyTicker(TickerProvider tickerProvider) {
+    _ticker = tickerProvider.createTicker((elapsed) {
+
+    });
   }
 }

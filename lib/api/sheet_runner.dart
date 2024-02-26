@@ -5,7 +5,7 @@ import 'package:bpm_turner/data/model/sheet_bar.dart';
 import 'package:bpm_turner/data/model/sheet_line.dart';
 import 'package:bpm_turner/data/model/sheet_margin.dart';
 import 'package:bpm_turner/data/model/sheet_page.dart';
-import 'package:bpm_turner/data/model/square_data.dart';
+import 'package:bpm_turner/data/model/progress_line.dart';
 import 'package:bpm_turner/data/model/tempo_sheet.dart';
 import 'package:bpm_turner/global.dart';
 import 'package:flutter/scheduler.dart';
@@ -36,14 +36,14 @@ class SheetRunner {
   /// Height of bar. This should be updated on every page change.
   double _barHeight = 0;
 
-  final SquareData _currentSquare = SquareData(left: 0, top: 0, height: 0);
+  final ProgressLine _currentSquare = ProgressLine(left: 0, top: 0, height: 0);
 
   /// Audio for metronome sound.
   final AudioPlayer _player = AudioPlayer()
     ..setSource(AssetSource('metronome.mp3'))
     ..seek(const Duration(seconds: 0));
 
-  final BehaviorSubject<SquareData> squareDataSubject = BehaviorSubject(sync: true);
+  final BehaviorSubject<ProgressLine> squareDataSubject = BehaviorSubject(sync: true);
 
   SheetRunner(
     this._sheetSize,

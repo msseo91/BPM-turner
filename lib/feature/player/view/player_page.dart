@@ -1,6 +1,7 @@
 import 'package:bpm_turner/data/repository/sheet_repository.dart';
 import 'package:bpm_turner/global.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/sample/rach_op17.dart';
@@ -50,7 +51,7 @@ class PlayerView extends StatelessWidget {
                           );
                       return const ProgressLoading();
                     } else {
-                      return SheetView();
+                      return const SheetView();
                     }
                   },
                 ),
@@ -63,50 +64,24 @@ class PlayerView extends StatelessWidget {
   }
 }
 
-class ProgressLoading extends StatelessWidget {
-  const ProgressLoading({super.key});
+class SheetView extends StatefulWidget {
+  const SheetView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: SizedBox(
-        width: 300,
-        height: 300,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            CircularProgressIndicator(
-              strokeWidth: 10,
-              backgroundColor: Colors.black,
-              color: Colors.blue,
-            ),
-            Center(
-                child: Text(
-              'Loading file...',
-              style: TextStyle(fontSize: 20),
-            )),
-          ],
-        ),
-      ),
-    );
+  State createState() {
+    return _SheetViewState();
   }
 }
 
-class SheetView extends StatelessWidget {
-  SheetView({super.key});
-
+class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
   final sheetImageKey = GlobalKey();
+  late final Ticker ticker;
 
-  void nextPage() {
-    logger.d("nextPage");
-  }
+  @override
+  void initState() {
+    super.initState();
 
-  void prevPage() {
-    logger.d("prevPage");
-  }
-
-  void showPickFile() {
-    logger.d("showPickFile");
+    context.read<PlayerBloc>().supplyTicker(this);
   }
 
   @override
@@ -114,7 +89,6 @@ class SheetView extends StatelessWidget {
     return BlocBuilder<PlayerBloc, PlayerState>(
       builder: (context, state) {
         final colors = Theme.of(context).colorScheme;
-        const iconSize = 40.0;
         var playerBloc = context.read<PlayerBloc>();
 
         return SafeArea(
@@ -182,9 +156,9 @@ class SheetView extends StatelessWidget {
                               ),
                               onPressed: state is PlayerRunning
                                   ? () =>
-                                      playerBloc.add(const PlayerEventPause())
+                                  playerBloc.add(const PlayerEventPause())
                                   : () => playerBloc.add(
-                                      const PlayerEventStart(countDown: 3)),
+                                  const PlayerEventStart(countDown: 3)),
                             ),
                             IconButton(
                               iconSize: iconSize,
@@ -233,7 +207,7 @@ class SheetView extends StatelessWidget {
                                 color: colors.onSecondaryContainer,
                                 icon: const Icon(Icons.edit_note)),
                             IconButton(
-                                onPressed: showPickFile,
+                                onPressed: () {},
                                 iconSize: iconSize,
                                 color: colors.onSecondaryContainer,
                                 icon: const Icon(Icons.file_open))
@@ -250,6 +224,36 @@ class SheetView extends StatelessWidget {
   }
 }
 
+
+class ProgressLoading extends StatelessWidget {
+  const ProgressLoading({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: SizedBox(
+        width: 300,
+        height: 300,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            CircularProgressIndicator(
+              strokeWidth: 10,
+              backgroundColor: Colors.black,
+              color: Colors.blue,
+            ),
+            Center(
+                child: Text(
+              'Loading file...',
+              style: TextStyle(fontSize: 20),
+            )),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class CountDown extends StatelessWidget {
   const CountDown({super.key, required this.countDown});
 
@@ -260,7 +264,8 @@ class CountDown extends StatelessWidget {
     return Center(
       child: Text(
         "$countDown",
-        style: const TextStyle(fontSize: 72, fontWeight: FontWeight.bold),
+        style: const TextStyle(
+            fontSize: 72, fontWeight: FontWeight.bold, color: Colors.red),
       ),
     );
   }
