@@ -1,7 +1,7 @@
 import 'package:bpm_turner/data/repository/sheet_repository.dart';
 import 'package:bpm_turner/global.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/sample/rach_op17.dart';
 import '../bloc/player_bloc.dart';
@@ -49,7 +49,7 @@ class PlayerView extends StatelessWidget {
                             ),
                           );
                       return const ProgressLoading();
-                    } else  {
+                    } else {
                       return SheetView();
                     }
                   },
@@ -126,9 +126,11 @@ class SheetView extends StatelessWidget {
                 onHorizontalDragEnd: (dragEndDetails) {
                   var velocity = dragEndDetails.primaryVelocity ?? 0;
                   if (velocity < 0) {
-                    nextPage();
+                    playerBloc.add(PlayerEventChangePage(
+                        pageIndex: state.sheet.pageIndex + 1));
                   } else if (velocity > 0) {
-                    prevPage();
+                    playerBloc.add(PlayerEventChangePage(
+                        pageIndex: state.sheet.pageIndex - 1));
                   }
                 },
                 child: SizedBox(
@@ -179,14 +181,17 @@ class SheetView extends StatelessWidget {
                                     : Icons.play_arrow,
                               ),
                               onPressed: state is PlayerRunning
-                                  ? () => playerBloc.add(const PlayerEventPause())
-                                  : () => playerBloc.add(const PlayerEventStart(countDown: 3)),
+                                  ? () =>
+                                      playerBloc.add(const PlayerEventPause())
+                                  : () => playerBloc.add(
+                                      const PlayerEventStart(countDown: 3)),
                             ),
                             IconButton(
                               iconSize: iconSize,
                               color: colors.onSecondaryContainer,
                               icon: const Icon(Icons.stop),
-                              onPressed: () => playerBloc.add(const PlayerEventStop()),
+                              onPressed: () =>
+                                  playerBloc.add(const PlayerEventStop()),
                             ),
                             IconButton(
                               iconSize: iconSize,
@@ -235,7 +240,8 @@ class SheetView extends StatelessWidget {
                           ],
                         ))),
               ),
-              if(state is PlayerCountDown) CountDown(countDown: state.countDown),
+              if (state is PlayerCountDown)
+                CountDown(countDown: state.countDown),
             ],
           ),
         );

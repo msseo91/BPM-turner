@@ -1,14 +1,10 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:bloc/bloc.dart';
 import 'package:bpm_turner/data/model/tempo_sheet.dart';
 import 'package:bpm_turner/data/repository/sheet_repository.dart';
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
-import 'package:bpm_turner/data/sample/rach_op17.dart';
-
-import '../../../global.dart';
 
 part 'player_event.dart';
 
@@ -28,6 +24,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     on<PlayerEventTabView>(_onPlayerTabView);
     on<PlayerEventSetMetronome>(_onPlayerSetMetronome);
     on<PlayerEventSetBpm>(_onPlayerSetBpm);
+    on<PlayerEventChangePage>(_onPlayerChangePage);
   }
 
   final SheetRepository _sheetRepository;
@@ -77,7 +74,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     Emitter<PlayerState> emit,
   ) async {
     // Count down and emit PlayerRunning.
-    for(int i = event.countDown; i > 0; i--){
+    for (int i = event.countDown; i > 0; i--) {
       emit(PlayerCountDown.fromState(state, i));
       await Future.delayed(const Duration(seconds: 1));
     }
@@ -112,5 +109,16 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     Emitter<PlayerState> emit,
   ) {
     emit(state.copyWith(bpm: event.bpm));
+  }
+
+  void _onPlayerChangePage(
+    PlayerEventChangePage event,
+    Emitter<PlayerState> emit,
+  ) {
+    // Check page index validation.
+    if(event.pageIndex < 0 || event.pageIndex >= state.sheet.pages.length) return;
+
+    emit(state.copyWith(
+        sheet: state.sheet.copyWith(pageIndex: event.pageIndex)));
   }
 }
