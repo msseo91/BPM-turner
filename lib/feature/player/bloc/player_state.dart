@@ -6,15 +6,18 @@ sealed class PlayerState extends Equatable {
     required this.bpm,
     required this.isMetronome,
     required this.controlOpacity,
+    this.countDown = 0,
   });
 
   final TempoSheet sheet;
   final int bpm;
   final bool isMetronome;
   final double controlOpacity;
+  final int countDown;
 
   @override
-  List<Object> get props => [sheet, bpm, isMetronome, controlOpacity];
+  List<Object> get props =>
+      [sheet, bpm, isMetronome, controlOpacity, countDown];
 }
 
 final class PlayerInitial extends PlayerState {
@@ -49,17 +52,16 @@ final class PlayerCountDown extends PlayerState {
     required super.bpm,
     required super.isMetronome,
     required super.controlOpacity,
-    required this.countDown,
+    required super.countDown,
   });
 
-  final int countDown;
-
-  PlayerCountDown.fromState(PlayerState state, {required this.countDown})
+  PlayerCountDown.fromState(PlayerState state, int countDown)
       : super(
           sheet: state.sheet,
           bpm: state.bpm,
           isMetronome: state.isMetronome,
           controlOpacity: state.controlOpacity,
+          countDown: countDown,
         );
 }
 

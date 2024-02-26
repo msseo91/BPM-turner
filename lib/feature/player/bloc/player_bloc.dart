@@ -78,7 +78,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   ) async {
     // Count down and emit PlayerRunning.
     for(int i = event.countDown; i > 0; i--){
-      emit(PlayerCountDown.fromState(state, countDown: i));
+      emit(PlayerCountDown.fromState(state, i));
       await Future.delayed(const Duration(seconds: 1));
     }
     emit(PlayerRunning.fromState(state));
