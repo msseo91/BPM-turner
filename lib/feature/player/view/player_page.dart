@@ -1,9 +1,9 @@
 import 'package:bpm_turner/data/repository/sheet_repository.dart';
-import 'package:bpm_turner/global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../data/model/progress_line.dart';
 import '../../../data/sample/rach_op17.dart';
 import '../bloc/player_bloc.dart';
 
@@ -156,9 +156,9 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
                               ),
                               onPressed: state is PlayerRunning
                                   ? () =>
-                                  playerBloc.add(const PlayerEventPause())
+                                      playerBloc.add(const PlayerEventPause())
                                   : () => playerBloc.add(
-                                  const PlayerEventStart(countDown: 3)),
+                                      const PlayerEventStart(countDown: 3)),
                             ),
                             IconButton(
                               iconSize: iconSize,
@@ -216,6 +216,16 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
               ),
               if (state is PlayerCountDown)
                 CountDown(countDown: state.countDown),
+              BlocBuilder<PlayerBloc, PlayerState>(
+                builder: (context, state) {
+                  return ProgressLineWidget(
+                    progressLine: (state as PlayerRunning).progressLine,
+                  );
+                },
+                buildWhen: (previous, current) {
+                  return current is PlayerRunning;
+                },
+              ),
             ],
           ),
         );
@@ -223,7 +233,6 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
     );
   }
 }
-
 
 class ProgressLoading extends StatelessWidget {
   const ProgressLoading({super.key});
@@ -266,6 +275,23 @@ class CountDown extends StatelessWidget {
         "$countDown",
         style: const TextStyle(
             fontSize: 72, fontWeight: FontWeight.bold, color: Colors.red),
+      ),
+    );
+  }
+}
+
+class ProgressLineWidget extends StatelessWidget {
+  const ProgressLineWidget({super.key, required this.progressLine});
+
+  final ProgressLine progressLine;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      left: progressLine.left.toDouble(),
+      top: progressLine.top.toDouble(),
+      child: const VerticalDivider(
+        color: Colors.red,
       ),
     );
   }

@@ -1,3 +1,5 @@
+import 'package:bpm_turner/data/model/sheet_bar.dart';
+import 'package:bpm_turner/data/model/sheet_line.dart';
 import 'package:bpm_turner/data/model/sheet_page.dart';
 import 'package:equatable/equatable.dart';
 
@@ -14,6 +16,10 @@ class TempoSheet extends Equatable {
   });
 
   MusicPage get currentPage => pages[pageIndex];
+
+  Line get currentLine => currentPage.currentLine;
+
+  Bar get currentBar => currentLine.currentBar;
 
   @override
   List<Object> get props => [name, pageIndex];

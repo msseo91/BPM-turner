@@ -1,193 +1,60 @@
-import 'dart:ui';
-
-import 'package:audioplayers/audioplayers.dart';
+import 'package:bpm_turner/data/model/runner_state.dart';
 import 'package:bpm_turner/data/model/sheet_bar.dart';
-import 'package:bpm_turner/data/model/sheet_line.dart';
-import 'package:bpm_turner/data/model/sheet_margin.dart';
-import 'package:bpm_turner/data/model/sheet_page.dart';
-import 'package:bpm_turner/data/model/progress_line.dart';
 import 'package:bpm_turner/data/model/tempo_sheet.dart';
-import 'package:bpm_turner/global.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:rxdart/rxdart.dart';
 
+import '../data/model/progress_line.dart';
+
+///
+/// 필요한것 정리
+/// Elapse 를 기준으로 프로그레스를 움직이려면 필요한것.
+/// 지금이 아니라, 나중에 마디와 단을 그렸을 때(모델) 을 기준으로 정해야 한다.
+/// 1. 악보 페이지의 사이즈
+/// 2. BPM
+/// 3. 한 마디 모델
+/// 4. 한 틱에 움질일 거리는 아래와 같다.
+///   barWidth / (barDuration / elapseBetweenTick)
+/// 5. 현재의 ProgressBar 를 리턴할 수 있어야 한다.
+/// 6. 페이지 전환 여부를 리턴할 수 있어야 한다.
+///
 class SheetRunner {
-  late final Ticker _ticker;
-  final Size _sheetSize;
-  late final TempoSheet _sheet;
-  final SheetMargin sheetMargin;
-  final int bpm;
-  late final Duration halfBarDuration;
-  late Size playerSize;
-  bool playMetronome;
+  final TempoSheet sheet;
+  int bpm;
+  bool isMetronome = false;
 
-  Function(Bar, int)? barCallback;
-  Function(Bar)? lineChangeCallback;
-  Function(int)? pageChangeCallback;
-
-  /// Current bar index in sheet.
-  int currentBarIndex = 0;
-  int currentPageIndex = 0;
-  int currentLineIndex = 0;
+  Duration _barDuration = Duration.zero;
   int _lastTickTime = 0;
   int _lastBeepTime = 0;
-  int _lastBarTime = 0;
+  ProgressLine _currentProgressLine = ProgressLine.initial();
 
-  /// Height of bar. This should be updated on every page change.
-  double _barHeight = 0;
-
-  final ProgressLine _currentSquare = ProgressLine(left: 0, top: 0, height: 0);
-
-  /// Audio for metronome sound.
-  final AudioPlayer _player = AudioPlayer()
-    ..setSource(AssetSource('metronome.mp3'))
-    ..seek(const Duration(seconds: 0));
-
-  final BehaviorSubject<ProgressLine> squareDataSubject = BehaviorSubject(sync: true);
-
-  SheetRunner(
-    this._sheetSize,
-    this._sheet, {
-    this.sheetMargin = const SheetMargin(left: 100, right: 100, top: 100, bottom: 100),
-        this.playMetronome = false,
+  SheetRunner({
+    required this.sheet,
     required this.bpm,
-    this.barCallback,
-    this.lineChangeCallback,
-    this.pageChangeCallback,
+    required this.isMetronome,
   }) {
-    _ticker = Ticker(_onTick);
-    halfBarDuration = Duration(milliseconds: bpmDuration(bpm));
-    playerSize = Size(_sheetSize.width - sheetMargin.right - sheetMargin.left,
-        _sheetSize.height - sheetMargin.top - sheetMargin.bottom);
-
-    _barHeight = playerSize.height / _sheet.pages[0].lines.length;
+    _barDuration = Duration(milliseconds: bpmDuration(bpm));
+    _currentProgressLine = ProgressLine(
+      left: sheet.currentBar.barRect.left.toInt(),
+      top: sheet.currentBar.barRect.top.toInt(),
+      height: sheet.currentBar.barRect.height.toInt(),
+    );
   }
 
-  _onTick(Duration elapse) {
-    logger.d("onTick");
-    var bar = currentBar();
-    if (bar == null) {
-      // End of music.
-      logger.i("End of music");
-      stop();
-      return;
-    }
-
-    var line = currentLine();
-
-    var barCount = line?.bars.length ?? 5;
-    var barWidth = playerSize.width / barCount;
-
+  RunnerState onTick(Duration elapse) {
     var elapseBetweenBeep = elapse.inMilliseconds - _lastBeepTime;
     var elapseBetweenTick = elapse.inMilliseconds - _lastTickTime;
     _lastTickTime = elapse.inMilliseconds;
 
-    // 1. How many pixels we have to move to right.
-    var barDuration = bar.halfBar ? halfBarDuration.inMilliseconds : (halfBarDuration.inMilliseconds * 2);
+    var barWidth = sheet.currentBar.barRect.width;
+    var barDuration = sheet.currentBar.halfBar
+        ? (_barDuration.inMilliseconds ~/ 2)
+        : _barDuration.inMilliseconds;
     var distance = barWidth ~/ (barDuration / elapseBetweenTick);
-    // Move the progressBar.
-    _currentSquare.left += distance;
 
-    // 2. It is end of the bar?
-    if((elapse.inMilliseconds - _lastBarTime >= barDuration)) {
-      // We passed 'end of the bar'. Change it!
-      _nextBar();
-    }
-
-    squareDataSubject.add(_currentSquare);
-
-    // 2. It is time to beep?
-    if(elapseBetweenBeep >= halfBarDuration.inMilliseconds) {
-      logger.i("Elapse between: $elapseBetweenBeep ms");
-      _lastBeepTime = elapse.inMilliseconds;
-
-      if (playMetronome) {
-        _player.resume();
-        _player.seek(const Duration(seconds: 0));
-      }
-    }
-  }
-
-  void playSheet() {
-    _ticker.start();
-  }
-
-  void stop() {
-    _ticker.stop();
-  }
-
-  MusicPage? currentPage() {
-    if (_sheet.pages.length <= currentPageIndex) return null;
-    return _sheet.pages[currentPageIndex];
-  }
-
-  Line? currentLine() {
-    var page = currentPage();
-    if (page == null) return null;
-    if (page.lines.length <= currentLineIndex) return null;
-    return page.lines[currentLineIndex];
-  }
-
-  Bar? currentBar() {
-    var line = currentLine();
-    if (line == null) return null;
-    if (line.bars.length <= currentBarIndex) return null;
-    return line.bars[currentBarIndex];
-  }
-
-  /// Turn to next page.
-  /// @return next page if exists, null if not.
-  MusicPage? _nextPage() {
-    currentLineIndex = 0;
-    currentBarIndex = 0;
-    if(currentPageIndex + 1 >= _sheet.pages.length) {
-      // Current page is end of the page.
-      logger.w("This is last page. $currentPageIndex");
-      return null;
-    }
-    currentPageIndex++;
-    // Update bar height.
-    _barHeight = playerSize.height / _sheet.pages[currentPageIndex].lines.length;
-    _currentSquare.left = sheetMargin.left;
-    _currentSquare.height = _barHeight.toInt();
-    _currentSquare.top = sheetMargin.top;
-
-    return currentPage();
-  }
-
-  /// Turn to next line.
-  Line? _nextLine() {
-    var page = currentPage();
-    if (page == null) return null;
-    if (page.lines.length <= currentLineIndex + 1) {
-      // Should turn next page.
-      _nextPage();
-    } else {
-      currentBarIndex = 0;
-      currentLineIndex++;
-
-      // We changed the line. So we need to change the progressBar position.
-      _currentSquare.left = sheetMargin.left;
-      _currentSquare.top += _barHeight.toInt();
-      var bar = currentBar();
-      if(bar != null) {
-        lineChangeCallback?.call(bar);
-      }
-    }
-
-    return currentLine();
-  }
-
-  /// Turn to nextBar.
-  Bar? _nextBar() {
-    var line = currentLine();
-    if (line == null) return null;
-    if (line.bars.length <= currentBarIndex + 1) {
-      // Should turn to next line.
-      _nextLine();
-    } else {
-      currentBarIndex++;
-    }
-    return currentBar();
+    // Move progressLine. TODO - Think when bar is ended.
+    _currentProgressLine = ProgressLine(
+      left: _currentProgressLine.left + distance,
+      top: _currentProgressLine.top,
+      height: _currentProgressLine.height,
+    );
   }
 }

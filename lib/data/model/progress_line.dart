@@ -9,4 +9,8 @@ class ProgressLine extends Equatable {
 
   @override
   List<Object?> get props => [left, top, height];
+
+  static ProgressLine initial() {
+    return const ProgressLine(left: 0, top: 0, height: 0);
+  }
 }
