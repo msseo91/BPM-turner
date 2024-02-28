@@ -14,10 +14,6 @@ sealed class PlayerState extends Equatable {
   final bool isMetronome;
   final double controlOpacity;
   final int countDown;
-
-  @override
-  List<Object> get props =>
-      [sheet, bpm, isMetronome, controlOpacity, countDown];
 }
 
 final class PlayerInitial extends PlayerState {
@@ -27,6 +23,9 @@ final class PlayerInitial extends PlayerState {
     required super.isMetronome,
     required super.controlOpacity,
   });
+
+  @override
+  List<Object?> get props => [sheet, bpm, isMetronome, controlOpacity];
 }
 
 final class PlayerStandBy extends PlayerState {
@@ -44,6 +43,9 @@ final class PlayerStandBy extends PlayerState {
           isMetronome: state.isMetronome,
           controlOpacity: state.controlOpacity,
         );
+
+  @override
+  List<Object?> get props => [sheet, bpm, isMetronome, controlOpacity];
 }
 
 final class PlayerCountDown extends PlayerState {
@@ -63,6 +65,9 @@ final class PlayerCountDown extends PlayerState {
           controlOpacity: state.controlOpacity,
           countDown: countDown,
         );
+
+  @override
+  List<Object?> get props => [sheet, bpm, isMetronome, controlOpacity];
 }
 
 final class PlayerRunning extends PlayerState {
@@ -71,15 +76,22 @@ final class PlayerRunning extends PlayerState {
     required super.bpm,
     required super.isMetronome,
     required super.controlOpacity,
+    required this.progressLine,
   });
 
-  PlayerRunning.fromState(PlayerState state)
-      : super(
+  final ProgressLine progressLine;
+
+  PlayerRunning.fromState(PlayerState state, ProgressLine progressLine)
+      : this(
           sheet: state.sheet,
           bpm: state.bpm,
           isMetronome: state.isMetronome,
           controlOpacity: state.controlOpacity,
+          progressLine: progressLine,
         );
+
+  @override
+  List<Object?> get props => [sheet, bpm, isMetronome, controlOpacity, progressLine];
 }
 
 final class PlayerRunComplete extends PlayerState {
@@ -97,9 +109,30 @@ final class PlayerRunComplete extends PlayerState {
           isMetronome: state.isMetronome,
           controlOpacity: state.controlOpacity,
         );
+
+  @override
+  List<Object?> get props => [sheet, bpm, isMetronome, controlOpacity];
 }
 
-extension Copy on PlayerState {
+extension on PlayerRunning {
+  PlayerRunning copyWith({
+    TempoSheet? sheet,
+    int? bpm,
+    bool? isMetronome,
+    double? controlOpacity,
+    ProgressLine? progressLine,
+  }) {
+    return PlayerRunning(
+      sheet: sheet ?? this.sheet,
+      bpm: bpm ?? this.bpm,
+      isMetronome: isMetronome ?? this.isMetronome,
+      controlOpacity: controlOpacity ?? this.controlOpacity,
+      progressLine: progressLine ?? this.progressLine,
+    );
+  }
+}
+
+extension on PlayerState {
   PlayerState copyWith({
     TempoSheet? sheet,
     int? bpm,
@@ -117,13 +150,6 @@ extension Copy on PlayerState {
         );
       case PlayerStandBy:
         return PlayerStandBy(
-          sheet: sheet ?? this.sheet,
-          bpm: bpm ?? this.bpm,
-          isMetronome: isMetronome ?? this.isMetronome,
-          controlOpacity: controlOpacity ?? this.controlOpacity,
-        );
-      case PlayerRunning:
-        return PlayerRunning(
           sheet: sheet ?? this.sheet,
           bpm: bpm ?? this.bpm,
           isMetronome: isMetronome ?? this.isMetronome,

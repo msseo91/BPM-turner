@@ -1,8 +1,12 @@
-class ProgressLine {
-  int left;
-  int top;
-  int height;
+import 'package:equatable/equatable.dart';
 
-  ProgressLine({required this.left, required this.top, required this.height});
+class ProgressLine extends Equatable {
+  final int left;
+  final int top;
+  final int height;
 
+  const ProgressLine({required this.left, required this.top, required this.height});
+
+  @override
+  List<Object?> get props => [left, top, height];
 }

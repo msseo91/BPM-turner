@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:bpm_turner/data/model/progress_line.dart';
 import 'package:bpm_turner/data/model/tempo_sheet.dart';
 import 'package:bpm_turner/data/repository/sheet_repository.dart';
 import 'package:bpm_turner/feature/player/proc/music_runner.dart';
