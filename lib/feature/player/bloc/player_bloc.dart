@@ -98,6 +98,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
       }
       if (runnerState.isEnd) {
         emit(PlayerRunComplete.fromState(state));
+        _ticker.stop();
         return;
       }
 
