@@ -218,8 +218,12 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
                 CountDown(countDown: state.countDown),
               BlocBuilder<PlayerBloc, PlayerState>(
                 builder: (context, state) {
+                  if(state is! PlayerRunning) {
+                    return const SizedBox.shrink();
+                  }
+
                   return ProgressLineWidget(
-                    progressLine: (state as PlayerRunning).progressLine,
+                    progressLine: state.progressLine,
                   );
                 },
                 buildWhen: (previous, current) {
