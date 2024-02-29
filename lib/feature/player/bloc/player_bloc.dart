@@ -105,8 +105,8 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
       emit(
         PlayerRunning.fromState(state, runnerState.progressLine),
       );
-    })
-      ..start();
+    });
+    await _ticker.start();
   }
 
   void _onPlayerRunComplete(

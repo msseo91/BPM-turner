@@ -1,4 +1,5 @@
 import 'package:bpm_turner/data/repository/sheet_repository.dart';
+import 'package:bpm_turner/global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -96,6 +97,7 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
             children: <Widget>[
               GestureDetector(
                 onTap: () => playerBloc.add(const PlayerEventTabView()),
+                onTapDown: (details) => logger.d("tap: ${details.globalPosition}"),
                 behavior: HitTestBehavior.translucent,
                 onHorizontalDragEnd: (dragEndDetails) {
                   var velocity = dragEndDetails.primaryVelocity ?? 0;
@@ -296,6 +298,8 @@ class ProgressLineWidget extends StatelessWidget {
       top: progressLine.top.toDouble(),
       child: const VerticalDivider(
         color: Colors.red,
+        width: 0,
+        thickness: 1,
       ),
     );
   }

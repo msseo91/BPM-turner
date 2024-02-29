@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:bpm_turner/data/model/sheet_bar.dart';
 import 'package:bpm_turner/data/model/sheet_page.dart';
 
@@ -10,7 +12,16 @@ TempoSheet tarantella = TempoSheet("Rachmaninoff Suite No.2, Op.17 Tarantella",
 
 List<MusicPage> _makePages() {
   return [
-    MusicPage(0, [Bar(halfBar: true)] + makeBars(15)),
+    //MusicPage(0, [Bar(halfBar: true)] + makeBars(15)),
+    MusicPage(0, [
+      Bar(halfBar: true, barRect: const Rect.fromLTRB(87, 181, 114, 308)),
+      Bar(barRect: const Rect.fromLTRB(114, 181, 173, 308)),
+      Bar(barRect: const Rect.fromLTRB(173, 181, 212, 308)),
+      Bar(barRect: const Rect.fromLTRB(212, 181, 261, 308)),
+      Bar(barRect: const Rect.fromLTRB(261, 181, 313, 308)),
+      Bar(barRect: const Rect.fromLTRB(313, 181, 366, 308)),
+    ] + makeBars(10)),
+
     MusicPage(1, makeBars(16)),
     MusicPage(2, makeBars(15)),
     MusicPage(3, makeBars(15)),

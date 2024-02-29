@@ -67,7 +67,8 @@ final class PlayerCountDown extends PlayerState {
         );
 
   @override
-  List<Object?> get props => [sheet, bpm, isMetronome, controlOpacity];
+  List<Object?> get props =>
+      [sheet, bpm, isMetronome, controlOpacity, countDown];
 }
 
 final class PlayerRunning extends PlayerState {
@@ -91,7 +92,8 @@ final class PlayerRunning extends PlayerState {
         );
 
   @override
-  List<Object?> get props => [sheet, bpm, isMetronome, controlOpacity, progressLine];
+  List<Object?> get props =>
+      [sheet, bpm, isMetronome, controlOpacity, progressLine];
 }
 
 final class PlayerRunComplete extends PlayerState {
@@ -169,6 +171,14 @@ extension on PlayerState {
           isMetronome: isMetronome ?? this.isMetronome,
           controlOpacity: controlOpacity ?? this.controlOpacity,
           countDown: countDown ?? (this as PlayerCountDown).countDown,
+        );
+      case PlayerRunning:
+        return PlayerRunning(
+          sheet: sheet ?? this.sheet,
+          bpm: bpm ?? this.bpm,
+          isMetronome: isMetronome ?? this.isMetronome,
+          controlOpacity: controlOpacity ?? this.controlOpacity,
+          progressLine: (this as PlayerRunning).progressLine,
         );
       default:
         throw StateError('Unknown state: $runtimeType');

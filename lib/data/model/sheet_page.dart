@@ -3,7 +3,6 @@
 import 'dart:ui';
 
 import 'package:bpm_turner/data/model/sheet_bar.dart';
-import 'package:bpm_turner/data/model/sheet_line.dart';
 
 /// Represent page of sheet music.
 class MusicPage {
