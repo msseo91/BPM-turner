@@ -1,249 +1,63 @@
 import 'package:bpm_turner/data/model/sheet_bar.dart';
-import 'package:bpm_turner/data/model/sheet_line.dart';
 import 'package:bpm_turner/data/model/sheet_page.dart';
-import 'package:bpm_turner/data/model/sheet_music.dart';
 
 import '../model/tempo_sheet.dart';
 
 /// Rachmaninoff Suite No.2, Op.17 Tarantella
 
-TempoSheet tarantella = TempoSheet("Rachmaninoff Suite No.2, Op.17 Tarantella", pages: _makePages());
+TempoSheet tarantella = TempoSheet("Rachmaninoff Suite No.2, Op.17 Tarantella",
+    pages: _makePages());
 
 List<MusicPage> _makePages() {
   return [
-    MusicPage(0, [
-      Line(0, [
-        // Default lineIndex is 0.
-        Bar(timeSignature68, halfBar: true),
-        Bar(timeSignature68),
-        Bar(timeSignature68),
-        Bar(timeSignature68),
-        Bar(timeSignature68),
-        Bar(timeSignature68, lastBarInLine: true)]),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(1, [
-      Line.makeBarLine(index: 0, barCount: 6, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(2, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(3, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(4, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(5, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(6, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(7, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(8, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(9, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 4, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 4, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(10, [
-      Line.makeBarLine(index: 0, barCount: 6, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 6, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 6, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(11, [
-      Line.makeBarLine(index: 0, barCount: 6, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 6, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 6, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(12, [
-      Line.makeBarLine(index: 0, barCount: 6, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 6, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 6, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(13, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(14, [
-      Line.makeBarLine(index: 0, barCount: 6, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(15, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(16, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(17, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(18, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(19, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(20, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(21, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(22, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(23, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(24, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(25, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(26, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(27, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(28, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(29, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(30, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(31, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 6, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(32, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(33, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(34, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 5, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(35, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 6, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(36, [
-      Line.makeBarLine(index: 0, barCount: 6, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 6, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
-
-    MusicPage(37, [
-      Line.makeBarLine(index: 0, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 1, barCount: 5, timeSignature: timeSignature68),
-      Line.makeBarLine(index: 2, barCount: 6, timeSignature: timeSignature68, lastLineInPage: true),
-    ]),
+    MusicPage(0, [Bar(halfBar: true)] + makeBars(15)),
+    MusicPage(1, makeBars(16)),
+    MusicPage(2, makeBars(15)),
+    MusicPage(3, makeBars(15)),
+    MusicPage(4, makeBars(15)),
+    MusicPage(5, makeBars(15)),
+    MusicPage(6, makeBars(15)),
+    MusicPage(7, makeBars(15)),
+    MusicPage(8, makeBars(15)),
+    MusicPage(9, makeBars(13)),
+    MusicPage(10, makeBars(18)),
+    MusicPage(11, makeBars(18)),
+    MusicPage(12, makeBars(18)),
+    MusicPage(13, makeBars(15)),
+    MusicPage(14, makeBars(16)),
+    MusicPage(15, makeBars(15)),
+    MusicPage(16, makeBars(15)),
+    MusicPage(17, makeBars(15)),
+    MusicPage(18, makeBars(15)),
+    MusicPage(19, makeBars(15)),
+    MusicPage(20, makeBars(15)),
+    MusicPage(21, makeBars(15)),
+    MusicPage(22, makeBars(15)),
+    MusicPage(23, makeBars(15)),
+    MusicPage(24, makeBars(15)),
+    MusicPage(25, makeBars(15)),
+    MusicPage(26, makeBars(15)),
+    MusicPage(27, makeBars(15)),
+    MusicPage(28, makeBars(15)),
+    MusicPage(29, makeBars(15)),
+    MusicPage(30, makeBars(15)),
+    MusicPage(31, makeBars(16)),
+    MusicPage(32, makeBars(15)),
+    MusicPage(33, makeBars(15)),
+    MusicPage(34, makeBars(15)),
+    MusicPage(35, makeBars(16)),
+    MusicPage(36, makeBars(17)),
+    MusicPage(37, makeBars(16)),
   ];
+}
+
+List<Bar> makeBars(int barCount) {
+  var bars = <Bar>[];
+  for (int i = 0; i < barCount; i++) {
+    var lastBar = i == barCount - 1;
+    bars.add(Bar(
+      lastBarInPage: lastBar,
+    ));
+  }
+  return bars;
 }

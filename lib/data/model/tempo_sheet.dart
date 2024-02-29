@@ -1,5 +1,4 @@
 import 'package:bpm_turner/data/model/sheet_bar.dart';
-import 'package:bpm_turner/data/model/sheet_line.dart';
 import 'package:bpm_turner/data/model/sheet_page.dart';
 import 'package:equatable/equatable.dart';
 
@@ -7,9 +6,9 @@ import 'package:equatable/equatable.dart';
 class TempoSheet extends Equatable {
   final String name;
   final List<MusicPage> pages;
-  final int pageIndex;
+  int pageIndex;
 
-  const TempoSheet(
+  TempoSheet(
     this.name, {
     required this.pages,
     this.pageIndex = 0,
@@ -17,12 +16,27 @@ class TempoSheet extends Equatable {
 
   MusicPage get currentPage => pages[pageIndex];
 
-  Line get currentLine => currentPage.currentLine;
-
-  Bar get currentBar => currentLine.currentBar;
+  Bar get currentBar => currentPage.currentBar;
 
   @override
   List<Object> get props => [name, pageIndex];
+
+  Bar? nextBar() {
+    var bar = currentPage.nextBar();
+    if(bar != null) return bar;
+
+    // End of the music.
+    return null;
+  }
+
+  MusicPage? nextPage() {
+    if(pageIndex < pages.length - 1) {
+      pageIndex++;
+      return currentPage;
+    } else {
+      return null;
+    }
+  }
 
   TempoSheet copyWith({
     String? name,

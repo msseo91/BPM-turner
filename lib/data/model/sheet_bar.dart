@@ -7,17 +7,10 @@ const (int, int) timeSignature68 = (6, 8);
 const (int, int) timeSignature38 = (3, 8);
 
 class Bar {
-  Bar(this.timeSignature,
-      {this.tempoParam = 0,
+  Bar({this.tempoParam = 0,
       this.lastBarInPage = false,
-      this.lastBarInLine = false,
       this.halfBar = false,
-      this.lineIndex = 0,
       this.barRect = Rect.zero});
-
-  /// Time signature. Ex) 4/4
-  /// (3,8) means 3/8
-  (int, int) timeSignature;
 
   /// Tempo parameter for representing 'tempo change' like 'ritardando'.
   /// If 0, no change.
@@ -28,14 +21,8 @@ class Bar {
   /// If this bar is last bar in page, this value is true.
   bool lastBarInPage;
 
-  /// If this bar is last bar in line, this value is true.
-  bool lastBarInLine;
-
   /// If this bar is half bar, this value is true.
   bool halfBar;
-
-  /// Index of line.
-  int lineIndex;
 
   /// Rect of bar. This represent position of bar in page.
   Rect barRect;

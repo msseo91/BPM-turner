@@ -1,6 +1,8 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:bpm_turner/data/model/runner_state.dart';
 import 'package:bpm_turner/data/model/sheet_bar.dart';
 import 'package:bpm_turner/data/model/tempo_sheet.dart';
+import 'package:bpm_turner/global.dart';
 
 import '../data/model/progress_line.dart';
 
@@ -24,7 +26,13 @@ class SheetRunner {
   Duration _barDuration = Duration.zero;
   int _lastTickTime = 0;
   int _lastBeepTime = 0;
+  int _lastBarTime = 0;
   ProgressLine _currentProgressLine = ProgressLine.initial();
+
+  /// Audio for metronome sound.
+  final AudioPlayer _player = AudioPlayer()
+    ..setSource(AssetSource('metronome.mp3'))
+    ..seek(Duration.zero);
 
   SheetRunner({
     required this.sheet,
@@ -40,6 +48,8 @@ class SheetRunner {
   }
 
   RunnerState onTick(Duration elapse) {
+    var shouldTurnPage = false;
+    var isEndMusic = false;
     var elapseBetweenBeep = elapse.inMilliseconds - _lastBeepTime;
     var elapseBetweenTick = elapse.inMilliseconds - _lastTickTime;
     _lastTickTime = elapse.inMilliseconds;
@@ -55,6 +65,37 @@ class SheetRunner {
       left: _currentProgressLine.left + distance,
       top: _currentProgressLine.top,
       height: _currentProgressLine.height,
+    );
+
+    // Check end of the bar.
+    if ((elapse.inMilliseconds - _lastBarTime >= barDuration)) {
+      // We passed 'end of the bar'. Change it!
+      if(sheet.nextBar() == null) {
+        shouldTurnPage = true;
+        // We are end of the page.
+        if(sheet.nextPage() == null) {
+          // End of music.
+          isEndMusic = true;
+        }
+      }
+      _lastBarTime = elapse.inMilliseconds;
+    }
+
+    // Check make beat.
+    if (elapseBetweenBeep >= _barDuration.inMilliseconds ~/ 2) {
+      logger.i("Elapse between: $elapseBetweenBeep ms");
+      _lastBeepTime = elapse.inMilliseconds;
+
+      if (isMetronome) {
+        _player.resume();
+        _player.seek(Duration.zero);
+      }
+    }
+
+    return RunnerState(
+        shouldTurnPage: shouldTurnPage,
+        isEnd: isEndMusic,
+        progressLine: _currentProgressLine
     );
   }
 }

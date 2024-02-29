@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:bpm_turner/api/sheet_runner.dart';
 import 'package:bpm_turner/data/model/progress_line.dart';
 import 'package:bpm_turner/data/model/tempo_sheet.dart';
 import 'package:bpm_turner/data/repository/sheet_repository.dart';
-import 'package:bpm_turner/feature/player/proc/music_runner.dart';
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/scheduler.dart';
@@ -30,9 +30,9 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     on<PlayerEventChangePage>(_onPlayerChangePage);
   }
 
+  late TickerProvider _tickerProvider;
   late Ticker _ticker;
   final SheetRepository _sheetRepository;
-  final MusicRunner runner = MusicRunner();
 
   void _onPlayerLoadPage(
     PlayerEventLoadPage event,
@@ -84,6 +84,28 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
       await Future.delayed(const Duration(seconds: 1));
     }
     emit(PlayerRunning.fromState(state, ProgressLine.initial()));
+
+    SheetRunner sheetRunner = SheetRunner(
+      sheet: state.sheet,
+      bpm: state.bpm,
+      isMetronome: state.isMetronome,
+    );
+
+    _ticker = _tickerProvider.createTicker((elapsed) {
+      var runnerState = sheetRunner.onTick(elapsed);
+      if (runnerState.shouldTurnPage) {
+        emit(state);
+      }
+      if (runnerState.isEnd) {
+        emit(PlayerRunComplete.fromState(state));
+        return;
+      }
+
+      emit(
+        PlayerRunning.fromState(state, runnerState.progressLine),
+      );
+    })
+      ..start();
   }
 
   void _onPlayerRunComplete(
@@ -121,15 +143,15 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     Emitter<PlayerState> emit,
   ) {
     // Check page index validation.
-    if(event.pageIndex < 0 || event.pageIndex >= state.sheet.pages.length) return;
+    if (event.pageIndex < 0 || event.pageIndex >= state.sheet.pages.length) {
+      return;
+    }
 
     emit(state.copyWith(
         sheet: state.sheet.copyWith(pageIndex: event.pageIndex)));
   }
 
   void supplyTicker(TickerProvider tickerProvider) {
-    _ticker = tickerProvider.createTicker((elapsed) {
-
-    });
+    _tickerProvider = tickerProvider;
   }
 }
