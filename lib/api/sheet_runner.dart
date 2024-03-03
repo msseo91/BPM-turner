@@ -46,7 +46,7 @@ class SheetRunner {
     required this.bpm,
     required this.isMetronome,
   }) {
-    _barDuration = Duration(milliseconds: bpmDuration(bpm));
+    _barDuration = Duration(milliseconds: barDuration(bpm));
     _currentProgressLine = ProgressLine(
       left: sheet.currentBar.barRectInPercent.leftPoint(size),
       top: sheet.currentBar.barRectInPercent.topPoint(size),

@@ -95,10 +95,10 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
       final colors = Theme.of(context).colorScheme;
       var playerBloc = context.read<PlayerBloc>();
       logger.d("Building SheetView");
-/**/
+
       return SafeArea(
         child: LayoutBuilder(builder: (builderContext, constraints) {
-          var size = constraints.biggest;
+          var size = MediaQuery.of(builderContext).size;
           return Stack(
             children: <Widget>[
               GestureDetector(

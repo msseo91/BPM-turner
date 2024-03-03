@@ -58,7 +58,7 @@ extension BarCalculator on Bar {
   }
 }
 
-/// BPM duration for one tick in millisecond.
-int bpmDuration(int bpm) {
-  return ((60 * 1000) ~/ bpm);
+/// BPM duration for one BAR in millisecond.
+int barDuration(int bpm) {
+  return ((60 * 1000) ~/ bpm) * 2;
 }
