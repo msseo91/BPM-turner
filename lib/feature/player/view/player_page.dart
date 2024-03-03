@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../data/model/progress_line.dart';
 import '../../../data/sample/rach_op17.dart';
 import '../bloc/player_bloc.dart';
+import 'package:bpm_turner/utils/tab_utils.dart';
 
 const Duration controlDuration = Duration(milliseconds: 3000);
 const double iconSize = 40;
@@ -87,6 +88,8 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+
     return BlocBuilder<PlayerBloc, PlayerState>(
       builder: (context, state) {
         final colors = Theme.of(context).colorScheme;
@@ -97,7 +100,8 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
             children: <Widget>[
               GestureDetector(
                 onTap: () => playerBloc.add(const PlayerEventTabView()),
-                onTapDown: (details) => logger.d("tap: ${details.globalPosition}"),
+                onTapDown: (details) => logger.d(
+                    "tap: ${details.leftPercent(size)}/${details.topPercent(size)}"),
                 behavior: HitTestBehavior.translucent,
                 onHorizontalDragEnd: (dragEndDetails) {
                   var velocity = dragEndDetails.primaryVelocity ?? 0;
@@ -159,8 +163,10 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
                               onPressed: state is PlayerRunning
                                   ? () =>
                                       playerBloc.add(const PlayerEventPause())
-                                  : () => playerBloc.add(
-                                      const PlayerEventStart(countDown: 3)),
+                                  : () => playerBloc.add(PlayerEventStart(
+                                        countDown: 3,
+                                        size: size,
+                                      )),
                             ),
                             IconButton(
                               iconSize: iconSize,
@@ -218,20 +224,8 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
               ),
               if (state is PlayerCountDown)
                 CountDown(countDown: state.countDown),
-              BlocBuilder<PlayerBloc, PlayerState>(
-                builder: (context, state) {
-                  if(state is! PlayerRunning) {
-                    return const SizedBox.shrink();
-                  }
-
-                  return ProgressLineWidget(
-                    progressLine: state.progressLine,
-                  );
-                },
-                buildWhen: (previous, current) {
-                  return current is PlayerRunning;
-                },
-              ),
+              if (state is PlayerRunning)
+                ProgressLineWidget(progressLine: state.progressLine),
             ],
           ),
         );
@@ -293,13 +287,17 @@ class ProgressLineWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    logger.d("progressLine: $progressLine");
+    // 상위 Stack 에서의 Position 기준이다.
     return Positioned(
       left: progressLine.left.toDouble(),
       top: progressLine.top.toDouble(),
+      height: progressLine.height.toDouble(),
+      width: 1,
       child: const VerticalDivider(
         color: Colors.red,
         width: 0,
-        thickness: 1,
+        thickness: 2,
       ),
     );
   }

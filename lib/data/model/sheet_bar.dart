@@ -10,7 +10,7 @@ class Bar {
   Bar({this.tempoParam = 0,
       this.lastBarInPage = false,
       this.halfBar = false,
-      this.barRect = Rect.zero});
+      this.barRectInPercent = Rect.zero});
 
   /// Tempo parameter for representing 'tempo change' like 'ritardando'.
   /// If 0, no change.
@@ -25,7 +25,7 @@ class Bar {
   bool halfBar;
 
   /// Rect of bar. This represent position of bar in page.
-  Rect barRect;
+  Rect barRectInPercent;
 }
 
 /// *** Basic idea ***

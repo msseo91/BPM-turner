@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:bloc/bloc.dart';
 import 'package:bpm_turner/api/sheet_runner.dart';
@@ -89,6 +90,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
       sheet: state.sheet,
       bpm: state.bpm,
       isMetronome: state.isMetronome,
+      size: event.size,
     );
 
     _ticker = _tickerProvider.createTicker((elapsed) {

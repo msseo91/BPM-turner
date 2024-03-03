@@ -14,8 +14,9 @@ final class PlayerEventStop extends PlayerEvent {
 }
 
 final class PlayerEventStart extends PlayerEvent {
-  const PlayerEventStart({required this.countDown});
+  const PlayerEventStart({required this.countDown, required this.size});
   final int countDown;
+  final Size size;
 }
 
 final class PlayerEventPause extends PlayerEvent {

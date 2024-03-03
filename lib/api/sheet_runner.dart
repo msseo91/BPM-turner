@@ -1,8 +1,12 @@
+
+import 'dart:ui';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:bpm_turner/data/model/runner_state.dart';
 import 'package:bpm_turner/data/model/sheet_bar.dart';
 import 'package:bpm_turner/data/model/tempo_sheet.dart';
 import 'package:bpm_turner/global.dart';
+import 'package:bpm_turner/utils/tab_utils.dart';
 
 import '../data/model/progress_line.dart';
 
@@ -22,12 +26,14 @@ class SheetRunner {
   final TempoSheet sheet;
   int bpm;
   bool isMetronome = false;
+  final Size size;
 
   Duration _barDuration = Duration.zero;
   int _lastTickTime = 0;
   int _lastBeepTime = 0;
   int _lastBarTime = 0;
   ProgressLine _currentProgressLine = ProgressLine.initial();
+  int _currentBarIndex = 0;
 
   /// Audio for metronome sound.
   final AudioPlayer _player = AudioPlayer()
@@ -35,15 +41,16 @@ class SheetRunner {
     ..seek(Duration.zero);
 
   SheetRunner({
+    required this.size,
     required this.sheet,
     required this.bpm,
     required this.isMetronome,
   }) {
     _barDuration = Duration(milliseconds: bpmDuration(bpm));
     _currentProgressLine = ProgressLine(
-      left: sheet.currentBar.barRect.left.toInt(),
-      top: sheet.currentBar.barRect.top.toInt(),
-      height: sheet.currentBar.barRect.height.toInt(),
+      left: sheet.currentBar.barRectInPercent.leftPoint(size),
+      top: sheet.currentBar.barRectInPercent.topPoint(size),
+      height: sheet.currentBar.barRectInPercent.heightPixel(size),
     );
   }
 
@@ -54,18 +61,28 @@ class SheetRunner {
     var elapseBetweenTick = elapse.inMilliseconds - _lastTickTime;
     _lastTickTime = elapse.inMilliseconds;
 
-    var barWidth = sheet.currentBar.barRect.width;
+    var barWidth = sheet.currentBar.barRectInPercent.widthPixel(size);
     var barDuration = sheet.currentBar.halfBar
         ? (_barDuration.inMilliseconds ~/ 2)
         : _barDuration.inMilliseconds;
     var distance = barWidth ~/ (barDuration / elapseBetweenTick);
 
-    // Move progressLine. TODO - Think when bar is ended.
-    _currentProgressLine = ProgressLine(
-      left: _currentProgressLine.left + distance,
-      top: _currentProgressLine.top,
-      height: _currentProgressLine.height,
-    );
+    // Move progressLine.
+    if(_currentBarIndex != sheet.currentPage.currentBarIndex) {
+      // Bar is changed!
+      _currentBarIndex = sheet.currentPage.currentBarIndex;
+      _currentProgressLine = ProgressLine(
+        left: sheet.currentBar.barRectInPercent.leftPoint(size),
+        top: sheet.currentBar.barRectInPercent.topPoint(size),
+        height: sheet.currentBar.barRectInPercent.heightPixel(size),
+      );
+    } else {
+      _currentProgressLine = ProgressLine(
+        left: _currentProgressLine.left + distance,
+        top: _currentProgressLine.top,
+        height: _currentProgressLine.height,
+      );
+    }
 
     // Check end of the bar.
     if ((elapse.inMilliseconds - _lastBarTime >= barDuration)) {

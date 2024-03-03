@@ -14,12 +14,12 @@ List<MusicPage> _makePages() {
   return [
     //MusicPage(0, [Bar(halfBar: true)] + makeBars(15)),
     MusicPage(0, [
-      Bar(halfBar: true, barRect: const Rect.fromLTRB(87, 181, 114, 308)),
-      Bar(barRect: const Rect.fromLTRB(114, 181, 173, 308)),
-      Bar(barRect: const Rect.fromLTRB(173, 181, 212, 308)),
-      Bar(barRect: const Rect.fromLTRB(212, 181, 261, 308)),
-      Bar(barRect: const Rect.fromLTRB(261, 181, 313, 308)),
-      Bar(barRect: const Rect.fromLTRB(313, 181, 366, 308)),
+      Bar(halfBar: true, barRectInPercent: const Rect.fromLTRB(0.236, 0.155, 0.308, 0.356)),
+      Bar(barRectInPercent: const Rect.fromLTRB(0.308, 0.157, 0.439, 0.356)),
+      Bar(barRectInPercent: const Rect.fromLTRB(0.441, 0.157, 0.536, 0.356)),
+      Bar(barRectInPercent: const Rect.fromLTRB(0.538, 0.157, 0.653, 0.357)),
+      Bar(barRectInPercent: const Rect.fromLTRB(0.653, 0.159, 0.777, 0.358)),
+      Bar(barRectInPercent: const Rect.fromLTRB(0.777, 0.157, 0.906, 0.358)),
     ] + makeBars(10)),
 
     MusicPage(1, makeBars(16)),
