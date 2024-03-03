@@ -96,7 +96,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     _ticker = _tickerProvider.createTicker((elapsed) {
       var runnerState = sheetRunner.onTick(elapsed);
       if (runnerState.shouldTurnPage) {
-        emit(state);
+        emit(state.copyWith(sheet: runnerState.sheet));
       }
       if (runnerState.isEnd) {
         emit(PlayerRunComplete.fromState(state));

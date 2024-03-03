@@ -10,6 +10,14 @@ import '../model/tempo_sheet.dart';
 TempoSheet tarantella = TempoSheet("Rachmaninoff Suite No.2, Op.17 Tarantella",
     pages: _makePages());
 
+/**
+ *
+    Bar(barRectInPercent: const Rect.fromLTRB()),
+    Bar(barRectInPercent: const Rect.fromLTRB()),
+    Bar(barRectInPercent: const Rect.fromLTRB()),
+    Bar(barRectInPercent: const Rect.fromLTRB()),
+    Bar(barRectInPercent: const Rect.fromLTRB()),
+ */
 List<MusicPage> _makePages() {
   return [
     //MusicPage(0, [Bar(halfBar: true)] + makeBars(15)),
@@ -20,9 +28,30 @@ List<MusicPage> _makePages() {
       Bar(barRectInPercent: const Rect.fromLTRB(0.538, 0.157, 0.653, 0.357)),
       Bar(barRectInPercent: const Rect.fromLTRB(0.653, 0.159, 0.777, 0.358)),
       Bar(barRectInPercent: const Rect.fromLTRB(0.777, 0.157, 0.906, 0.358)),
-    ] + makeBars(10)),
+
+      Bar(barRectInPercent: const Rect.fromLTRB(0.179, 0.426, 0.316, 0.64)),
+      Bar(barRectInPercent: const Rect.fromLTRB(0.316, 0.426, 0.441, 0.64)),
+      Bar(barRectInPercent: const Rect.fromLTRB(0.441 ,0.426, 0.575, 0.64)),
+      Bar(barRectInPercent: const Rect.fromLTRB(0.575, 0.426, 0.741, 0.64)),
+      Bar(barRectInPercent: const Rect.fromLTRB(0.741, 0.426, 0.903, 0.64)),
+
+      Bar(barRectInPercent: const Rect.fromLTRB(0.177, 0.697, 0.333, 0.915)),
+      Bar(barRectInPercent: const Rect.fromLTRB(0.333, 0.697, 0.468, 0.915)),
+      Bar(barRectInPercent: const Rect.fromLTRB(0.468, 0.697, 0.612, 0.915)),
+      Bar(barRectInPercent: const Rect.fromLTRB(0.612, 0.697, 0.735, 0.915)),
+      Bar(barRectInPercent: const Rect.fromLTRB(0.735, 0.697, 0.904, 0.915)),
+    ]),
 
     MusicPage(1, makeBars(16)),
+    /*MusicPage(1, [
+      Bar(barRectInPercent: const Rect.fromLTRB()),
+      Bar(barRectInPercent: const Rect.fromLTRB()),
+      Bar(barRectInPercent: const Rect.fromLTRB()),
+      Bar(barRectInPercent: const Rect.fromLTRB()),
+      Bar(barRectInPercent: const Rect.fromLTRB()),
+    ]),*/
+
+
     MusicPage(2, makeBars(15)),
     MusicPage(3, makeBars(15)),
     MusicPage(4, makeBars(15)),

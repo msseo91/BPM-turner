@@ -89,6 +89,7 @@ class SheetRunner {
       // We passed 'end of the bar'. Change it!
       if(sheet.nextBar() == null) {
         shouldTurnPage = true;
+        logger.d("Turn page!");
         // We are end of the page.
         if(sheet.nextPage() == null) {
           // End of music.
@@ -112,7 +113,8 @@ class SheetRunner {
     return RunnerState(
         shouldTurnPage: shouldTurnPage,
         isEnd: isEndMusic,
-        progressLine: _currentProgressLine
+        progressLine: _currentProgressLine,
+        sheet: sheet,
     );
   }
 }

@@ -19,10 +19,11 @@ class PlayerPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => PlayerBloc(
-        sheet: tarantella,
-        sheetRepository: RepositoryProvider.of<SheetRepository>(context),
-      ),
+      create: (_) =>
+          PlayerBloc(
+            sheet: tarantella,
+            sheetRepository: RepositoryProvider.of<SheetRepository>(context),
+          ),
       child: const PlayerView(),
     );
   }
@@ -43,14 +44,14 @@ class PlayerView extends StatelessWidget {
                   builder: (context, state) {
                     if (state is PlayerInitial) {
                       context.read<PlayerBloc>().add(
-                            PlayerEventLoadPage(
-                              screenArg: PlayerScreenArg(
-                                path: "assets/rach-tarantella.pdf",
-                                sheet: tarantella,
-                                isAsset: true,
-                              ),
-                            ),
-                          );
+                        PlayerEventLoadPage(
+                          screenArg: PlayerScreenArg(
+                            path: "assets/rach-tarantella.pdf",
+                            sheet: tarantella,
+                            isAsset: true,
+                          ),
+                        ),
+                      );
                       return const ProgressLoading();
                     } else {
                       return const SheetView();
@@ -88,20 +89,23 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
 
-    return BlocBuilder<PlayerBloc, PlayerState>(
-      builder: (context, state) {
-        final colors = Theme.of(context).colorScheme;
-        var playerBloc = context.read<PlayerBloc>();
 
-        return SafeArea(
-          child: Stack(
+    return BlocBuilder<PlayerBloc, PlayerState>(builder: (context, state) {
+      final colors = Theme.of(context).colorScheme;
+      var playerBloc = context.read<PlayerBloc>();
+      logger.d("Building SheetView");
+/**/
+      return SafeArea(
+        child: LayoutBuilder(builder: (builderContext, constraints) {
+          var size = constraints.biggest;
+          return Stack(
             children: <Widget>[
               GestureDetector(
                 onTap: () => playerBloc.add(const PlayerEventTabView()),
-                onTapDown: (details) => logger.d(
-                    "tap: ${details.leftPercent(size)}/${details.topPercent(size)}"),
+                onTapDown: (details) =>
+                    logger.d(
+                        "tap: ${details.leftPercent(size)}/${details.topPercent(size)}"),
                 behavior: HitTestBehavior.translucent,
                 onHorizontalDragEnd: (dragEndDetails) {
                   var velocity = dragEndDetails.primaryVelocity ?? 0;
@@ -133,8 +137,10 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             IconButton(
-                                onPressed: () => playerBloc
-                                    .add(PlayerEventSetBpm(bpm: state.bpm - 5)),
+                                onPressed: () =>
+                                    playerBloc
+                                        .add(PlayerEventSetBpm(
+                                        bpm: state.bpm - 5)),
                                 iconSize: iconSize,
                                 color: colors.onSecondaryContainer,
                                 icon: const Icon(Icons.remove)),
@@ -147,8 +153,10 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
                               ),
                             ),
                             IconButton(
-                                onPressed: () => playerBloc
-                                    .add(PlayerEventSetBpm(bpm: state.bpm + 5)),
+                                onPressed: () =>
+                                    playerBloc
+                                        .add(PlayerEventSetBpm(
+                                        bpm: state.bpm + 5)),
                                 iconSize: iconSize,
                                 color: colors.onSecondaryContainer,
                                 icon: const Icon(Icons.add)),
@@ -162,11 +170,12 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
                               ),
                               onPressed: state is PlayerRunning
                                   ? () =>
-                                      playerBloc.add(const PlayerEventPause())
-                                  : () => playerBloc.add(PlayerEventStart(
-                                        countDown: 3,
-                                        size: size,
-                                      )),
+                                  playerBloc.add(const PlayerEventPause())
+                                  : () =>
+                                  playerBloc.add(PlayerEventStart(
+                                    countDown: 3,
+                                    size: size,
+                                  )),
                             ),
                             IconButton(
                               iconSize: iconSize,
@@ -181,11 +190,12 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
                               icon: Icon(state.isMetronome
                                   ? Icons.volume_up
                                   : Icons.volume_off),
-                              onPressed: () => playerBloc.add(
-                                PlayerEventSetMetronome(
-                                  isMetronome: !state.isMetronome,
-                                ),
-                              ),
+                              onPressed: () =>
+                                  playerBloc.add(
+                                    PlayerEventSetMetronome(
+                                      isMetronome: !state.isMetronome,
+                                    ),
+                                  ),
                             ),
                           ],
                         ))),
@@ -227,10 +237,11 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
               if (state is PlayerRunning)
                 ProgressLineWidget(progressLine: state.progressLine),
             ],
-          ),
-        );
-      },
-    );
+          );
+        }
+        ),
+      );
+    });
   }
 }
 
@@ -253,9 +264,9 @@ class ProgressLoading extends StatelessWidget {
             ),
             Center(
                 child: Text(
-              'Loading file...',
-              style: TextStyle(fontSize: 20),
-            )),
+                  'Loading file...',
+                  style: TextStyle(fontSize: 20),
+                )),
           ],
         ),
       ),
