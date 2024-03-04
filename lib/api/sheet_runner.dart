@@ -38,6 +38,8 @@ class SheetRunner {
   /// Audio for metronome sound.
   final AudioPlayer _player = AudioPlayer()
     ..setSource(AssetSource('metronome.mp3'))
+    // ..setPlayerMode(PlayerMode.lowLatency)
+    ..setReleaseMode(ReleaseMode.stop)
     ..seek(Duration.zero);
 
   SheetRunner({
@@ -63,26 +65,10 @@ class SheetRunner {
 
     var barWidth = sheet.currentBar.barRectInPercent.widthPixel(size);
     var barDuration = sheet.currentBar.halfBar
-        ? (_barDuration.inMilliseconds ~/ 2)
+        ? (_barDuration.inMilliseconds / 2)
         : _barDuration.inMilliseconds;
-    var distance = barWidth ~/ (barDuration / elapseBetweenTick);
-
-    // Move progressLine.
-    if(_currentBarIndex != sheet.currentPage.currentBarIndex) {
-      // Bar is changed!
-      _currentBarIndex = sheet.currentPage.currentBarIndex;
-      _currentProgressLine = ProgressLine(
-        left: sheet.currentBar.barRectInPercent.leftPoint(size),
-        top: sheet.currentBar.barRectInPercent.topPoint(size),
-        height: sheet.currentBar.barRectInPercent.heightPixel(size),
-      );
-    } else {
-      _currentProgressLine = ProgressLine(
-        left: _currentProgressLine.left + distance,
-        top: _currentProgressLine.top,
-        height: _currentProgressLine.height,
-      );
-    }
+    var distance = barWidth / (barDuration / elapseBetweenTick);
+    logger.d('barWidth: $barWidth, distance: $distance');
 
     // Check end of the bar.
     if ((elapse.inMilliseconds - _lastBarTime >= barDuration)) {
@@ -96,7 +82,20 @@ class SheetRunner {
           isEndMusic = true;
         }
       }
+      _currentProgressLine = ProgressLine(
+        left: sheet.currentBar.barRectInPercent.leftPoint(size),
+        top: sheet.currentBar.barRectInPercent.topPoint(size),
+        height: sheet.currentBar.barRectInPercent.heightPixel(size),
+      );
       _lastBarTime = elapse.inMilliseconds;
+    } else {
+      // We are in the middle of the bar.
+      // Move progressLine.
+      _currentProgressLine = ProgressLine(
+        left: _currentProgressLine.left + distance,
+        top: _currentProgressLine.top,
+        height: _currentProgressLine.height,
+      );
     }
 
     // Check make beat.
@@ -105,8 +104,7 @@ class SheetRunner {
       _lastBeepTime = elapse.inMilliseconds;
 
       if (isMetronome) {
-        _player.resume();
-        _player.seek(Duration.zero);
+        _player.resume().then((value) => _player.seek(Duration.zero));
       }
     }
 

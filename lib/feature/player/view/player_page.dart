@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../data/model/progress_line.dart';
-import '../../../data/sample/rach_op17.dart';
+import 'package:bpm_turner/data/model/progress_line.dart';
+import 'package:bpm_turner/data/sample/rach_op17.dart';
 import '../bloc/player_bloc.dart';
 import 'package:bpm_turner/utils/tab_utils.dart';
 
@@ -98,14 +98,13 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
 
       return SafeArea(
         child: LayoutBuilder(builder: (builderContext, constraints) {
-          var size = MediaQuery.of(builderContext).size;
           return Stack(
             children: <Widget>[
               GestureDetector(
                 onTap: () => playerBloc.add(const PlayerEventTabView()),
                 onTapDown: (details) =>
                     logger.d(
-                        "tap: ${details.leftPercent(size)}/${details.topPercent(size)}"),
+                        "tap: ${details.leftPercent(constraints.biggest)}/${details.topPercent(constraints.biggest)}"),
                 behavior: HitTestBehavior.translucent,
                 onHorizontalDragEnd: (dragEndDetails) {
                   var velocity = dragEndDetails.primaryVelocity ?? 0;
@@ -174,7 +173,7 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
                                   : () =>
                                   playerBloc.add(PlayerEventStart(
                                     countDown: 3,
-                                    size: size,
+                                    size: constraints.biggest,
                                   )),
                             ),
                             IconButton(
@@ -301,9 +300,9 @@ class ProgressLineWidget extends StatelessWidget {
     logger.d("progressLine: $progressLine");
     // 상위 Stack 에서의 Position 기준이다.
     return Positioned(
-      left: progressLine.left.toDouble(),
-      top: progressLine.top.toDouble(),
-      height: progressLine.height.toDouble(),
+      left: progressLine.left,
+      top: progressLine.top,
+      height: progressLine.height,
       width: 1,
       child: const VerticalDivider(
         color: Colors.red,

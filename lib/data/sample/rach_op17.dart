@@ -6,34 +6,24 @@ import 'package:bpm_turner/data/model/sheet_page.dart';
 import '../model/tempo_sheet.dart';
 
 /// Rachmaninoff Suite No.2, Op.17 Tarantella
-
 TempoSheet tarantella = TempoSheet("Rachmaninoff Suite No.2, Op.17 Tarantella",
     pages: _makePages());
 
-/**
- *
-    Bar(barRectInPercent: const Rect.fromLTRB()),
-    Bar(barRectInPercent: const Rect.fromLTRB()),
-    Bar(barRectInPercent: const Rect.fromLTRB()),
-    Bar(barRectInPercent: const Rect.fromLTRB()),
-    Bar(barRectInPercent: const Rect.fromLTRB()),
- */
 List<MusicPage> _makePages() {
   return [
-    //MusicPage(0, [Bar(halfBar: true)] + makeBars(15)),
     MusicPage(0, [
-      Bar(halfBar: true, barRectInPercent: const Rect.fromLTRB(0.239, 0.159, 0.305, 0.365)),
-      Bar(barRectInPercent: const Rect.fromLTRB(0.305, 0.159, 0.438, 0.365)),
-      Bar(barRectInPercent: const Rect.fromLTRB(0.438, 0.159, 0.536, 0.365)),
-      Bar(barRectInPercent: const Rect.fromLTRB(0.536, 0.159, 0.653, 0.365)),
-      Bar(barRectInPercent: const Rect.fromLTRB(0.653, 0.159, 0.776, 0.365)),
-      Bar(barRectInPercent: const Rect.fromLTRB(0.776, 0.159, 0.907, 0.365)),
+      Bar(halfBar: true, barRectInPercent: const Rect.fromLTRB(0.235, 0.139, 0.307, 0.342)),
+      Bar(barRectInPercent: const Rect.fromLTRB(0.307, 0.139, 0.438, 0.342)),
+      Bar(barRectInPercent: const Rect.fromLTRB(0.438, 0.139, 0.536, 0.342)),
+      Bar(barRectInPercent: const Rect.fromLTRB(0.536, 0.139, 0.653, 0.342)),
+      Bar(barRectInPercent: const Rect.fromLTRB(0.653, 0.139, 0.776, 0.342)),
+      Bar(barRectInPercent: const Rect.fromLTRB(0.776, 0.139, 0.907, 0.342)),
 
-      Bar(barRectInPercent: const Rect.fromLTRB(0.182, 0.435, 0.316, 0.653)),
-      Bar(barRectInPercent: const Rect.fromLTRB(0.316, 0.435, 0.439, 0.653)),
-      Bar(barRectInPercent: const Rect.fromLTRB(0.439 ,0.435, 0.573, 0.653)),
-      Bar(barRectInPercent: const Rect.fromLTRB(0.573, 0.435, 0.739, 0.653)),
-      Bar(barRectInPercent: const Rect.fromLTRB(0.739, 0.435, 0.903, 0.653)),
+      Bar(barRectInPercent: const Rect.fromLTRB(0.182, 0.415, 0.316, 0.631)),
+      Bar(barRectInPercent: const Rect.fromLTRB(0.316, 0.415, 0.439, 0.631)),
+      Bar(barRectInPercent: const Rect.fromLTRB(0.439 ,0.415, 0.573, 0.631)),
+      Bar(barRectInPercent: const Rect.fromLTRB(0.573, 0.415, 0.739, 0.631)),
+      Bar(barRectInPercent: const Rect.fromLTRB(0.739, 0.415, 0.903, 0.631)),
 
       Bar(barRectInPercent: const Rect.fromLTRB(0.177, 0.697, 0.333, 0.915)),
       Bar(barRectInPercent: const Rect.fromLTRB(0.333, 0.697, 0.468, 0.915)),

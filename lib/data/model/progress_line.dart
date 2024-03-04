@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 
 class ProgressLine extends Equatable {
-  final int left;
-  final int top;
-  final int height;
+  final double left;
+  final double top;
+  final double height;
 
   const ProgressLine({required this.left, required this.top, required this.height});
 
