@@ -80,11 +80,13 @@ List<MusicPage> _makePages() {
       Bar(barRectInPercent: const Rect.fromLTRB(0.48, 0.155, 0.633, 0.325)),
       Bar(barRectInPercent: const Rect.fromLTRB(0.636, 0.155, 0.775, 0.325)),
       Bar(barRectInPercent: const Rect.fromLTRB(0.767, 0.155, 0.929, 0.325)),
+
       Bar(barRectInPercent: const Rect.fromLTRB(0.151, 0.396, 0.293, 0.596)),
       Bar(barRectInPercent: const Rect.fromLTRB(0.293, 0.396, 0.463, 0.596)),
       Bar(barRectInPercent: const Rect.fromLTRB(0.463, 0.396, 0.622, 0.596)),
       Bar(barRectInPercent: const Rect.fromLTRB(0.622, 0.396, 0.789, 0.596)),
       Bar(barRectInPercent: const Rect.fromLTRB(0.789, 0.396, 0.934, 0.596)),
+
       Bar(barRectInPercent: const Rect.fromLTRB(0.156, 0.661, 0.313, 0.863)),
       Bar(barRectInPercent: const Rect.fromLTRB(0.313, 0.661, 0.493, 0.863)),
       Bar(barRectInPercent: const Rect.fromLTRB(0.493, 0.661, 0.633, 0.863)),

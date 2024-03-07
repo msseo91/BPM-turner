@@ -1,4 +1,5 @@
 import 'package:bpm_turner/data/repository/sheet_repository.dart';
+import 'package:bpm_turner/feature/editor/editor.dart';
 import 'package:bpm_turner/global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -212,14 +213,14 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
                           children: [
                             IconButton(
                                 onPressed: () {
-                                  /*Navigator.push(
+                                  Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => EditorRoute(
-                                        sheetImages: sheetImages,
+                                      builder: (context) => EditorPage(
+                                        tempoSheet: state.sheet,
                                       ),
                                     ),
-                                  );*/
+                                  );
                                 },
                                 iconSize: iconSize,
                                 color: colors.onSecondaryContainer,
