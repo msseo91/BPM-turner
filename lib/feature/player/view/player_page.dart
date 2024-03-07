@@ -12,6 +12,9 @@ import 'package:bpm_turner/utils/tab_utils.dart';
 const Duration controlDuration = Duration(milliseconds: 3000);
 const double iconSize = 40;
 const int defaultCountDown = 3;
+int tapCount = 0;
+double prevX = 0;
+double prevY = 0;
 
 class PlayerPage extends StatelessWidget {
   const PlayerPage({super.key});
@@ -89,8 +92,6 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-
-
     return BlocBuilder<PlayerBloc, PlayerState>(builder: (context, state) {
       final colors = Theme.of(context).colorScheme;
       var playerBloc = context.read<PlayerBloc>();
@@ -104,7 +105,7 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
                 onTap: () => playerBloc.add(const PlayerEventTabView()),
                 onTapDown: (details) =>
                     logger.d(
-                        "tap: ${details.leftPercent(constraints.biggest)}/${details.topPercent(constraints.biggest)}"),
+                        "tap: ${details.leftPercent(constraints.biggest)}, ${details.topPercent(constraints.biggest)}"),
                 behavior: HitTestBehavior.translucent,
                 onHorizontalDragEnd: (dragEndDetails) {
                   var velocity = dragEndDetails.primaryVelocity ?? 0;
