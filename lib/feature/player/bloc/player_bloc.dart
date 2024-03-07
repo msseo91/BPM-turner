@@ -10,6 +10,8 @@ import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/scheduler.dart';
 
+import '../../../data/model/sheet_page.dart';
+
 part 'player_event.dart';
 
 part 'player_state.dart';

@@ -1,6 +1,8 @@
 import 'dart:core';
+import 'dart:io';
 import 'dart:ui';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:pdf_render/pdf_render.dart';
 
 import 'package:bpm_turner/global.dart';
@@ -23,5 +25,10 @@ class SheetRepository {
       images.add(await pageImage.createImageIfNotAvailable());
     }
     return images;
+  }
+
+  Future<File?> pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    return result != null ? File(result.files.single.path!) : null;
   }
 }

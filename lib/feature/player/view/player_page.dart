@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:bpm_turner/data/model/progress_line.dart';
 import 'package:bpm_turner/data/sample/rach_op17.dart';
+import '../../sheet_navigation.dart';
 import '../bloc/player_bloc.dart';
 import 'package:bpm_turner/utils/tab_utils.dart';
 
@@ -23,12 +24,11 @@ class PlayerPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) =>
-          PlayerBloc(
-            sheet: tarantella,
-            sheetRepository: RepositoryProvider.of<SheetRepository>(context),
-          ),
-      child: const PlayerView(),
+      create: (_) => PlayerBloc(
+        sheet: tarantella,
+        sheetRepository: RepositoryProvider.of<SheetRepository>(context),
+      ),
+      child: const SheetView(),
     );
   }
 }
@@ -48,14 +48,14 @@ class PlayerView extends StatelessWidget {
                   builder: (context, state) {
                     if (state is PlayerInitial) {
                       context.read<PlayerBloc>().add(
-                        PlayerEventLoadPage(
-                          screenArg: PlayerScreenArg(
-                            path: "assets/rach-tarantella.pdf",
-                            sheet: tarantella,
-                            isAsset: true,
-                          ),
-                        ),
-                      );
+                            PlayerEventLoadPage(
+                              screenArg: PlayerScreenArg(
+                                path: "assets/rach-tarantella.pdf",
+                                sheet: tarantella,
+                                isAsset: true,
+                              ),
+                            ),
+                          );
                       return const ProgressLoading();
                     } else {
                       return const SheetView();
@@ -93,156 +93,135 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PlayerBloc, PlayerState>(builder: (context, state) {
-      final colors = Theme.of(context).colorScheme;
-      var playerBloc = context.read<PlayerBloc>();
-      logger.d("Building SheetView");
-
-      return SafeArea(
-        child: LayoutBuilder(builder: (builderContext, constraints) {
-          return Stack(
-            children: <Widget>[
-              GestureDetector(
-                onTap: () => playerBloc.add(const PlayerEventTabView()),
-                onTapDown: (details) =>
-                    logger.d(
-                        "tap: ${details.leftPercent(constraints.biggest)}, ${details.topPercent(constraints.biggest)}"),
-                behavior: HitTestBehavior.translucent,
-                onHorizontalDragEnd: (dragEndDetails) {
-                  var velocity = dragEndDetails.primaryVelocity ?? 0;
-                  if (velocity < 0) {
-                    playerBloc.add(PlayerEventChangePage(
-                        pageIndex: state.sheet.pageIndex + 1));
-                  } else if (velocity > 0) {
-                    playerBloc.add(PlayerEventChangePage(
-                        pageIndex: state.sheet.pageIndex - 1));
-                  }
-                },
-                child: SizedBox(
-                  width: double.infinity,
-                  height: double.infinity,
-                  child: RawImage(
-                    key: sheetImageKey,
-                    image: state.sheet.currentPage.sheetImage,
+    return Scaffold(
+      drawer: const SheetDrawer(),
+      body: BlocBuilder<PlayerBloc, PlayerState>(builder: (context, state) {
+        if (state is PlayerInitial) {
+          context.read<PlayerBloc>().add(
+                PlayerEventLoadPage(
+                  screenArg: PlayerScreenArg(
+                    path: "assets/rach-tarantella.pdf",
+                    sheet: tarantella,
+                    isAsset: true,
                   ),
                 ),
-              ),
-              AnimatedOpacity(
-                duration: const Duration(milliseconds: 400),
-                opacity: state.controlOpacity,
-                child: Align(
-                    alignment: Alignment.topCenter,
-                    child: Container(
-                        color: colors.secondaryContainer,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            IconButton(
-                                onPressed: () =>
-                                    playerBloc
-                                        .add(PlayerEventSetBpm(
-                                        bpm: state.bpm - 5)),
-                                iconSize: iconSize,
-                                color: colors.onSecondaryContainer,
-                                icon: const Icon(Icons.remove)),
-                            Text(
-                              state.bpm.toString(),
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                color: colors.onSecondaryContainer,
-                              ),
-                            ),
-                            IconButton(
-                                onPressed: () =>
-                                    playerBloc
-                                        .add(PlayerEventSetBpm(
-                                        bpm: state.bpm + 5)),
-                                iconSize: iconSize,
-                                color: colors.onSecondaryContainer,
-                                icon: const Icon(Icons.add)),
-                            IconButton(
-                              iconSize: iconSize,
-                              color: colors.onSecondaryContainer,
-                              icon: Icon(
-                                state is PlayerRunning
-                                    ? Icons.pause
-                                    : Icons.play_arrow,
-                              ),
-                              onPressed: state is PlayerRunning
-                                  ? () =>
-                                  playerBloc.add(const PlayerEventPause())
-                                  : () =>
-                                  playerBloc.add(PlayerEventStart(
-                                    countDown: 3,
-                                    size: constraints.biggest,
-                                  )),
-                            ),
-                            IconButton(
-                              iconSize: iconSize,
-                              color: colors.onSecondaryContainer,
-                              icon: const Icon(Icons.stop),
-                              onPressed: () =>
-                                  playerBloc.add(const PlayerEventStop()),
-                            ),
-                            IconButton(
-                              iconSize: iconSize,
-                              color: colors.onSecondaryContainer,
-                              icon: Icon(state.isMetronome
-                                  ? Icons.volume_up
-                                  : Icons.volume_off),
-                              onPressed: () =>
-                                  playerBloc.add(
+              );
+          return const ProgressLoading();
+        }
+
+        final colors = Theme.of(context).colorScheme;
+        var playerBloc = context.read<PlayerBloc>();
+        logger.d("Building SheetView");
+
+        return SafeArea(
+          child: LayoutBuilder(builder: (builderContext, constraints) {
+            return Stack(
+              children: <Widget>[
+                GestureDetector(
+                  onTap: () => playerBloc.add(const PlayerEventTabView()),
+                  onTapDown: (details) => logger.d(
+                      "tap: ${details.leftPercent(constraints.biggest)}, ${details.topPercent(constraints.biggest)}"),
+                  behavior: HitTestBehavior.translucent,
+                  onHorizontalDragEnd: (dragEndDetails) {
+                    var velocity = dragEndDetails.primaryVelocity ?? 0;
+                    if (velocity < 0) {
+                      playerBloc.add(PlayerEventChangePage(
+                          pageIndex: state.sheet.pageIndex + 1));
+                    } else if (velocity > 0) {
+                      playerBloc.add(PlayerEventChangePage(
+                          pageIndex: state.sheet.pageIndex - 1));
+                    }
+                  },
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: double.infinity,
+                    child: RawImage(
+                      key: sheetImageKey,
+                      image: state.sheet.currentPage.sheetImage,
+                    ),
+                  ),
+                ),
+                AnimatedOpacity(
+                  duration: const Duration(milliseconds: 400),
+                  opacity: state.controlOpacity,
+                  child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                          color: colors.secondaryContainer,
+                          child: Row(children: [
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                IconButton(
+                                    onPressed: () => playerBloc.add(
+                                        PlayerEventSetBpm(bpm: state.bpm - 5)),
+                                    iconSize: iconSize,
+                                    color: colors.onSecondaryContainer,
+                                    icon: const Icon(Icons.remove)),
+                                Text(
+                                  state.bpm.toString(),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                    color: colors.onSecondaryContainer,
+                                  ),
+                                ),
+                                IconButton(
+                                    onPressed: () => playerBloc.add(
+                                        PlayerEventSetBpm(bpm: state.bpm + 5)),
+                                    iconSize: iconSize,
+                                    color: colors.onSecondaryContainer,
+                                    icon: const Icon(Icons.add)),
+                                IconButton(
+                                  iconSize: iconSize,
+                                  color: colors.onSecondaryContainer,
+                                  icon: Icon(
+                                    state is PlayerRunning
+                                        ? Icons.pause
+                                        : Icons.play_arrow,
+                                  ),
+                                  onPressed: state is PlayerRunning
+                                      ? () => playerBloc
+                                          .add(const PlayerEventPause())
+                                      : () => playerBloc.add(PlayerEventStart(
+                                            countDown: 3,
+                                            size: constraints.biggest,
+                                          )),
+                                ),
+                                IconButton(
+                                  iconSize: iconSize,
+                                  color: colors.onSecondaryContainer,
+                                  icon: const Icon(Icons.stop),
+                                  onPressed: () =>
+                                      playerBloc.add(const PlayerEventStop()),
+                                ),
+                                IconButton(
+                                  iconSize: iconSize,
+                                  color: colors.onSecondaryContainer,
+                                  icon: Icon(state.isMetronome
+                                      ? Icons.volume_up
+                                      : Icons.volume_off),
+                                  onPressed: () => playerBloc.add(
                                     PlayerEventSetMetronome(
                                       isMetronome: !state.isMetronome,
                                     ),
                                   ),
-                            ),
-                          ],
-                        ))),
-              ),
-              AnimatedOpacity(
-                duration: const Duration(milliseconds: 400),
-                opacity: state.controlOpacity,
-                child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                        color: colors.secondaryContainer,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => EditorPage(
-                                        tempoSheet: state.sheet,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                iconSize: iconSize,
-                                color: colors.onSecondaryContainer,
-                                icon: const Icon(Icons.edit_note)),
-                            IconButton(
-                                onPressed: () {},
-                                iconSize: iconSize,
-                                color: colors.onSecondaryContainer,
-                                icon: const Icon(Icons.file_open))
-                          ],
-                        ))),
-              ),
-              if (state is PlayerCountDown)
-                CountDown(countDown: state.countDown),
-              if (state is PlayerRunning)
-                ProgressLineWidget(progressLine: state.progressLine),
-            ],
-          );
-        }
-        ),
-      );
-    });
+                                ),
+                              ],
+                            )
+                          ]))),
+                ),
+                if (state is PlayerCountDown)
+                  CountDown(countDown: state.countDown),
+                if (state is PlayerRunning)
+                  ProgressLineWidget(progressLine: state.progressLine),
+              ],
+            );
+          }),
+        );
+      }),
+    );
   }
 }
 
@@ -265,9 +244,9 @@ class ProgressLoading extends StatelessWidget {
             ),
             Center(
                 child: Text(
-                  'Loading file...',
-                  style: TextStyle(fontSize: 20),
-                )),
+              'Loading file...',
+              style: TextStyle(fontSize: 20),
+            )),
           ],
         ),
       ),

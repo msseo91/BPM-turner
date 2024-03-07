@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:bpm_turner/data/repository/sheet_repository.dart';
 import 'package:bpm_turner/data/sample/rach_op17.dart';
+import 'package:bpm_turner/feature/sheet_navigation.dart';
 import 'package:bpm_turner/global.dart';
 import 'package:bpm_turner/feature/player/player.dart';
 import 'package:bpm_turner/feature/editor/editor.dart';
@@ -34,13 +35,7 @@ class _AppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return RepositoryProvider.value(
       value: _sheetRepository,
-      child: BlocProvider(
-        create: (_) => PlayerBloc(
-          sheet: tarantella,
-          sheetRepository: _sheetRepository,
-        ),
-        child: const AppView(),
-      ),
+      child: const AppView(),
     );
   }
 }
@@ -63,15 +58,6 @@ class _AppViewState extends State<AppView> {
       title: 'BPM turner',
       navigatorKey: _navigatorKey,
       home: const PlayerPage(),
-      builder: (context, child) {
-        return BlocListener<PlayerBloc, PlayerState>(
-          listener: (context, state) {
-            // TODO: IMPL!
-            logger.d("state: $state");
-          },
-          child: child,
-        );
-      },
     );
   }
 }
