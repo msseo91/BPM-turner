@@ -25,20 +25,19 @@ class EditorView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Expanded(
-        child: SafeArea(
-            child: Stack(
+      body: SafeArea(
+        child: Stack(
           children: [
             GestureDetector(
               child: Container(
                 color: Colors.white,
                 child: RawImage(
-                  // TODO
-                ),
+                    // TODO
+                    ),
               ),
             ),
           ],
-        )),
+        ),
       ),
     );
   }

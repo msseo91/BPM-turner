@@ -119,17 +119,14 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
               children: <Widget>[
                 GestureDetector(
                   onTap: () => playerBloc.add(const PlayerEventTabView()),
-                  onTapDown: (details) => logger.d(
-                      "tap: ${details.leftPercent(constraints.biggest)}, ${details.topPercent(constraints.biggest)}"),
+                  onTapDown: (details) => logger.d("tap: ${details.leftPercent(constraints.biggest)}, ${details.topPercent(constraints.biggest)}"),
                   behavior: HitTestBehavior.translucent,
                   onHorizontalDragEnd: (dragEndDetails) {
                     var velocity = dragEndDetails.primaryVelocity ?? 0;
                     if (velocity < 0) {
-                      playerBloc.add(PlayerEventChangePage(
-                          pageIndex: state.sheet.pageIndex + 1));
+                      playerBloc.add(PlayerEventChangePage(pageIndex: state.sheet.pageIndex + 1));
                     } else if (velocity > 0) {
-                      playerBloc.add(PlayerEventChangePage(
-                          pageIndex: state.sheet.pageIndex - 1));
+                      playerBloc.add(PlayerEventChangePage(pageIndex: state.sheet.pageIndex - 1));
                     }
                   },
                   child: SizedBox(
@@ -149,13 +146,16 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
                       child: Container(
                           color: colors.secondaryContainer,
                           child: Row(children: [
-
+                            IconButton(
+                              onPressed: () => Scaffold.of(context).openDrawer(),
+                              icon: const Icon(Icons.menu),
+                            ),
+                            const Spacer(),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 IconButton(
-                                    onPressed: () => playerBloc.add(
-                                        PlayerEventSetBpm(bpm: state.bpm - 5)),
+                                    onPressed: () => playerBloc.add(PlayerEventSetBpm(bpm: state.bpm - 5)),
                                     iconSize: iconSize,
                                     color: colors.onSecondaryContainer,
                                     icon: const Icon(Icons.remove)),
@@ -168,8 +168,7 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
                                   ),
                                 ),
                                 IconButton(
-                                    onPressed: () => playerBloc.add(
-                                        PlayerEventSetBpm(bpm: state.bpm + 5)),
+                                    onPressed: () => playerBloc.add(PlayerEventSetBpm(bpm: state.bpm + 5)),
                                     iconSize: iconSize,
                                     color: colors.onSecondaryContainer,
                                     icon: const Icon(Icons.add)),
@@ -177,13 +176,10 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
                                   iconSize: iconSize,
                                   color: colors.onSecondaryContainer,
                                   icon: Icon(
-                                    state is PlayerRunning
-                                        ? Icons.pause
-                                        : Icons.play_arrow,
+                                    state is PlayerRunning ? Icons.pause : Icons.play_arrow,
                                   ),
                                   onPressed: state is PlayerRunning
-                                      ? () => playerBloc
-                                          .add(const PlayerEventPause())
+                                      ? () => playerBloc.add(const PlayerEventPause())
                                       : () => playerBloc.add(PlayerEventStart(
                                             countDown: 3,
                                             size: constraints.biggest,
@@ -193,15 +189,12 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
                                   iconSize: iconSize,
                                   color: colors.onSecondaryContainer,
                                   icon: const Icon(Icons.stop),
-                                  onPressed: () =>
-                                      playerBloc.add(const PlayerEventStop()),
+                                  onPressed: () => playerBloc.add(const PlayerEventStop()),
                                 ),
                                 IconButton(
                                   iconSize: iconSize,
                                   color: colors.onSecondaryContainer,
-                                  icon: Icon(state.isMetronome
-                                      ? Icons.volume_up
-                                      : Icons.volume_off),
+                                  icon: Icon(state.isMetronome ? Icons.volume_up : Icons.volume_off),
                                   onPressed: () => playerBloc.add(
                                     PlayerEventSetMetronome(
                                       isMetronome: !state.isMetronome,
@@ -212,10 +205,8 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
                             )
                           ]))),
                 ),
-                if (state is PlayerCountDown)
-                  CountDown(countDown: state.countDown),
-                if (state is PlayerRunning)
-                  ProgressLineWidget(progressLine: state.progressLine),
+                if (state is PlayerCountDown) CountDown(countDown: state.countDown),
+                if (state is PlayerRunning) ProgressLineWidget(progressLine: state.progressLine),
               ],
             );
           }),
@@ -264,8 +255,7 @@ class CountDown extends StatelessWidget {
     return Center(
       child: Text(
         "$countDown",
-        style: const TextStyle(
-            fontSize: 72, fontWeight: FontWeight.bold, color: Colors.red),
+        style: const TextStyle(fontSize: 72, fontWeight: FontWeight.bold, color: Colors.red),
       ),
     );
   }
