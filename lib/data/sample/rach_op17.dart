@@ -727,7 +727,7 @@ List<MusicPage> _makePages() {
       Bar(barRectInPercent: const Rect.fromLTRB(.738, .084, .902, .326)),
 
       Bar(barRectInPercent: const Rect.fromLTRB(.174, .397, .321, .626)),
-      Bar(barRectInPercent: const Rect.fromLTRB(.174, .397, .488, .626)),
+      Bar(barRectInPercent: const Rect.fromLTRB(.321, .397, .488, .626)),
       Bar(barRectInPercent: const Rect.fromLTRB(.488, .397, .634, .626)),
       Bar(barRectInPercent: const Rect.fromLTRB(.634, .397, .765, .626)),
       Bar(barRectInPercent: const Rect.fromLTRB(.765, .397, .903, .626)),
