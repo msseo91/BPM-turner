@@ -9,6 +9,7 @@ import 'package:bpm_turner/data/repository/sheet_repository.dart';
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:keep_screen_on/keep_screen_on.dart';
 
 import '../../../data/model/sheet_page.dart';
 

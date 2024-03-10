@@ -8,6 +8,7 @@ import 'package:bpm_turner/feature/editor/editor.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:keep_screen_on/keep_screen_on.dart';
 import 'package:logger/logger.dart';
 
 void main() {
@@ -29,6 +30,9 @@ class _AppState extends State<MyApp> {
   void initState() {
     super.initState();
     _sheetRepository = SheetRepository();
+
+    // Keep the screen on.
+    KeepScreenOn.turnOn();
   }
 
   @override
