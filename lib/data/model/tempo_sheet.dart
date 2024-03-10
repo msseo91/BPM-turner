@@ -49,4 +49,13 @@ class TempoSheet extends Equatable {
       pageIndex: pageIndex ?? this.pageIndex,
     );
   }
+
+  void reset({bool resetPageIndex = false}) {
+    if(resetPageIndex) {
+      pageIndex = 0;
+    }
+    for (var page in pages) {
+      page.currentBarIndex = 0;
+    }
+  }
 }

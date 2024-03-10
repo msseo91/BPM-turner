@@ -81,19 +81,21 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     PlayerEventStart event,
     Emitter<PlayerState> emit,
   ) async {
-    // Count down and emit PlayerRunning.
-    for (int i = event.countDown; i > 0; i--) {
-      emit(PlayerCountDown.fromState(state, i));
-      await Future.delayed(const Duration(seconds: 1));
-    }
-    emit(PlayerRunning.fromState(state, ProgressLine.initial()));
-
+    // Before start, reset the sheet.
+    state.sheet.reset(resetPageIndex: false);
     SheetRunner sheetRunner = SheetRunner(
       sheet: state.sheet,
       bpm: state.bpm,
       isMetronome: state.isMetronome,
       size: event.size,
     );
+
+    // Count down and emit PlayerRunning.
+    for (int i = event.countDown; i > 0; i--) {
+      emit(PlayerCountDown.fromState(state, i));
+      await Future.delayed(const Duration(seconds: 1));
+    }
+    emit(PlayerRunning.fromState(state, ProgressLine.initial()));
 
     _ticker = _tickerProvider.createTicker((elapsed) {
       var runnerState = sheetRunner.onTick(elapsed);
