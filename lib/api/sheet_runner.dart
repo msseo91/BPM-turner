@@ -30,10 +30,12 @@ class SheetRunner {
 
   Duration _barDuration = Duration.zero;
   int _lastTickTime = 0;
-  int _lastBeepTime = 0;
+  int _lastBeatTime = 0;
   int _lastBarTime = 0;
   ProgressLine _currentProgressLine = ProgressLine.initial();
-  int _currentBarIndex = 0;
+  bool _isFirstTick = true;
+  /// Beat(metronome) duration.
+  int _beatDuration = 0;
 
   /// Audio for metronome sound.
   final AudioPlayer _player = AudioPlayer()
@@ -49,6 +51,7 @@ class SheetRunner {
     required this.isMetronome,
   }) {
     _barDuration = Duration(milliseconds: barDuration(bpm));
+    _beatDuration = _barDuration.inMilliseconds ~/ 2;
     _currentProgressLine = ProgressLine(
       left: sheet.currentBar.barRectInPercent.leftPoint(size),
       top: sheet.currentBar.barRectInPercent.topPoint(size),
@@ -59,15 +62,15 @@ class SheetRunner {
   RunnerState onTick(Duration elapse) {
     var shouldTurnPage = false;
     var isEndMusic = false;
-    var elapseBetweenBeep = elapse.inMilliseconds - _lastBeepTime;
-    var elapseBetweenTick = elapse.inMilliseconds - _lastTickTime;
+    var elapseFromBeat = elapse.inMilliseconds - _lastBeatTime;
+    var elapseFromTick = elapse.inMilliseconds - _lastTickTime;
     _lastTickTime = elapse.inMilliseconds;
 
     var barWidth = sheet.currentBar.barRectInPercent.widthPixel(size);
     var barDuration = sheet.currentBar.halfBar
         ? (_barDuration.inMilliseconds / 2)
         : _barDuration.inMilliseconds;
-    var distance = barWidth / (barDuration / elapseBetweenTick);
+    var distance = barWidth / (barDuration / elapseFromTick);
     logger.d('barWidth: $barWidth, distance: $distance');
 
     // Check end of the bar.
@@ -99,15 +102,16 @@ class SheetRunner {
     }
 
     // Check make beat.
-    if (elapseBetweenBeep >= _barDuration.inMilliseconds ~/ 2) {
-      logger.i("Elapse between: $elapseBetweenBeep ms");
-      _lastBeepTime = elapse.inMilliseconds;
+    if (_isFirstTick || elapseFromBeat >= _beatDuration) {
+      logger.i("Elapse between: $elapseFromBeat ms");
+      _lastBeatTime = elapse.inMilliseconds;
 
       if (isMetronome) {
         _player.resume().then((value) => _player.seek(Duration.zero));
       }
     }
 
+    _isFirstTick = false;
     return RunnerState(
         shouldTurnPage: shouldTurnPage,
         isEnd: isEndMusic,
