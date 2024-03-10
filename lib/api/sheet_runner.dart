@@ -68,14 +68,14 @@ class SheetRunner {
 
     var barWidth = sheet.currentBar.barRectInPercent.widthPixel(size);
     var barDuration = sheet.currentBar.halfBar
-        ? (_barDuration.inMilliseconds / 2)
+        ? (_barDuration.inMilliseconds ~/ 2)
         : _barDuration.inMilliseconds;
     var distance = barWidth / (barDuration / elapseFromTick);
-    logger.d('barWidth: $barWidth, distance: $distance');
 
     // Check end of the bar.
     if ((elapse.inMilliseconds - _lastBarTime >= barDuration)) {
       // We passed 'end of the bar'. Change it!
+      logger.d("Next bar");
       if(sheet.nextBar() == null) {
         shouldTurnPage = true;
         logger.d("Turn page!");
@@ -103,7 +103,7 @@ class SheetRunner {
 
     // Check make beat.
     if (_isFirstTick || elapseFromBeat >= _beatDuration) {
-      logger.i("Elapse between: $elapseFromBeat ms");
+      logger.i("Elapse between beat: $elapseFromBeat ms");
       _lastBeatTime = elapse.inMilliseconds;
 
       if (isMetronome) {

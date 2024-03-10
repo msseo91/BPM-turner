@@ -111,7 +111,6 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
 
         final colors = Theme.of(context).colorScheme;
         var playerBloc = context.read<PlayerBloc>();
-        logger.d("Building SheetView");
 
         return SafeArea(
           child: LayoutBuilder(builder: (builderContext, constraints) {
@@ -268,7 +267,6 @@ class ProgressLineWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    logger.d("progressLine: $progressLine");
     // 상위 Stack 에서의 Position 기준이다.
     return Positioned(
       left: progressLine.left,
