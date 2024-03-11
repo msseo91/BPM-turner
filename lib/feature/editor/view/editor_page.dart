@@ -24,13 +24,28 @@ class EditorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var bloc = BlocProvider.of<EditorBloc>(context);
     return Scaffold(
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          children: [
+            IconButton(
+              onPressed: () => bloc.add(EditorEventLoad()),
+              icon: const Icon(Icons.file_open),
+            ),
+          ],
+        ),
+      ),
       body: SafeArea(
         child: Stack(
           children: [
             GestureDetector(
-              child: Container(
-                color: Colors.white,
+              onPanStart: (details) => bloc.add(EditorEventStartDrag(position: details.localPosition)),
+              onPanUpdate: (details) => bloc.add(EditorEventDrag(position: details.localPosition)),
+              onPanEnd: (details) => bloc.add(const EditorEventEndDrag()),
+              child: const SizedBox(
+                width: double.infinity,
+                height: double.infinity,
                 child: RawImage(
                     // TODO
                     ),
