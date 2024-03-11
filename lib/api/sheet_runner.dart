@@ -52,6 +52,8 @@ class SheetRunner {
   }) {
     _barDuration = Duration(milliseconds: barDuration(bpm));
     _beatDuration = _barDuration.inMilliseconds ~/ 2;
+    logger.i("Bar duration: ${_barDuration.inMilliseconds}", "Beat duration: $_beatDuration");
+
     _currentProgressLine = ProgressLine(
       left: sheet.currentBar.barRectInPercent.leftPoint(size),
       top: sheet.currentBar.barRectInPercent.topPoint(size),
