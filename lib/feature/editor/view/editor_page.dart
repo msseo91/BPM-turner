@@ -1,5 +1,8 @@
 import 'package:bpm_turner/data/model/tempo_sheet.dart';
+import 'package:bpm_turner/data/repository/sheet_repository.dart';
 import 'package:bpm_turner/feature/editor/bloc/editor_bloc.dart';
+import 'package:bpm_turner/feature/editor/editor.dart';
+import 'package:bpm_turner/feature/editor/view/editor_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,8 +16,8 @@ class EditorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => EditorBloc(),
-      child: EditorView(),
+      create: (context) => EditorBloc(sheetRepository: RepositoryProvider.of<SheetRepository>(context)),
+      child: const EditorView(),
     );
   }
 }
@@ -43,14 +46,18 @@ class EditorView extends StatelessWidget {
               onPanStart: (details) => bloc.add(EditorEventStartDrag(position: details.localPosition)),
               onPanUpdate: (details) => bloc.add(EditorEventDrag(position: details.localPosition)),
               onPanEnd: (details) => bloc.add(const EditorEventEndDrag()),
-              child: const SizedBox(
+              child: SizedBox(
                 width: double.infinity,
                 height: double.infinity,
-                child: RawImage(
-                    // TODO
-                    ),
+                child: BlocBuilder<EditorBloc, EditorState>(
+                    builder: (context, state) {
+                      return CustomPaint(
+                          painter: EditorPainter(state.rects),
+                          child: RawImage(image: state.sheet?.currentPage.sheetImage),
+                        );
+                    }
               ),
-            ),
+            )),
           ],
         ),
       ),
