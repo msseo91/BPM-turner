@@ -75,6 +75,9 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     PlayerEventStop event,
     Emitter<PlayerState> emit,
   ) {
+    // Stop any progress and reset the sheet(Go to first).
+    _ticker.stop();
+    state.sheet.reset(resetPageIndex: true);
     emit(PlayerStandBy.fromState(state));
   }
 
