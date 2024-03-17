@@ -13,10 +13,10 @@ class SheetDrawer extends StatelessWidget {
       padding: EdgeInsets.zero,
       children: <Widget>[
         const DrawerHeader(
-          child: Text('BPM Turner'),
           decoration: BoxDecoration(
             color: Colors.blue,
           ),
+          child: Text('BPM Turner'),
         ),
         ListTile(
           title: const Text('Player'),

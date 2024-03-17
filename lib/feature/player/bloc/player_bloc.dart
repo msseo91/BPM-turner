@@ -23,6 +23,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
             sheet: sheet, bpm: 170, isMetronome: false, controlOpacity: 0.0)) {
     on<PlayerEventLoadPage>(_onPlayerLoadPage);
     on<PlayerEventStop>(_onPlayerStop);
+    on<PlayerEventPause>(_onPlayerPause);
     on<PlayerEventStart>(_onPlayerStart);
     on<PlayerEventRunComplete>(_onPlayerRunComplete);
     on<PlayerEventTabView>(_onPlayerTabView);
@@ -114,6 +115,14 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
       );
     });
     await _ticker.start();
+  }
+
+  void _onPlayerPause(
+    PlayerEventPause event,
+    Emitter<PlayerState> emit,
+  ) {
+    _ticker.stop();
+    emit(PlayerStandBy.fromState(state));
   }
 
   void _onPlayerRunComplete(
