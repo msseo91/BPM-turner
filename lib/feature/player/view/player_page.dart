@@ -14,9 +14,6 @@ import 'package:bpm_turner/utils/tab_utils.dart';
 const Duration controlDuration = Duration(milliseconds: 3000);
 const double iconSize = 40;
 const int defaultCountDown = 3;
-int tapCount = 0;
-double prevX = 0;
-double prevY = 0;
 
 class PlayerPage extends StatelessWidget {
   const PlayerPage({super.key});
@@ -54,6 +51,7 @@ class PlayerView extends StatelessWidget {
                                 sheet: tarantella,
                                 isAsset: true,
                               ),
+                              screenSize: MediaQuery.of(context).size,
                             ),
                           );
                       return const ProgressLoading();
@@ -104,6 +102,7 @@ class _SheetViewState extends State<SheetView> with TickerProviderStateMixin {
                     sheet: tarantella,
                     isAsset: true,
                   ),
+                  screenSize: MediaQuery.of(context).size,
                 ),
               );
           return const ProgressLoading();

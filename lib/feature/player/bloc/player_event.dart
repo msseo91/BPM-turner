@@ -5,8 +5,9 @@ abstract class PlayerEvent {
 }
 
 final class PlayerEventLoadPage extends PlayerEvent {
-  const PlayerEventLoadPage({required this.screenArg});
+  const PlayerEventLoadPage({required this.screenArg, required this.screenSize});
   final PlayerScreenArg screenArg;
+  final Size screenSize;
 }
 
 final class PlayerEventStop extends PlayerEvent {

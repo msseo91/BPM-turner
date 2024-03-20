@@ -5,7 +5,11 @@ abstract class EditorEvent {
   const EditorEvent();
 }
 
-final class EditorEventLoad extends EditorEvent {}
+final class EditorEventLoad extends EditorEvent {
+  const EditorEventLoad({required this.screenSize});
+
+  final Size screenSize;
+}
 
 final class EditorEventStartDrag extends EditorEvent {
   const EditorEventStartDrag({required this.position});

@@ -18,6 +18,7 @@ List<MusicPage> _makePages() {
       Bar(barRectInPercent: const Rect.fromLTRB(0.536, 0.139, 0.653, 0.342)),
       Bar(barRectInPercent: const Rect.fromLTRB(0.653, 0.139, 0.776, 0.342)),
       Bar(barRectInPercent: const Rect.fromLTRB(0.776, 0.139, 0.907, 0.342)),
+
       Bar(barRectInPercent: const Rect.fromLTRB(0.182, 0.415, 0.316, 0.631)),
       Bar(barRectInPercent: const Rect.fromLTRB(0.316, 0.415, 0.439, 0.631)),
       Bar(barRectInPercent: const Rect.fromLTRB(0.439, 0.415, 0.573, 0.631)),
