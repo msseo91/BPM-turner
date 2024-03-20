@@ -33,8 +33,9 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   }
 
   late TickerProvider _tickerProvider;
-  late Ticker _ticker;
+  Ticker? _ticker;
   final SheetRepository _sheetRepository;
+  bool startContinue = false;
 
   void _onPlayerLoadPage(
     PlayerEventLoadPage event,
@@ -73,8 +74,11 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     PlayerEventStop event,
     Emitter<PlayerState> emit,
   ) {
+    // Stop starting count down.
+    startContinue = false;
+
     // Stop any progress and reset the sheet(Go to first).
-    _ticker.stop();
+    _ticker?.stop();
     state.sheet.reset(resetPageIndex: true);
     emit(PlayerStandBy.fromState(state));
   }
@@ -84,6 +88,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     Emitter<PlayerState> emit,
   ) async {
     // Before start, reset the sheet.
+    startContinue = true;
     state.sheet.reset(resetPageIndex: false);
     SheetRunner sheetRunner = SheetRunner(
       sheet: state.sheet,
@@ -94,6 +99,8 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
 
     // Count down and emit PlayerRunning.
     for (int i = event.countDown; i > 0; i--) {
+      if(!startContinue) return;
+
       emit(PlayerCountDown.fromState(state, i));
       await Future.delayed(const Duration(seconds: 1));
     }
@@ -106,7 +113,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
       }
       if (runnerState.isEnd) {
         emit(PlayerRunComplete.fromState(state));
-        _ticker.stop();
+        _ticker?.stop();
         return;
       }
 
@@ -114,14 +121,14 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
         PlayerRunning.fromState(state, runnerState.progressLine),
       );
     });
-    await _ticker.start();
+    await _ticker?.start();
   }
 
   void _onPlayerPause(
     PlayerEventPause event,
     Emitter<PlayerState> emit,
   ) {
-    _ticker.stop();
+    _ticker?.stop();
     emit(PlayerStandBy.fromState(state));
   }
 
