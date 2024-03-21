@@ -43,7 +43,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   ) async {
     event.screenArg.isAsset
         ? await _sheetRepository
-            .loadSheetMusic(assetName: event.screenArg.path)
+            .loadSheetMusic(assetName: event.screenArg.path, size: event.screenSize)
             .then((imageList) {
             event.screenArg.sheet.pages.forEachIndexed((i, page) {
               page.sheetImage = imageList[i];
@@ -56,7 +56,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
             );
           })
         : await _sheetRepository
-            .loadSheetMusic(path: event.screenArg.path)
+            .loadSheetMusic(path: event.screenArg.path, size: event.screenSize)
             .then((imageList) {
             event.screenArg.sheet.pages.forEachIndexed((i, page) {
               page.sheetImage = imageList[i];

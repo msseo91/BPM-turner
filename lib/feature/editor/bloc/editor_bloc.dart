@@ -27,8 +27,8 @@ class EditorBloc extends Bloc<EditorEvent, EditorState> {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result != null) {
       var file = result.files.single;
-      var sheetImages = await _sheetRepository.loadSheetMusic(path: file.path);
-      var pages = sheetImages.map((e) => MusicPage(0, []));
+      var sheetImages = await _sheetRepository.loadSheetMusic(path: file.path, size: event.screenSize);
+      var pages = sheetImages.map((e) => MusicPage(0, [], sheetImage: e));
 
       emit(EditorStateLoaded(sheet: TempoSheet("Editing sheet", pages: pages.toList()), rects: []));
     }

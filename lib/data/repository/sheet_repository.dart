@@ -11,7 +11,7 @@ class SheetRepository {
   void insertSheet() {}
 
   /// Load sheetMusic(Image) from asset or file in local.
-  Future<List<Image>> loadSheetMusic({String? path, String? assetName}) async {
+  Future<List<Image>> loadSheetMusic({String? path, String? assetName, required Size size}) async {
     var doc = path != null
         ? await PdfDocument.openFile(path)
         : await PdfDocument.openAsset(assetName!);
@@ -21,7 +21,7 @@ class SheetRepository {
     for (var i = 1; i <= pageCount; i++) {
       logger.d("Making $i page to image.");
       PdfPage page = await doc.getPage(i);
-      PdfPageImage pageImage = await page.render(width: 1200, height: 1920);
+      PdfPageImage pageImage = await page.render(width: size.width.toInt(), height: size.height.toInt());
       images.add(await pageImage.createImageIfNotAvailable());
     }
     return images;

@@ -16,7 +16,8 @@ class EditorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => EditorBloc(sheetRepository: RepositoryProvider.of<SheetRepository>(context)),
+      create: (context) => EditorBloc(
+          sheetRepository: RepositoryProvider.of<SheetRepository>(context)),
       child: const EditorView(),
     );
   }
@@ -30,34 +31,44 @@ class EditorView extends StatelessWidget {
     var bloc = BlocProvider.of<EditorBloc>(context);
     return Scaffold(
       bottomNavigationBar: BottomAppBar(
-        child: Row(
-          children: [
-            IconButton(
-              onPressed: () => bloc.add(EditorEventLoad()),
-              icon: const Icon(Icons.file_open),
-            ),
-          ],
-        ),
+        child: BlocBuilder<EditorBloc, EditorState>(builder: (context, state) {
+          return Row(
+            children: [
+              IconButton(
+                onPressed: () => bloc.add(
+                    EditorEventLoad(screenSize: MediaQuery.of(context).size)),
+                icon: const Icon(Icons.file_open),
+              ),
+              IconButton(
+                onPressed: () =>
+                    bloc.add(EditorEventChangePage(pageIndex: state.sheet?.pageIndex ?? 0 + 1)),
+                icon: const Icon(Icons.arrow_forward),
+              ),
+            ],
+          );
+        }),
       ),
       body: SafeArea(
         child: Stack(
           children: [
             GestureDetector(
-              onPanStart: (details) => bloc.add(EditorEventStartDrag(position: details.localPosition)),
-              onPanUpdate: (details) => bloc.add(EditorEventDrag(position: details.localPosition)),
-              onPanEnd: (details) => bloc.add(const EditorEventEndDrag()),
-              child: SizedBox(
-                width: double.infinity,
-                height: double.infinity,
-                child: BlocBuilder<EditorBloc, EditorState>(
-                    builder: (context, state) {
-                      return CustomPaint(
-                          painter: EditorPainter(state.rects),
-                          child: RawImage(image: state.sheet?.currentPage.sheetImage),
-                        );
-                    }
-              ),
-            )),
+                onPanStart: (details) => bloc
+                    .add(EditorEventStartDrag(position: details.localPosition)),
+                onPanUpdate: (details) =>
+                    bloc.add(EditorEventDrag(position: details.localPosition)),
+                onPanEnd: (details) => bloc.add(const EditorEventEndDrag()),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: BlocBuilder<EditorBloc, EditorState>(
+                      builder: (context, state) {
+                    return CustomPaint(
+                      painter: EditorPainter(state.rects),
+                      child:
+                          RawImage(image: state.sheet?.currentPage.sheetImage),
+                    );
+                  }),
+                )),
           ],
         ),
       ),
