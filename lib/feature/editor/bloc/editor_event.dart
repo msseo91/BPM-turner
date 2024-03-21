@@ -27,8 +27,11 @@ final class EditorEventEndDrag extends EditorEvent {
   const EditorEventEndDrag();
 }
 
-final class EditorEventChangePage extends EditorEvent {
-  const EditorEventChangePage({required this.pageIndex});
-
-  final int pageIndex;
+final class EditorEventPageForward extends EditorEvent {
+  const EditorEventPageForward();
 }
+
+final class EditorEventPageBackward extends EditorEvent {
+  const EditorEventPageBackward();
+}
+

@@ -18,7 +18,8 @@ class EditorBloc extends Bloc<EditorEvent, EditorState> {
     on<EditorEventStartDrag>(_onEditorEventStartDrag);
     on<EditorEventDrag>(_onEditorEventDrag);
     on<EditorEventEndDrag>(_onEditorEventEndDrag);
-    on<EditorEventChangePage>(_onEditorEventChangePage);
+    on<EditorEventPageForward>(_onEditorEventPageForward);
+    on<EditorEventPageBackward>(_onEditorEventPageBackward);
   }
 
   final SheetRepository _sheetRepository;
@@ -46,15 +47,20 @@ class EditorBloc extends Bloc<EditorEvent, EditorState> {
 
   }
 
-  void _onEditorEventChangePage(EditorEventChangePage event, Emitter<EditorState> emit) {
+  void _onEditorEventPageForward(EditorEventPageForward event, Emitter<EditorState> emit) {
     if(state.sheet == null) return;
 
-    // Check page index validation.
-    if (event.pageIndex < 0 || event.pageIndex >= state.sheet!.pages.length) {
-      return;
+    if(state.sheet!.pageIndex < state.sheet!.pages.length - 1) {
+      emit(EditorStateLoaded(sheet: state.sheet!.copyWith(pageIndex: state.sheet!.pageIndex + 1), rects: state.rects));
     }
+  }
 
-    emit(EditorStateLoaded(sheet: state.sheet!.copyWith(pageIndex: event.pageIndex), rects: state.rects));
+  void _onEditorEventPageBackward(EditorEventPageBackward event, Emitter<EditorState> emit) {
+    if(state.sheet == null) return;
+
+    if(state.sheet!.pageIndex > 0) {
+      emit(EditorStateLoaded(sheet: state.sheet!.copyWith(pageIndex: state.sheet!.pageIndex - 1), rects: state.rects));
+    }
   }
 
 }
