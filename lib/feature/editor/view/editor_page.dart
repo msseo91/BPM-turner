@@ -39,10 +39,20 @@ class EditorView extends StatelessWidget {
                     EditorEventLoad(screenSize: MediaQuery.of(context).size)),
                 icon: const Icon(Icons.file_open),
               ),
-              IconButton(
-                onPressed: () =>
-                    bloc.add(EditorEventChangePage(pageIndex: state.sheet?.pageIndex ?? 0 + 1)),
-                icon: const Icon(Icons.arrow_forward),
+              Row (
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    onPressed: () =>
+                        bloc.add(EditorEventChangePage(pageIndex: (state.sheet?.pageIndex ?? 0) - 1)),
+                    icon: const Icon(Icons.arrow_back),
+                  ),
+                  IconButton(
+                    onPressed: () =>
+                        bloc.add(EditorEventChangePage(pageIndex: (state.sheet?.pageIndex ?? 0) + 1)),
+                    icon: const Icon(Icons.arrow_forward),
+                  ),
+                ],
               ),
             ],
           );

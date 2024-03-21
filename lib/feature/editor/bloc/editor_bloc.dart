@@ -47,7 +47,14 @@ class EditorBloc extends Bloc<EditorEvent, EditorState> {
   }
 
   void _onEditorEventChangePage(EditorEventChangePage event, Emitter<EditorState> emit) {
+    if(state.sheet == null) return;
 
+    // Check page index validation.
+    if (event.pageIndex < 0 || event.pageIndex >= state.sheet!.pages.length) {
+      return;
+    }
+
+    emit(EditorStateLoaded(sheet: state.sheet!.copyWith(pageIndex: event.pageIndex), rects: state.rects));
   }
 
 }
