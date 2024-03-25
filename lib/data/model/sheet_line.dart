@@ -1,8 +1,11 @@
+
 import 'dart:ui';
 
-class BarDivider {
-  BarDivider({required this.top, required this.bottom });
+import 'package:bpm_turner/data/model/bar_divider.dart';
 
-  final Offset top;
-  final Offset bottom;
+class SheetLine {
+  final Rect rect;
+  final List<BarDivider> barDividers;
+
+  SheetLine({ required this.rect, required this.barDividers });
 }

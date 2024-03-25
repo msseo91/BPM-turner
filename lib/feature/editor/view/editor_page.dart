@@ -64,7 +64,7 @@ class EditorView extends StatelessWidget {
                   height: double.infinity,
                   child: BlocBuilder<EditorBloc, EditorState>(builder: (context, state) {
                     return CustomPaint(
-                      foregroundPainter: EditorPainter(state.rects, state.barDividers),
+                      foregroundPainter: EditorPainter(state.lines),
                       child: RawImage(image: state.sheet?.currentPage.sheetImage),
                     );
                   }),

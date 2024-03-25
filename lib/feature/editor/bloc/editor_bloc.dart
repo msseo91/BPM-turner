@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:bpm_turner/data/model/sheet_line.dart';
 import 'package:bpm_turner/data/model/sheet_page.dart';
 import 'package:bpm_turner/data/model/tempo_sheet.dart';
 import 'package:bpm_turner/data/repository/sheet_repository.dart';
@@ -6,7 +7,7 @@ import 'package:bpm_turner/feature/editor/bloc/editor_mode.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
-import '../../../data/model/sheet_line.dart';
+import '../../../data/model/bar_divider.dart';
 
 part 'editor_event.dart';
 part 'editor_state.dart';
@@ -30,6 +31,16 @@ class EditorBloc extends Bloc<EditorEvent, EditorState> {
   DrawMode _drawMode = DrawMode.line;
   final SheetRepository _sheetRepository;
 
+  SheetLine? _findCurrentLine(Offset position) {
+    for (var line in state.lines) {
+      var rect = line.rect;
+      if (rect.left <= position.dx && rect.right >= position.dx && rect.top <= position.dy && rect.bottom >= position.dy) {
+        return line;
+      }
+    }
+    return null;
+  }
+
   void _onEditorEventLoad(EditorEventLoad event, Emitter<EditorState> emit) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result != null) {
@@ -39,9 +50,8 @@ class EditorBloc extends Bloc<EditorEvent, EditorState> {
 
       emit(EditorStateLoaded(
         sheet: TempoSheet("Editing sheet", pages: pages.toList()),
-        rects: [],
+        lines: [],
         drawMode: DrawMode.line,
-        barDividers: [],
       ));
     }
   }
@@ -51,52 +61,61 @@ class EditorBloc extends Bloc<EditorEvent, EditorState> {
       emit(
         EditorStateRects(
           sheet: state.sheet,
-          rects: state.rects + [Rect.fromLTRB(event.position.dx, event.position.dy, event.position.dx, event.position.dy)],
+          lines: state.lines +
+              [
+                SheetLine(
+                  rect: Rect.fromLTRB(event.position.dx, event.position.dy, event.position.dx, event.position.dy),
+                  barDividers: [],
+                ),
+              ],
           drawMode: state.drawMode,
-          barDividers: state.barDividers,
         ),
       );
     } else {
       // Bar mode
       // Are we in the Line?
-      Rect? line = _findCurrentLine(event.position);
+      SheetLine? line = _findCurrentLine(event.position);
       if (line == null) return;
 
       // We are in the line. Draw it!
+      state.lines.last = SheetLine(
+        rect: state.lines.last.rect,
+        barDividers: state.lines.last.barDividers +
+            [BarDivider(top: Offset(event.position.dx, line.rect.top), bottom: Offset(event.position.dx, line.rect.bottom))],
+      );
       emit(EditorStateRects(
-          rects: state.rects,
-          sheet: state.sheet,
-          drawMode: state.drawMode,
-          barDividers: state.barDividers + [BarDivider(top: Offset(event.position.dx, line.top), bottom: Offset(event.position.dx, line.bottom))]));
+        sheet: state.sheet,
+        lines: state.lines,
+        drawMode: state.drawMode,
+      ));
     }
   }
 
   void _onEditorEventDrag(EditorEventDrag event, Emitter<EditorState> emit) {
     if (_drawMode == DrawMode.line) {
-      Rect currentRect = state.rects.last;
-      state.rects.last = Rect.fromLTRB(currentRect.left, currentRect.top, event.position.dx, event.position.dy);
+      Rect currentRect = state.lines.last.rect;
+      state.lines.last = SheetLine(rect: Rect.fromLTRB(currentRect.left, currentRect.top, event.position.dx, event.position.dy), barDividers: []);
       emit(
         EditorStateRects(
           sheet: state.sheet,
-          rects: state.rects,
+          lines: state.lines,
           drawMode: state.drawMode,
-          barDividers: state.barDividers,
         ),
       );
     } else {
-      Rect? line = _findCurrentLine(event.position);
+      SheetLine? line = _findCurrentLine(event.position);
       if (line == null) return;
 
-      state.barDividers.last = BarDivider(
-          top: Offset(event.position.dx, state.barDividers.last.top.dy),
-          bottom: Offset(event.position.dx, state.barDividers.last.bottom.dy),
+      state.lines.last.barDividers.last = BarDivider(
+          top: Offset(event.position.dx, line.rect.top),
+          bottom: Offset(event.position.dx, line.rect.bottom),
       );
+
       emit(
         EditorStateRects(
           sheet: state.sheet,
-          rects: state.rects,
+          lines: state.lines,
           drawMode: state.drawMode,
-          barDividers: state.barDividers,
         ),
       );
     }
@@ -108,9 +127,8 @@ class EditorBloc extends Bloc<EditorEvent, EditorState> {
     emit(
       EditorStateRects(
         sheet: state.sheet,
-        rects: [],
+        lines: [],
         drawMode: state.drawMode,
-        barDividers: [],
       ),
     );
   }
@@ -121,9 +139,8 @@ class EditorBloc extends Bloc<EditorEvent, EditorState> {
     if (state.sheet!.pageIndex < state.sheet!.pages.length - 1) {
       emit(EditorStateLoaded(
         sheet: state.sheet!.copyWith(pageIndex: state.sheet!.pageIndex + 1),
-        rects: state.rects,
+        lines: state.lines,
         drawMode: state.drawMode,
-        barDividers: state.barDividers,
       ));
     }
   }
@@ -134,9 +151,8 @@ class EditorBloc extends Bloc<EditorEvent, EditorState> {
     if (state.sheet!.pageIndex > 0) {
       emit(EditorStateLoaded(
         sheet: state.sheet!.copyWith(pageIndex: state.sheet!.pageIndex - 1),
-        rects: state.rects,
+        lines: state.lines,
         drawMode: state.drawMode,
-        barDividers: state.barDividers,
       ));
     }
   }
@@ -152,16 +168,7 @@ class EditorBloc extends Bloc<EditorEvent, EditorState> {
   void _saveSheet() {
     if (state.sheet == null) return;
 
-    // Sort rects by left-top position.
-    state.rects.sort((a, b) => a.top.compareTo(b.top));
-  }
-
-  Rect? _findCurrentLine(Offset position) {
-    for (var rect in state.rects) {
-      if (rect.left <= position.dx && rect.right >= position.dx && rect.top <= position.dy && rect.bottom >= position.dy) {
-        return rect;
-      }
-    }
-    return null;
+    // Create bar Rect from Line and BarDividers.
+    for (var line in state.lines) {}
   }
 }

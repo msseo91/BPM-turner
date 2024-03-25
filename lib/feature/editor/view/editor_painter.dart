@@ -1,12 +1,13 @@
+import 'package:bpm_turner/data/model/sheet_line.dart';
 import 'package:flutter/material.dart';
 
-import '../../../data/model/sheet_line.dart';
+import '../../../data/model/bar_divider.dart';
+
 
 class EditorPainter extends CustomPainter {
-  final List<Rect> rects;
-  final List<BarDivider> barDividers;
+  final List<SheetLine> lines;
 
-  EditorPainter(this.rects, this.barDividers);
+  EditorPainter(this.lines);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -15,19 +16,16 @@ class EditorPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
 
-    if(rects.isNotEmpty) {
-      for (var rect in rects) {
-        canvas.drawRect(rect, paint);
-      }
-    }
-
-    if(barDividers.isNotEmpty) {
-      for(var divider in barDividers) {
-        canvas.drawLine(
-          divider.top,
-          divider.bottom,
-          paint,
-        );
+    if(lines.isNotEmpty) {
+      for(var line in lines) {
+        canvas.drawRect(line.rect, paint);
+        for(var divider in line.barDividers) {
+          canvas.drawLine(
+            divider.top,
+            divider.bottom,
+            paint,
+          );
+        }
       }
     }
   }
