@@ -21,6 +21,7 @@ class EditorBloc extends Bloc<EditorEvent, EditorState> {
     on<EditorEventEndDrag>(_onEditorEventEndDrag);
     on<EditorEventPageForward>(_onEditorEventPageForward);
     on<EditorEventPageBackward>(_onEditorEventPageBackward);
+    on<EditorEventDelete>(_onEditorEventDelete);
   }
 
   final SheetRepository _sheetRepository;
@@ -58,6 +59,15 @@ class EditorBloc extends Bloc<EditorEvent, EditorState> {
 
   void _onEditorEventEndDrag(EditorEventEndDrag event, Emitter<EditorState> emit) {
 
+  }
+
+  void _onEditorEventDelete(EditorEventDelete event, Emitter<EditorState> emit) {
+    emit(
+      EditorStateRects(
+        sheet: state.sheet,
+        rects: [],
+      ),
+    );
   }
 
   void _onEditorEventPageForward(EditorEventPageForward event, Emitter<EditorState> emit) {

@@ -35,3 +35,7 @@ final class EditorEventPageBackward extends EditorEvent {
   const EditorEventPageBackward();
 }
 
+final class EditorEventDelete extends EditorEvent {
+  const EditorEventDelete();
+}
+

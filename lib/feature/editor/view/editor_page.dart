@@ -44,6 +44,10 @@ class EditorView extends StatelessWidget {
               onPressed: () => bloc.add(const EditorEventPageForward()),
               icon: const Icon(Icons.arrow_forward),
             ),
+            IconButton(
+              onPressed: () => bloc.add(const EditorEventDelete()),
+              icon: const Icon(Icons.delete_outline),
+            ),
           ],
         ),
       ),
