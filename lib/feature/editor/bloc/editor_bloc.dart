@@ -189,5 +189,8 @@ class EditorBloc extends Bloc<EditorEvent, EditorState> {
 
     state.sheet?.currentPage.bars.clear();
     state.sheet?.currentPage.bars.addAll(bars);
+
+    // TODO - avoid duplicate insert.
+    _sheetRepository.insertSheet(state.sheet!);
   }
 }

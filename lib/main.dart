@@ -1,17 +1,15 @@
 import 'package:bloc/bloc.dart';
 import 'package:bpm_turner/data/repository/sheet_repository.dart';
-import 'package:bpm_turner/data/sample/rach_op17.dart';
-import 'package:bpm_turner/feature/sheet_navigation.dart';
 import 'package:bpm_turner/global.dart';
 import 'package:bpm_turner/feature/player/player.dart';
-import 'package:bpm_turner/feature/editor/editor.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keep_screen_on/keep_screen_on.dart';
-import 'package:logger/logger.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   // Bloc.observer = Observer();
   runApp(const MyApp());
 }
