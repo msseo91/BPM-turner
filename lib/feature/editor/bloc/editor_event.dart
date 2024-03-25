@@ -24,7 +24,9 @@ final class EditorEventDrag extends EditorEvent {
 }
 
 final class EditorEventEndDrag extends EditorEvent {
-  const EditorEventEndDrag();
+  const EditorEventEndDrag({required this.screenSize});
+
+  final Size screenSize;
 }
 
 final class EditorEventPageForward extends EditorEvent {

@@ -4,10 +4,12 @@ import 'package:bpm_turner/data/model/sheet_page.dart';
 import 'package:bpm_turner/data/model/tempo_sheet.dart';
 import 'package:bpm_turner/data/repository/sheet_repository.dart';
 import 'package:bpm_turner/feature/editor/bloc/editor_mode.dart';
+import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import '../../../data/model/bar_divider.dart';
+import '../../../data/model/sheet_bar.dart';
 
 part 'editor_event.dart';
 part 'editor_state.dart';
@@ -107,8 +109,8 @@ class EditorBloc extends Bloc<EditorEvent, EditorState> {
       if (line == null) return;
 
       state.lines.last.barDividers.last = BarDivider(
-          top: Offset(event.position.dx, line.rect.top),
-          bottom: Offset(event.position.dx, line.rect.bottom),
+        top: Offset(event.position.dx, line.rect.top),
+        bottom: Offset(event.position.dx, line.rect.bottom),
       );
 
       emit(
@@ -121,7 +123,9 @@ class EditorBloc extends Bloc<EditorEvent, EditorState> {
     }
   }
 
-  void _onEditorEventEndDrag(EditorEventEndDrag event, Emitter<EditorState> emit) {}
+  void _onEditorEventEndDrag(EditorEventEndDrag event, Emitter<EditorState> emit) {
+    _saveSheet(event.screenSize);
+  }
 
   void _onEditorEventDelete(EditorEventDelete event, Emitter<EditorState> emit) {
     emit(
@@ -165,10 +169,25 @@ class EditorBloc extends Bloc<EditorEvent, EditorState> {
     _drawMode = DrawMode.bar;
   }
 
-  void _saveSheet() {
+  void _saveSheet(Size screenSize) {
     if (state.sheet == null) return;
 
     // Create bar Rect from Line and BarDividers.
-    for (var line in state.lines) {}
+    List<Bar> bars = [];
+    state.lines.sort((a, b) => a.rect.top.compareTo(b.rect.top));
+    for (var line in state.lines) {
+      line.barDividers.sort((a, b) => a.top.dx.compareTo(b.top.dx));
+      line.barDividers.forEachIndexed((index, divider) {
+        var left = index == 0 ? line.rect.left : line.barDividers[index - 1].top.dx;
+        var right = index == line.barDividers.length - 1 ? line.rect.right : line.barDividers[index + 1].top.dx;
+        var rectInPercent =
+            Rect.fromLTRB(left / screenSize.width, line.rect.top / screenSize.height, right / screenSize.width, line.rect.bottom / screenSize.height);
+
+        bars.add(Bar(barRectInPercent: rectInPercent));
+      });
+    }
+
+    state.sheet?.currentPage.bars.clear();
+    state.sheet?.currentPage.bars.addAll(bars);
   }
 }

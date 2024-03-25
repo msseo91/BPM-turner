@@ -53,24 +53,26 @@ class EditorView extends StatelessWidget {
         ),
       ),
       body: SafeArea(
-        child: Stack(
-          children: [
-            GestureDetector(
-                onPanStart: (details) => bloc.add(EditorEventStartDrag(position: details.localPosition)),
-                onPanUpdate: (details) => bloc.add(EditorEventDrag(position: details.localPosition)),
-                onPanEnd: (details) => bloc.add(const EditorEventEndDrag()),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: double.infinity,
-                  child: BlocBuilder<EditorBloc, EditorState>(builder: (context, state) {
-                    return CustomPaint(
-                      foregroundPainter: EditorPainter(state.lines),
-                      child: RawImage(image: state.sheet?.currentPage.sheetImage),
-                    );
-                  }),
-                )),
-          ],
-        ),
+        child: LayoutBuilder(builder: (builderContext, constraints) {
+          return Stack(
+            children: [
+              GestureDetector(
+                  onPanStart: (details) => bloc.add(EditorEventStartDrag(position: details.localPosition)),
+                  onPanUpdate: (details) => bloc.add(EditorEventDrag(position: details.localPosition)),
+                  onPanEnd: (details) => bloc.add(EditorEventEndDrag(screenSize: constraints.biggest)),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: double.infinity,
+                    child: BlocBuilder<EditorBloc, EditorState>(builder: (context, state) {
+                      return CustomPaint(
+                        foregroundPainter: EditorPainter(state.lines),
+                        child: RawImage(image: state.sheet?.currentPage.sheetImage),
+                      );
+                    }),
+                  )),
+            ],
+          );
+        }),
       ),
     );
   }
