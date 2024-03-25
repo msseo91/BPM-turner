@@ -92,6 +92,16 @@ class SheetRepository {
     return images;
   }
 
+  Stream<Image> loadSheetImages({required String path, required Size size}) async* {
+    var doc = await PdfDocument.openFile(path);
+    int pageCount = doc.pageCount;
+    for (var i = 1; i <= pageCount; i++) {
+      PdfPage page = await doc.getPage(i);
+      PdfPageImage pageImage = await page.render(width: size.width.toInt(), height: size.height.toInt());
+      yield await pageImage.createImageIfNotAvailable();
+    }
+  }
+
   Future<File?> pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     return result != null ? File(result.files.single.path!) : null;
