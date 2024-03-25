@@ -1,4 +1,3 @@
-import 'package:bpm_turner/data/model/tempo_sheet.dart';
 import 'package:bpm_turner/data/repository/sheet_repository.dart';
 import 'package:bpm_turner/feature/editor/bloc/editor_bloc.dart';
 import 'package:bpm_turner/feature/editor/editor.dart';
@@ -36,6 +35,8 @@ class EditorView extends StatelessWidget {
               onPressed: () => bloc.add(EditorEventLoad(screenSize: MediaQuery.of(context).size)),
               icon: const Icon(Icons.file_open),
             ),
+            IconButton(onPressed: () => bloc.add(const EditorEventModeLine()), icon: const Icon(Icons.rectangle_outlined)),
+            IconButton(onPressed: () => bloc.add(const EditorEventModeBar()), icon: const Icon(Icons.panorama_vertical_outlined)),
             IconButton(
               onPressed: () => bloc.add(const EditorEventPageBackward()),
               icon: const Icon(Icons.arrow_back),
@@ -63,7 +64,7 @@ class EditorView extends StatelessWidget {
                   height: double.infinity,
                   child: BlocBuilder<EditorBloc, EditorState>(builder: (context, state) {
                     return CustomPaint(
-                      foregroundPainter: EditorPainter(state.rects),
+                      foregroundPainter: EditorPainter(state.rects, state.barDividers),
                       child: RawImage(image: state.sheet?.currentPage.sheetImage),
                     );
                   }),

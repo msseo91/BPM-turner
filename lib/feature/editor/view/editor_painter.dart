@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../../../data/model/sheet_line.dart';
+
 class EditorPainter extends CustomPainter {
   final List<Rect> rects;
+  final List<BarDivider> barDividers;
 
-  EditorPainter(this.rects);
+  EditorPainter(this.rects, this.barDividers);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -15,6 +18,16 @@ class EditorPainter extends CustomPainter {
     if(rects.isNotEmpty) {
       for (var rect in rects) {
         canvas.drawRect(rect, paint);
+      }
+    }
+
+    if(barDividers.isNotEmpty) {
+      for(var divider in barDividers) {
+        canvas.drawLine(
+          divider.top,
+          divider.bottom,
+          paint,
+        );
       }
     }
   }

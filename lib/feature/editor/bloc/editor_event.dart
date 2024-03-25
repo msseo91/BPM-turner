@@ -39,3 +39,10 @@ final class EditorEventDelete extends EditorEvent {
   const EditorEventDelete();
 }
 
+final class EditorEventModeLine extends EditorEvent {
+  const EditorEventModeLine();
+}
+
+final class EditorEventModeBar extends EditorEvent {
+  const EditorEventModeBar();
+}
