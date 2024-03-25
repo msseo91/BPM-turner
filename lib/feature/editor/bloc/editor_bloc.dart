@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:bloc/bloc.dart';
 import 'package:bpm_turner/data/model/sheet_page.dart';
@@ -36,11 +37,23 @@ class EditorBloc extends Bloc<EditorEvent, EditorState> {
   }
 
   void _onEditorEventStartDrag(EditorEventStartDrag event, Emitter<EditorState> emit) {
-
+    emit(
+      EditorStateRects(
+        sheet: state.sheet,
+        rects: state.rects + [Rect.fromLTRB(event.position.dx, event.position.dy, event.position.dx, event.position.dy)],
+      ),
+    );
   }
 
   void _onEditorEventDrag(EditorEventDrag event, Emitter<EditorState> emit) {
-
+    Rect currentRect = state.rects.last;
+    state.rects.last = Rect.fromLTRB(currentRect.left, currentRect.top, event.position.dx, event.position.dy);
+    emit(
+      EditorStateRects(
+        sheet: state.sheet,
+        rects: state.rects,
+      ),
+    );
   }
 
   void _onEditorEventEndDrag(EditorEventEndDrag event, Emitter<EditorState> emit) {
